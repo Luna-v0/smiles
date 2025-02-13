@@ -1,10 +1,33 @@
 from sly import Parser
 from lex import SmilesLex
 import chem
+import re
+from itertools import combinations
 
 # https://depth-first.com/articles/2020/04/20/smiles-formal-grammar/
 
+
+def generate_combinations(rule: str):
+    parts = rule.split()
+
+    # Separate required and optional elements
+    required = [p.rstrip('?') for p in parts if not p.endswith('?')]
+    optional = [p.rstrip('?') for p in parts if p.endswith('?')]
+
+    all_combinations = []
+
+    # Generate all possible ordered combinations of optional elements
+    for i in range(len(optional) + 1):
+        for combo in combinations(optional, i):
+            ordered_combo = [p.rstrip('?') for p in parts if p.rstrip(
+                '?') in combo or p.rstrip('?') in required]
+            all_combinations.append(" ".join(ordered_combo))
+
+    return all_combinations
+
+
 class SmilesParser(Parser):
+    debugfile = 'parser.out'
     tokens = SmilesLex.tokens
 
     last_rule = ""
@@ -25,23 +48,30 @@ class SmilesParser(Parser):
         self.update_last_rule('chain_branch')
         pass
 
-    @_('chain', 'chains chain')  # type: ignore
+    @_('chain', 'chain chains')  # type: ignore
     def chains(self, rules):
         self.update_last_rule('chains')
         pass
 
-    @_('"[" opt_isotope symbol opt_chiral opt_hcount opt_charge opt_map "]"', #type: ignore
-       '"[" opt_isotope opt_hcount symbol opt_chiral opt_charge opt_map "]"')
+    @_('"[" internal_bracket "]"')  # type: ignore
     def bracket_atom(self, rules):
         self.update_last_rule('bracket_atom')
-        chem.validate_valency_mol(rules.opt_isotope, rules.symbol,
-                                  rules.opt_chiral, rules.opt_hcount,
-                                  rules.opt_charge, rules.opt_map)
         pass
 
-    @_('"." atom', 'opt_bond atom', 'opt_bond rnum')  # type: ignore
+    @_(*generate_combinations('isotope? hcount? symbol chiral? charge? map?')) # type: ignore
+    def internal_bracket(self, rules):
+        chem.validate_valency_mol(rules.isotope, rules.symbol,
+                                  rules.chiral, rules.hcount,
+                                  rules.charge, rules.map)
+        pass
+
+    @_('dot_proxy', 'bond atom', 'bond rnum', 'atom', 'rnum')  # type: ignore
     def chain(self, rules):
         self.update_last_rule('chain')
+        pass
+
+    @_('"." atom')  # type: ignore
+    def dot_proxy(self, rules):
         pass
 
     @_('semi_symbol', 'organic_symbol')  # type: ignore
@@ -54,59 +84,33 @@ class SmilesParser(Parser):
         self.update_last_rule('branch')
         pass
 
-    @_('opt_bond_dot line', 'inner_branch opt_bond_dot line')  # type: ignore
+    @_('bond_dot line', 'line', 'inner_branch bond_dot line', 'inner_branch line') # type: ignore
     def inner_branch(self, rules):
         self.update_last_rule('inner_branch')
         pass
 
-    @_('bond', 'empty')  # type: ignore
-    def opt_bond(self, rules):
-        self.update_last_rule('opt_bond')
+    @_('bond', '"."')  # type: ignore
+    def bond_dot(self, rules):
+        self.update_last_rule('bond_dot')
         return rules[0] if len(rules) > 0 else None
 
-    @_('isotope', 'empty')  # type: ignore
-    def opt_isotope(self, rules):
-        self.update_last_rule('opt_isotope')
-        return rules[0] if len(rules) > 0 else None
-
-    @_('chiral', 'empty')  # type: ignore
-    def opt_chiral(self, rules):
-        self.update_last_rule('opt_chiral')
-        return rules[0] if len(rules) > 0 else None
-
-    @_('hcount', 'empty')  # type: ignore
-    def opt_hcount(self, rules):
-        self.update_last_rule('opt_hcount')
-        return rules[0] if len(rules) > 0 else None
-
-    @_('bond', '"."', 'empty')  # type: ignore
-    def opt_bond_dot(self, rules):
-        self.update_last_rule('opt_bond_dot')
-        return rules[0] if len(rules) > 0 else None
-
-    @_('charge', 'empty')  # type: ignore
-    def opt_charge(self, rules):
-        self.update_last_rule('opt_charge')
-        return rules[0] if len(rules) > 0 else None
-
-    @_('map', 'empty')  # type: ignore
-    def opt_map(self, rules):
-        self.update_last_rule('opt_map')
-        return rules[0] if len(rules) > 0 else None
-
-    @_('digit', 'empty')  # type: ignore
-    def opt_digit(self, rules):
-        self.update_last_rule('opt_digit')
-        return rules[0] if len(rules) > 0 else None
-
-    @_('semi_bond', '"-"')  # type: ignore
+    @_('semi_bond_rule', '"-"')  # type: ignore
     def bond(self, rules):
         self.update_last_rule('bond')
         return rules[0] if len(rules) > 0 else None
 
-    @_('"H"', 'semi_organic_symbol')  # type: ignore
+    @_('semi_bond')  # type: ignore
+    def semi_bond_rule(self, rules):
+        self.update_last_rule('semi_bond_rule')
+        pass
+
+    @_('"H"', 'semi_organic_rule')  # type: ignore
     def organic_symbol(self, rules):
         self.update_last_rule('organic_symbol')
+        pass
+
+    @_('semi_organic_symbol')  # type: ignore
+    def semi_organic_rule(self, rules):
         pass
 
     @_('organic_symbol', 'bracket_atom')  # type: ignore
@@ -119,12 +123,12 @@ class SmilesParser(Parser):
         self.update_last_rule('rnum')
         pass
 
-    @_('opt_digit opt_digit digit')  # type: ignore
+    @_('digit digit digit', 'digit digit', 'digit')  # type: ignore
     def isotope(self, rules):
         self.update_last_rule('isotope')
         pass
 
-    @_('"H" opt_digit')  # type: ignore
+    @_('"H" digit', '"H"')  # type: ignore
     def hcount(self, rules):
         self.update_last_rule('hcount')
         pass
@@ -134,7 +138,7 @@ class SmilesParser(Parser):
         self.update_last_rule('charge')
         pass
 
-    @_('":" opt_digit opt_digit digit')  # type: ignore
+    @_('":" digit digit digit', '":" digit digit', '":" digit')  # type: ignore
     def map(self, rules):
         self.update_last_rule('map')
         pass
@@ -147,10 +151,6 @@ class SmilesParser(Parser):
     @_('digit digit', 'digit')  # type: ignore
     def fifteen(self, rules):
         self.update_last_rule('fifteen')
-        pass
-    
-    @_('')  # type: ignore
-    def empty(self,rules):
         pass
 
 

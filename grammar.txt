@@ -1,0 +1,60 @@
+S' -> line
+line -> atom chain_branch
+line -> atom
+chain_branch -> chain_branch branch
+chain_branch -> chain_branch chains
+chain_branch -> branch
+chain_branch -> chains
+chains -> chain chains
+chains -> chain
+bracket_atom -> [ opt_isotope opt_hcount symbol opt_chiral opt_charge opt_map ]
+bracket_atom -> [ opt_isotope symbol opt_chiral opt_hcount opt_charge opt_map ]
+chain -> opt_bond rnum
+chain -> opt_bond atom
+chain -> . atom
+symbol -> organic_symbol
+symbol -> semi_symbol
+branch -> ( inner_branch )
+inner_branch -> inner_branch opt_bond_dot line
+inner_branch -> opt_bond_dot line
+opt_bond -> empty
+opt_bond -> bond
+opt_isotope -> empty
+opt_isotope -> isotope
+opt_chiral -> empty
+opt_chiral -> chiral
+opt_hcount -> empty
+opt_hcount -> hcount
+opt_bond_dot -> empty
+opt_bond_dot -> .
+opt_bond_dot -> bond
+opt_charge -> empty
+opt_charge -> charge
+opt_map -> empty
+opt_map -> map
+opt_digit -> empty
+opt_digit -> digit
+bond -> -
+bond -> semi_bond_rule
+semi_bond_rule -> semi_bond
+organic_symbol -> semi_organic_rule
+organic_symbol -> H
+semi_organic_rule -> semi_organic_symbol
+atom -> bracket_atom
+atom -> organic_symbol
+rnum -> % digit digit
+rnum -> digit
+isotope -> opt_digit opt_digit digit
+hcount -> H opt_digit
+charge -> + fifteen
+charge -> - fifteen
+charge -> - -
+charge -> -
+charge -> + +
+charge -> +
+map -> : opt_digit opt_digit digit
+chiral -> @ @
+chiral -> @
+fifteen -> digit
+fifteen -> digit digit
+empty -> <empty>
