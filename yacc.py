@@ -69,8 +69,8 @@ class SmilesParser(Parser):
         
         isotope, symbol, chiral, hcount, charge, mol_map = mol
 
-        #if not chem.validate_valency_bracket(isotope, symbol, chiral, hcount, charge, mol_map): 
-        #    raise Exception(f'Invalid valency in Bracket [{','.join([str(x) for x in mol if x is not None])}]')
+        if not chem.validate_valency_bracket(isotope, symbol, chiral, hcount, charge, mol_map): 
+            raise Exception(f'Invalid valency in Bracket [{','.join([str(x) for x in mol if x is not None])}]')
         
 
     @_('dot_proxy', 'bond atom', 'bond rnum', 'atom', 'rnum')  # type: ignore
@@ -184,6 +184,7 @@ def validateSMILES(mol: str) -> bool:
         parser.parse(lexer.tokenize(mol))
         return True
     except Exception as e:
+        print(type(e))
         print("Error:",e)
         return False
 

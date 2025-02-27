@@ -18,7 +18,6 @@ look_up_table_json.pop("order")
 look_up_table = {x["symbol"]:x for x in look_up_table_json.values()}
 
 
-
 def get_electric_config(symbol:str):
     
     mol_prop = look_up_table[symbol]
@@ -34,17 +33,12 @@ def get_electric_config(symbol:str):
     
     return splited_elect_config, elect_in_valency_layer
 
-def helium_special_case(elect_config:list[str],charge:int) -> bool:
-    
-    electrons = sum([int(x[2]) for x in elect_config]) - charge
-    
-    return True if electrons == 2 else False
 
 def check_valency(elect_config:list[str],charge=0,hcount=0): # elect_config example ['1s2','2s2','2p2']
     if hcount is None:
         hcount = 0
     if charge is None:
-        charge = 0
+        charge = 0 
     
     max_valency_per_layer = [2,8,18,32,32,18,8,2]
     
@@ -52,22 +46,38 @@ def check_valency(elect_config:list[str],charge=0,hcount=0): # elect_config exam
     
     unique_elect_config = set([x[0] for x in elect_config])
     
+    sorted_elect_config = list(unique_elect_config)
+    sorted_elect_config.sort(reverse=True)
+    
     electron_layers = [
-        sum([int(x[2]) for x in electron_layers if elect_config==layer_n]) for layer_n in list(unique_elect_config).sort(reverse=True)
-    ] # decrescent list of electrons in each layer
+        sum([int(x[2]) for x in elect_config if x[0]==layer_n]) for layer_n in sorted_elect_config
+    ] # decrescent list by layer of electrons
     
-    if acc > 0:
-        return electron_layers[0] + acc == 8 or (len(electron_layers) == 1 and electron_layers[0]==2)
+    if sum(electron_layers) < -acc: return False
     
-    for x in range(len(electron_layers)):
-        electron = electron_layers[x]
-        
-        if electron > -acc:
+    print(electron_layers)
+    
+    if acc < 0:
+        for x in range(len(electron_layers)):
+            electron = electron_layers[x]
+
+            if electron > -acc:
+                return electron + acc == 8 or (x == len(electron_layers)-1 and electron == 2)
+
+            acc +=electron
+
+        return False
+    
+    for _ in range(len(max_valency_per_layer)):
+        electron = electron_layers[0]
+        if electron+acc > max_valency_per_layer[len(electron_layers)-1]:
             return electron + acc == 8 or (x == len(electron_layers)-1 and electron == 2)
-        
-        acc +=electron_layers
+
+        acc -=electron
+        electron_layers[0] = max_valency_per_layer[len(electron_layers)-1]
+        electron_layers.insert(0,0)
     
-    
+    return False
 
 
 def validate_valency_bracket(isotope: Optional[int], symbol: str, chiral: Optional[int],
@@ -76,24 +86,8 @@ def validate_valency_bracket(isotope: Optional[int], symbol: str, chiral: Option
 
     elect_config, valency = get_electric_config(symbol)
     
-    print(valency,hcount,charge, not hcount)
-    
     
     if not hcount and not charge:
         return (valency == 8 or symbol == 'He')
     
-    if not charge and hcount and (valency+hcount==8 or (symbol=='H' and hcount==1)): # this or can be removed depending of the standard
-        return True
-
-    if not hcount and charge and (valency-charge==8 or valency-charge==0 or helium_special_case(elect_config,charge)):
-        return True
-        
-    
-    if hcount and charge and (valency-charge+hcount == 8 or valency-charge+hcount == 0 or helium_special_case(elect_config,hcount-charge)):
-        return True
-        
-        
-    if hcount and charge and valency-charge<=0:
-        return False
-    
-    return False
+    return check_valency(elect_config,charge,hcount)
