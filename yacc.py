@@ -1,6 +1,6 @@
 from sly import Parser
-from src.lex import SmilesLex
-import src.chem as chem
+from lex import SmilesLex
+import chem as chem
 import re
 from itertools import combinations
 import json  # temporary
@@ -42,27 +42,19 @@ class SmilesParser(Parser):
     debugfile = 'parser.out'
     tokens = SmilesLex.tokens
 
-    last_rule = ""
-
     def error(self, t):
-        raise Exception(f"Error on {str(t)}, last rule {self.last_rule}")
-
-    def update_last_rule(self, rule_name):
-        self.last_rule = rule_name
+        raise Exception(f"Error on {str(t)}")
 
     @_('atom', 'atom chain_branch')  # type: ignore
     def line(self, rules):
-        self.update_last_rule('line')
         pass
 
     @_('chains', 'branch', 'chain_branch chains', 'chain_branch branch')  # type: ignore
     def chain_branch(self, rules):
-        self.update_last_rule('chain_branch')
         pass
 
     @_('chain', 'chain chains')  # type: ignore
     def chains(self, rules):
-        self.update_last_rule('chains')
         pass
 
     @_('"[" internal_bracket "]"')  # type: ignore
@@ -70,45 +62,35 @@ class SmilesParser(Parser):
         return rules.internal_bracket
 
 
-    @_(*generate_combinations('isotope? hcount? symbol chiral? charge? map?')) # type: ignore
+    @_(*generate_combinations('isotope? symbol chiral? hcount? charge? map?')) # type: ignore
     def internal_bracket(self, rules):
         
-        mol = getAttributes(rules, ['isotope', 'hcount', 'symbol', 'chiral', 'charge', 'map'])
+        mol = getAttributes(rules, ['isotope', 'symbol', 'chiral','hcount', 'charge', 'map'])
         
-        isotope, hcount, symbol, chiral, charge, mol_map = mol
+        isotope, symbol, chiral, hcount, charge, mol_map = mol
 
-        print(f"Isotope: {isotope}")
-        print(f"Hcount: {hcount}")
-        print(f"Symbol: {symbol}")
-        print(f"Chiral: {chiral}")
-        print(f"Charge: {charge}")
-        print(f"Map: {mol_map}")
-
-        chem.validate_valency_mol(isotope, symbol, chiral, hcount, charge, mol_map)
-        pass
+        #if not chem.validate_valency_bracket(isotope, symbol, chiral, hcount, charge, mol_map): 
+        #    raise Exception(f'Invalid valency in Bracket [{','.join([str(x) for x in mol if x is not None])}]')
+        
 
     @_('dot_proxy', 'bond atom', 'bond rnum', 'atom', 'rnum')  # type: ignore
     def chain(self, rules):
-
         pass
 
     @_('"." atom')  # type: ignore
     def dot_proxy(self, rules):
         pass
 
-    @_('semi_symbol', 'organic_symbol')  # type: ignore
+    @_('semi_symbol', '"H"')  # type: ignore
     def symbol(self, rules):
         return rules[0]
 
     @_('"(" inner_branch ")"')  # type: ignore
     def branch(self, rules):
-        self.update_last_rule('branch')
         pass
-
 
     @_('bond_dot line', 'line', 'bond_dot line inner_branch', 'line inner_branch')    # type: ignore
     def inner_branch(self, rules):
-        self.update_last_rule('inner_branch')
         pass
 
     @_('bond', '"."')  # type: ignore
@@ -123,17 +105,16 @@ class SmilesParser(Parser):
     def semi_bond_rule(self, rules):
         return rules[0]
 
-    @_('"H"', 'semi_organic_rule')  # type: ignore
-    def organic_symbol(self, rules):
-        return rules[0]
-
-    @_('semi_organic_symbol')  # type: ignore
-    def semi_organic_rule(self, rules):
-        return rules[0]
-
-    @_('organic_symbol', 'bracket_atom')  # type: ignore
+    @_('symbol', 'bracket_atom')  # type: ignore
     def atom(self, rules):
-        return rules[0]
+        if type(rules[0]) != str or len(rules[0]) == 1 or rules[0] in chem.organic_atoms: return rules[0]
+        
+        elem1, elem2 = rules[0]
+        
+        if elem1 in chem.organic_atoms and elem2 in chem.organic_atoms:
+            return [elem1,elem2]
+        
+        raise Exception(f"Inorganic Atom Outside Bracket {rules[0]}")
 
     @_('digit', '"%" digit digit ')  # type: ignore
     def rnum(self, rules):
@@ -178,7 +159,6 @@ class SmilesParser(Parser):
 
     @_('"@"', '"@" "@"')  # type: ignore
     def chiral(self, rules):
-        self.update_last_rule('chiral')
         pass
 
     @_('digit digit', 'digit')  # type: ignore
@@ -204,7 +184,7 @@ def validateSMILES(mol: str) -> bool:
         parser.parse(lexer.tokenize(mol))
         return True
     except Exception as e:
+        print("Error:",e)
         return False
 
-
-print(validateSMILES("[Cl+]"))
+validateSMILES('O=C(O)C1=NN(c2ccc(S(=O)(=O)O)cc2)C(=O)C1N=Nc1ccc(S(=O)(=O)O)cc1.[Na+].[Na+].[Na+]')
