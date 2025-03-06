@@ -1,2 +1,5 @@
 sly
 deepchem
+pandas
+tensorflow
+notebook

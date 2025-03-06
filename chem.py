@@ -86,7 +86,6 @@ def validate_valency_bracket(isotope: Optional[int], symbol: str, chiral: Option
 
     elect_config, valency = get_electric_config(symbol)
     
-    
     if not hcount and not charge:
         return (valency == 8 or symbol == 'He')
     

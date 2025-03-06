@@ -41,6 +41,7 @@ def getAttributes(rules, properties):
 class SmilesParser(Parser):
     debugfile = 'parser.out'
     tokens = SmilesLex.tokens
+    use_only_grammar = False
 
     def error(self, t):
         raise Exception(f"Error on {str(t)}")
@@ -68,6 +69,8 @@ class SmilesParser(Parser):
         mol = getAttributes(rules, ['isotope', 'symbol', 'chiral','hcount', 'charge', 'map'])
         
         isotope, symbol, chiral, hcount, charge, mol_map = mol
+
+        if self.use_only_grammar: return
 
         if not chem.validate_valency_bracket(isotope, symbol, chiral, hcount, charge, mol_map): 
             raise Exception(f'Invalid valency in Bracket [{','.join([str(x) for x in mol if x is not None])}]')
@@ -179,8 +182,9 @@ parser = SmilesParser()
 lexer = SmilesLex()
 
 
-def validateSMILES(mol: str) -> bool:
+def validateSMILES(mol: str,use_only_grammar=False) -> bool:
     try:
+        parser.use_only_grammar = use_only_grammar
         parser.parse(lexer.tokenize(mol))
         return True
     except Exception as e:
@@ -188,4 +192,3 @@ def validateSMILES(mol: str) -> bool:
         print("Error:",e)
         return False
 
-validateSMILES('O=C(O)C1=NN(c2ccc(S(=O)(=O)O)cc2)C(=O)C1N=Nc1ccc(S(=O)(=O)O)cc1.[Na+].[Na+].[Na+]')
