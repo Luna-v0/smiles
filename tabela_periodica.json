@@ -1,0 +1,745 @@
+{
+    "H": {
+        "valencia": [
+            1
+        ],
+        "numero_atomico": 1
+    },
+    "He": {
+        "valencia": [
+            0
+        ],
+        "numero_atomico": 2
+    },
+    "Li": {
+        "valencia": [
+            1,
+            -1
+        ],
+        "numero_atomico": 3
+    },
+    "Be": {
+        "valencia": [
+            2
+        ],
+        "numero_atomico": 4
+    },
+    "B": {
+        "valencia": [
+            3
+        ],
+        "numero_atomico": 5
+    },
+    "C": {
+        "valencia": [
+            4
+        ],
+        "numero_atomico": 6
+    },
+    "N": {
+        "valencia": [
+            3
+        ],
+        "numero_atomico": 7
+    },
+    "O": {
+        "valencia": [
+            2
+        ],
+        "numero_atomico": 8
+    },
+    "F": {
+        "valencia": [
+            1
+        ],
+        "numero_atomico": 9
+    },
+    "Ne": {
+        "valencia": [
+            0
+        ],
+        "numero_atomico": 10
+    },
+    "Na": {
+        "valencia": [
+            1,
+            -1
+        ],
+        "numero_atomico": 11
+    },
+    "Mg": {
+        "valencia": [
+            2,
+            -1
+        ],
+        "numero_atomico": 12
+    },
+    "Al": {
+        "valencia": [
+            3,
+            6
+        ],
+        "numero_atomico": 13
+    },
+    "Si": {
+        "valencia": [
+            4,
+            6
+        ],
+        "numero_atomico": 14
+    },
+    "P": {
+        "valencia": [
+            3,
+            5,
+            7
+        ],
+        "numero_atomico": 15
+    },
+    "S": {
+        "valencia": [
+            2,
+            4,
+            6
+        ],
+        "numero_atomico": 16
+    },
+    "Cl": {
+        "valencia": [
+            1
+        ],
+        "numero_atomico": 17
+    },
+    "Ar": {
+        "valencia": [
+            0
+        ],
+        "numero_atomico": 18
+    },
+    "K": {
+        "valencia": [
+            1,
+            -1
+        ],
+        "numero_atomico": 19
+    },
+    "Ca": {
+        "valencia": [
+            2,
+            -1
+        ],
+        "numero_atomico": 20
+    },
+    "Sc": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 21
+    },
+    "Ti": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 22
+    },
+    "V": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 23
+    },
+    "Cr": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 24
+    },
+    "Mn": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 25
+    },
+    "Fe": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 26
+    },
+    "Co": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 27
+    },
+    "Ni": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 28
+    },
+    "Cu": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 29
+    },
+    "Zn": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 30
+    },
+    "Ga": {
+        "valencia": [
+            3
+        ],
+        "numero_atomico": 31
+    },
+    "Ge": {
+        "valencia": [
+            4
+        ],
+        "numero_atomico": 32
+    },
+    "As": {
+        "valencia": [
+            3,
+            5,
+            7
+        ],
+        "numero_atomico": 33
+    },
+    "Se": {
+        "valencia": [
+            2,
+            4,
+            6
+        ],
+        "numero_atomico": 34
+    },
+    "Br": {
+        "valencia": [
+            1
+        ],
+        "numero_atomico": 35
+    },
+    "Kr": {
+        "valencia": [
+            0
+        ],
+        "numero_atomico": 36
+    },
+    "Rb": {
+        "valencia": [
+            1
+        ],
+        "numero_atomico": 37
+    },
+    "Sr": {
+        "valencia": [
+            2,
+            -1
+        ],
+        "numero_atomico": 38
+    },
+    "Y": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 39
+    },
+    "Zr": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 40
+    },
+    "Nb": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 41
+    },
+    "Mo": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 42
+    },
+    "Tc": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 43
+    },
+    "Ru": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 44
+    },
+    "Rh": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 45
+    },
+    "Pd": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 46
+    },
+    "Ag": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 47
+    },
+    "Cd": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 48
+    },
+    "In": {
+        "valencia": [
+            3
+        ],
+        "numero_atomico": 49
+    },
+    "Sn": {
+        "valencia": [
+            2,
+            4
+        ],
+        "numero_atomico": 50
+    },
+    "Sb": {
+        "valencia": [
+            3,
+            5,
+            7
+        ],
+        "numero_atomico": 51
+    },
+    "Te": {
+        "valencia": [
+            2,
+            4,
+            6
+        ],
+        "numero_atomico": 52
+    },
+    "I": {
+        "valencia": [
+            1,
+            3,
+            5
+        ],
+        "numero_atomico": 53
+    },
+    "Xe": {
+        "valencia": [
+            0,
+            2,
+            4,
+            6
+        ],
+        "numero_atomico": 54
+    },
+    "Cs": {
+        "valencia": [
+            1
+        ],
+        "numero_atomico": 55
+    },
+    "Ba": {
+        "valencia": [
+            2,
+            -1
+        ],
+        "numero_atomico": 56
+    },
+    "La": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 57
+    },
+    "Ce": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 58
+    },
+    "Pr": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 59
+    },
+    "Nd": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 60
+    },
+    "Pm": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 61
+    },
+    "Sm": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 62
+    },
+    "Eu": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 63
+    },
+    "Gd": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 64
+    },
+    "Tb": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 65
+    },
+    "Dy": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 66
+    },
+    "Ho": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 67
+    },
+    "Er": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 68
+    },
+    "Tm": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 69
+    },
+    "Yb": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 70
+    },
+    "Lu": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 71
+    },
+    "Hf": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 72
+    },
+    "Ta": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 73
+    },
+    "W": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 74
+    },
+    "Re": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 75
+    },
+    "Os": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 76
+    },
+    "Ir": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 77
+    },
+    "Pt": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 78
+    },
+    "Au": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 79
+    },
+    "Hg": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 80
+    },
+    "Tl": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 81
+    },
+    "Pb": {
+        "valencia": [
+            2,
+            4
+        ],
+        "numero_atomico": 82
+    },
+    "Bi": {
+        "valencia": [
+            3,
+            5,
+            7
+        ],
+        "numero_atomico": 83
+    },
+    "Po": {
+        "valencia": [
+            2,
+            4,
+            6
+        ],
+        "numero_atomico": 84
+    },
+    "At": {
+        "valencia": [
+            1,
+            3,
+            5
+        ],
+        "numero_atomico": 85
+    },
+    "Rn": {
+        "valencia": [
+            0
+        ],
+        "numero_atomico": 86
+    },
+    "Fr": {
+        "valencia": [
+            1
+        ],
+        "numero_atomico": 87
+    },
+    "Ra": {
+        "valencia": [
+            2,
+            -1
+        ],
+        "numero_atomico": 88
+    },
+    "Ac": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 89
+    },
+    "Th": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 90
+    },
+    "Pa": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 91
+    },
+    "U": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 92
+    },
+    "Np": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 93
+    },
+    "Pu": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 94
+    },
+    "Am": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 95
+    },
+    "Cm": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 96
+    },
+    "Bk": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 97
+    },
+    "Cf": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 98
+    },
+    "Es": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 99
+    },
+    "Fm": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 100
+    },
+    "Md": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 101
+    },
+    "No": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 102
+    },
+    "Lr": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 103
+    },
+    "Rf": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 104
+    },
+    "Db": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 105
+    },
+    "Sg": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 106
+    },
+    "Bh": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 107
+    },
+    "Hs": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 108
+    },
+    "Mt": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 109
+    },
+    "Ds": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 110
+    },
+    "Rg": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 111
+    },
+    "Cn": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 112
+    },
+    "Nh": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 113
+    },
+    "Fl": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 114
+    },
+    "Mc": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 115
+    },
+    "Lv": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 116
+    },
+    "Ts": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 117
+    },
+    "Og": {
+        "valencia": [
+            -1
+        ],
+        "numero_atomico": 118
+    }
+}

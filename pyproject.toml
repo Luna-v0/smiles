@@ -1,0 +1,22 @@
+[project]
+name = "slyparser"
+version = "0.1.0"
+description = "A LALR(1) parser using SLY"
+dependencies = [
+  "sly"
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+addopts = "-ra -q"
+testpaths = ["tests"]
