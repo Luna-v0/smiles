@@ -4,7 +4,18 @@ import src.chem.chem as chem
 from itertools import combinations
 
 
-def generate_combinations(rule: str):
+def generate_combinations(rule: str) -> list[str]:
+    """
+    Generate all combinations of a rule with optional elements.
+    Example: 
+        rule = "X? Y Z?"
+        combinations = [ X Y Z, X Y, Y Z, Y ]
+    
+    Args:
+        rule: A string with the rule to generate combinations from.
+    Returns:
+        A list of strings with all combinations of the rule.
+    """
     parts = rule.split()
 
     # Separate required and optional elements
@@ -23,6 +34,14 @@ def generate_combinations(rule: str):
 
 
 def getAttributes(rules, properties):
+    """
+    Get the attributes of the rules.
+    Args:
+        rules: The rules to get the attributes from.
+        properties: The properties to get the attributes from.
+    Returns:
+        The attributes of the rules.
+    """
     if type(properties) != list:
         return getattr(rules, properties, None)
 
@@ -35,6 +54,9 @@ def getAttributes(rules, properties):
 
 
 class SmilesParser(Parser):
+    """
+    Parser using the SLY library to parse SMILES strings.
+    """
     debugfile = 'parser.out'
     tokens = SmilesLex.tokens
     use_only_grammar = False
@@ -167,7 +189,7 @@ class SmilesParser(Parser):
             x = int(rules[0]+rules[1])
 
             if x > 15:
-                raise "Cannot execeed 15"
+                raise Exception("Cannot execeed 15")
 
             return x
 

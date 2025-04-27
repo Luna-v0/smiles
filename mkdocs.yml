@@ -1,16 +1,26 @@
 site_name: Smiles Validator
 theme:
-  name: "material"
+  name: material
   palette:
-    - scheme: default
-      primary: deep purple
-      accent: lime
-    - scheme: slate
-      primary: deep purple
-      accent: lime
+    # Palette toggle for automatic mode
+    - media: "(prefers-color-scheme)"
       toggle:
-        icon: material/weather-night
+        icon: material/brightness-auto
         name: Switch to light mode
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default 
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
 
 plugins:
   - search
@@ -25,9 +35,6 @@ plugins:
 
 nav:
   - Home: index.md
-  - Parser: parser.md
-  - Chemistry: chem.md
-  - Analyses: analyses.md
   - API Reference:
     - Validator: reference/validator.md
     - Chem: reference/chem.md
