@@ -17,11 +17,9 @@ uv pip install -e .
 ## 🚀 Usage
 
 ```py
-from validator.lex import MyLexer
-from validator.yacc import MyParser
+from validator.yacc import validate_smiles
 
-tokens = MyLexer().tokenize("H2O + NaCl")
-ast = MyParser().parse(tokens)
+print(validate_smiles("c1ccccc1"))
 ```
 
 ## Run Tests
