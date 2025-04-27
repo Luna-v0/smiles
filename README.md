@@ -4,6 +4,10 @@ A validator for SMILE chemical language using SLY LaLR(1) parser. The grammar wa
 
 All the data related to the periodic table was retrived from the [Bowserinator/Periodic-Table-JSON repo](https://github.com/Bowserinator/Periodic-Table-JSON/tree/master).
 
+## 📚 Documenatation
+
+All the documentation is available in the [Docs Page](https://luna-v0.github.io/smiles/).
+
 ## 📦 Installation
 
 For installation make sure you have [uv](https://github.com/astral-sh/uv) installed.
@@ -22,7 +26,7 @@ from validator.yacc import validate_smiles
 print(validate_smiles("c1ccccc1"))
 ```
 
-## Run Tests
+## 🧪 Run Tests
 
 ```py
 pytest
