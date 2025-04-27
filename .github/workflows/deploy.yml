@@ -3,10 +3,10 @@ name: Deploy MkDocs to GitHub Pages
 on:
   push:
     branches:
-      - main  # or 'master' if that's your default branch
+      - main
 
 permissions:
-  contents: write  # needed to push to gh-pages
+  contents: write
 
 jobs:
   deploy:
@@ -28,4 +28,5 @@ jobs:
 
       - name: 🚀 Deploy to GitHub Pages
         run: |
+          export PYTHONPATH=src
           mkdocs gh-deploy --force
