@@ -1,6 +1,8 @@
 from sly import Lexer
 import re
-from src.chem.chem import tp_symbols as tp
+from src.chem.chem import chem
+
+pt = chem.pt_symbols
 
 def generate_regex_from_list(elem_list: list[str]) -> str:
     """
@@ -35,7 +37,7 @@ def generate_lower(elem_list: list[str]) -> list[str]:
     return sorted(elem_list,reverse=True) + sorted(re_elem,reverse=True)
 
 
-atoms = list(set(tp) - set("H"))
+atoms = list(set(pt) - set("H"))
 bonds = ["=", "#", "$", "/", "\\"]
 
 

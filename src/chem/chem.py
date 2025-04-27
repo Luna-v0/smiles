@@ -170,7 +170,7 @@ class Chem:
         look_up_table: A look up table for all atoms
     """
 
-    def __init__(self, periodic_table_path='../periodic-table-lookup.json'):
+    def __init__(self, periodic_table_path='src/periodic-table-lookup.json'):
 
         upper_organic_atoms = {"N", "O", "P",
                                "S", "F", "Cl", "Br", "I", "C", "B"}
@@ -180,7 +180,7 @@ class Chem:
 
         # set of all organic atoms
         self.organic_atoms = {atom.lower()
-                              for atom in upper_organic_atoms} + upper_organic_atoms
+                              for atom in upper_organic_atoms} | upper_organic_atoms
 
         # set of all periodic table symbols
         self.pt_symbols = [look_up_table_json[x]['symbol']
