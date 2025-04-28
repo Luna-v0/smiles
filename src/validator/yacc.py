@@ -1,8 +1,8 @@
 from sly import Parser
 from validator.lex import SmilesLex
-import src.chem.chem as chem
+from src.chem.chem import chem
 from itertools import combinations
-
+from validator.parser_manager import parser_manager
 
 def generate_combinations(rule: str) -> list[str]:
     """
@@ -66,15 +66,32 @@ class SmilesParser(Parser):
 
     @_('atom', 'atom chain_branch')  # type: ignore
     def line(self, rules):
-        pass
+        if len(rules) == 1:
+            return rules[0]
+        
+        if type(rules.chain_branch) == list:
+            return [rules[0]] + rules.chain_branch
+        return [rules[0], rules.chain_branch]
 
     @_('chains', 'branch', 'chain_branch chains', 'chain_branch branch')  # type: ignore
     def chain_branch(self, rules):
-        pass
+        if len(rules) == 1:
+            return rules[0]
+
+        if type(rules.chain_branch) == list:
+            return [rules[0]] + rules.chain_branch
+
+        return [rules[0], rules.chain_branch]
 
     @_('chain', 'chain chains')  # type: ignore
     def chains(self, rules):
-        pass
+        if len(rules) == 1:
+            return rules[0]
+
+        if type(rules.chains) == list:
+            return [rules[0]] + rules.chains
+
+        return [rules[0], rules.chains]
 
     @_('"[" internal_bracket "]"')  # type: ignore
     def bracket_atom(self, rules):
@@ -93,10 +110,20 @@ class SmilesParser(Parser):
         if not chem.validate_valency_bracket(isotope, symbol, chiral, hcount, charge, mol_map): 
             raise Exception(f"Invalid valency in Bracket [{','.join([str(x) for x in mol if x is not None])}]")
         
+        
 
     @_('dot_proxy', 'bond atom', 'bond rnum', 'atom', 'rnum')  # type: ignore
     def chain(self, rules):
-        pass
+        if len(rules) == 1:
+            return rules[0]
+        
+        if rules.bond == ':' and rules.atom and type(rules.atom) == str and rules.atom[0].isupper():
+            raise Exception(f"Aromatic bond cannot be use with Uppercase and collon {rules.atom}")
+        
+        # TODO: need to check if the atom is not bracketed too
+        
+        return [rules.atom, chem.number_of_electrons_per_bond(rules.bond)]
+    
 
     @_('"." atom')  # type: ignore
     def dot_proxy(self, rules):
@@ -108,7 +135,7 @@ class SmilesParser(Parser):
 
     @_('"(" inner_branch ")"')  # type: ignore
     def branch(self, rules):
-        pass
+        return rules.inner_branch
 
     @_('bond_dot line', 'line', 'bond_dot line inner_branch', 'line inner_branch')    # type: ignore
     def inner_branch(self, rules):
@@ -128,72 +155,35 @@ class SmilesParser(Parser):
 
     @_('symbol', 'bracket_atom')  # type: ignore
     def atom(self, rules):
-        if type(rules[0]) != str or len(rules[0]) == 1 or rules[0] in chem.organic_atoms: return rules[0]
-        
-        elem1, elem2 = rules[0]
-        
-        if elem1 in chem.organic_atoms and elem2 in chem.organic_atoms:
-            return [elem1,elem2]
-        
-        raise Exception(f"Inorganic Atom Outside Bracket {rules[0]}")
+        return parser_manager.atom(rules[0])
 
     @_('digit', '"%" digit digit ')  # type: ignore
     def rnum(self, rules):
-        if rules[0] == '%':
-            return int(''.join(rules[1:]))
-
-        return int(rules[0])
+        return parser_manager.ring_number(*rules)
 
     @_('digit digit digit', 'digit digit', 'digit')  # type: ignore
     def isotope(self, rules):
-        return int(''.join(rules))
+        return parser_manager.int(*rules)
 
     @_('"H" digit', '"H"')  # type: ignore
     def hcount(self, rules):
-        if len(rules) == 1:
-            return 1
-
-        return int(rules.digit)
+        return parser_manager.hcount(*rules)
 
     @_('"+"', '"+" "+"', '"-"', '"-" "-"', '"-" fifteen', '"+" fifteen')  # type: ignore
     def charge(self, rules):
-        if len(rules) == 1:
-            return 1 if rules[0] == "+" else -1
-
-        if rules[1] == '-':
-            return -2
-
-        if rules[1] == '+':
-            return 2
-
-        if rules[0] == '-':
-            return rules.fifteen * -1
-
-        return rules.fifteen
+        return parser_manager.charge(*rules)
 
     @_('":" digit digit digit', '":" digit digit', '":" digit')  # type: ignore
     def map(self, rules):
-
-        digits = rules[1:]
-
-        return int(''.join(digits))
+        return parser_manager.int(*rules[1:])
 
     @_('"@"', '"@" "@"')  # type: ignore
     def chiral(self, rules):
-        pass
+        return parser_manager.chiral(*rules)
 
     @_('digit digit', 'digit')  # type: ignore
     def fifteen(self, rules):
-
-        if len(rules) == 2:
-            x = int(rules[0]+rules[1])
-
-            if x > 15:
-                raise Exception("Cannot execeed 15")
-
-            return x
-
-        return int(rules.digit)
+        return parser_manager.fifteen(*rules)
 
 
 parser = SmilesParser()

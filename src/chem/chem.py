@@ -170,6 +170,32 @@ class Chem:
         look_up_table: A look up table for all atoms
     """
 
+    def number_of_electrons_per_bond(self, bond:str) -> int:
+        """
+        Get the number of electrons per bond.
+
+        Args:
+            bond: The bond to get the number of electrons from.
+
+        Returns:
+            The number of electrons per bond.
+        """
+        bonds = {
+            "=": 2,
+            "#": 3,
+            "$": 4,
+            "/": 1,
+            "\\": 1,
+            "-": 1,
+            ".": 0
+        }
+        
+        if bond in bonds:
+            return bonds[bond]
+        
+
+        raise Exception(f"Invalid Bond {bond}")
+
     def __init__(self, periodic_table_path='src/periodic-table-lookup.json'):
 
         upper_organic_atoms = {"N", "O", "P",
