@@ -33,6 +33,13 @@ plugins:
             separate_signature: true
             show_signature_annotations: true
 
+markdown_extensions:
+  - toc
+  - tables
+  - admonition
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
 nav:
   - Home: index.md
   - API Reference:

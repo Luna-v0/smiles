@@ -3,7 +3,12 @@ name = "slyparser"
 version = "0.1.0"
 description = "A LALR(1) parser using SLY"
 dependencies = [
-  "sly"
+  "mkdocs>=1.6.1",
+  "mkdocs-material>=9.6.12",
+  "notebook>=7.4.1",
+  "pandas>=2.2.3",
+  "pymdown-extensions>=10.15",
+  "sly",
 ]
 
 [build-system]
