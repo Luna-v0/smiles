@@ -74,13 +74,7 @@ class SmilesParser(Parser):
 
     @_('chain', 'chain chains')  # type: ignore
     def chains(self, rules):
-        if len(rules) == 1:
-            return rules[0]
-
-        if type(rules.chains) == list:
-            return [rules[0]] + rules.chains
-
-        return [rules[0], rules.chains]
+        return parser_manager.listify(*rules)
 
     @_('"[" internal_bracket "]"')  # type: ignore
     def bracket_atom(self, rules):
@@ -102,20 +96,11 @@ class SmilesParser(Parser):
 
     @_('dot_proxy', 'bond atom', 'bond rnum', 'atom', 'rnum')  # type: ignore
     def chain(self, rules):
-        if len(rules) == 1:
-            return rules[0]
-        
-        if rules.bond == ':' and rules.atom and type(rules.atom) == str and rules.atom[0].isupper():
-            raise Exception(f"Aromatic bond cannot be use with Uppercase and collon {rules.atom}")
-        
-        # TODO: need to check if the atom is not bracketed too
-        
-        return [rules.atom, chem.number_of_electrons_per_bond(rules.bond)]
-    
+        return parser_manager.chain(**rules)
 
     @_('"." atom')  # type: ignore
     def dot_proxy(self, rules):
-        pass
+        return parser_manager.dot_proxy(rules.atom)
 
     @_('semi_symbol', '"H"')  # type: ignore
     def symbol(self, rules):
@@ -127,7 +112,7 @@ class SmilesParser(Parser):
 
     @_('bond_dot line', 'line', 'bond_dot line inner_branch', 'line inner_branch')    # type: ignore
     def inner_branch(self, rules):
-        pass
+        return parser_manager.inner_branch(**rules)
 
     @_('bond', '"."')  # type: ignore
     def bond_dot(self, rules):

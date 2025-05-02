@@ -33,11 +33,52 @@ class ParserException(Exception):
 class ParserManager:
     """
     Parser manager to parse the SMILES strings.
+    
+    Attributes: 
+        current_open_rnum: The current open ring numbers.
+        current_closed_rnum: The current closed ring numbers.
+        current_chain: The current chain.
     """
-    current_chiral = None
     current_open_rnum = list()
     current_closed_rnum = list()
-  
+    current_chain = list() 
+
+    def _reset(self):
+        """
+        Resets the parser manager to its initial state.
+        """
+        self.current_open_rnum = list()
+        self.current_closed_rnum = list()
+
+    def chain(self,bond, atom, rnum, dot_proxy):
+        
+        if bond is None:
+            
+            if atom is not None:
+                return atom
+
+            if rnum is not None:
+                return rnum
+
+            return dot_proxy    
+
+        if bond == ':' and atom and type(atom) == str and atom[0].isupper():
+            raise Exception(f"Aromatic bond cannot be use with Uppercase and collon {rules.atom}")
+        
+        # TODO: need to check if the atom is not bracketed too
+        
+        return [atom, chem.number_of_electrons_per_bond(bond)]
+    
+    @fill_none
+    def internal_bracket(self, istope, symbol, chiral, hcount, charge, mol_map):
+        """
+        Parses the internal bracket and checks for valency.
+        """
+        if not chem.validate_valency_bracket(isotope, symbol, chiral, hcount, charge, mol_map): 
+            raise Exception(f"Invalid valency in Bracket [{','.join([str(x) for x in mol if x is not None])}]")
+
+        return chem.valency
+
     @fill_none
     def listify(self,base_element, recursion):
         """
@@ -157,20 +198,18 @@ class ParserManager:
         return charge2
         
     @fill_none
-    def chiral(self, chiral1: str, chiral2: Optional[str]) -> bool:
+    def chiral(self, chiral1: str, chiral2: Optional[str]) -> str:
         """
         Fixes the current chiral rotation
 
-        True for clockwise and False for counterclockwise
         Args:
             chiral1: The first chiral symbol.
             chiral2: The second chiral symbol, if any.
         Returns:
             The current chiral rotation.
         """
-        self.current_chiral = chiral2 is None
-
-        return self.current_chiral
+        return "counterclockwise" if chiral2 else "clockwise"
+        
 
     @fill_none
     def fifteen(self, digit1: str, digit2: Optional[str]) -> int:
