@@ -37,7 +37,28 @@ class ParserManager:
     current_chiral = None
     current_open_rnum = list()
     current_closed_rnum = list()
-    
+  
+    @fill_none
+    def listify(self,base_element, recursion):
+        """
+        Generic rule for dealing with rules in the following format:
+
+        x -> y x
+        x -> y
+        Args:
+            base_element: Base element.
+            recursion: The chain element.
+        Returns:
+            The parsed atom or chain branch.
+        """
+        if recursion is None: return base_element
+
+        if type(recursion) == list:
+            return [base_element] + recursion 
+
+        return [base_element, recursion]
+
+
     def atom(self, symbol_or_bracket:str):
         """
         Parses the atom symbol or bracket and from this point on always returns the parser manager

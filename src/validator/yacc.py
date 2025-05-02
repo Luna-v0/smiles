@@ -66,22 +66,11 @@ class SmilesParser(Parser):
 
     @_('atom', 'atom chain_branch')  # type: ignore
     def line(self, rules):
-        if len(rules) == 1:
-            return rules[0]
-        
-        if type(rules.chain_branch) == list:
-            return [rules[0]] + rules.chain_branch
-        return [rules[0], rules.chain_branch]
+        return parser_manager.listify(*rules)        
 
-    @_('chains', 'branch', 'chain_branch chains', 'chain_branch branch')  # type: ignore
+    @_('chains', 'branch', 'chains chain_branch', 'branch chain_branch')  # type: ignore
     def chain_branch(self, rules):
-        if len(rules) == 1:
-            return rules[0]
-
-        if type(rules.chain_branch) == list:
-            return [rules[0]] + rules.chain_branch
-
-        return [rules[0], rules.chain_branch]
+        return parser_manager.listify(*rules)
 
     @_('chain', 'chain chains')  # type: ignore
     def chains(self, rules):
@@ -96,7 +85,6 @@ class SmilesParser(Parser):
     @_('"[" internal_bracket "]"')  # type: ignore
     def bracket_atom(self, rules):
         return rules.internal_bracket
-
 
     @_(*generate_combinations('isotope? symbol chiral? hcount? charge? map?')) # type: ignore
     def internal_bracket(self, rules):
