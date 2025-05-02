@@ -2,7 +2,7 @@ from typing import List, Optional, Union
 from dataclasses import dataclass, field
 import functools
 
-import chem
+    from chem import chem
 
 def fill_none(func):
     """
@@ -119,7 +119,7 @@ class ParserManager:
         if elem1 in chem.organic_atoms and elem2 in chem.organic_atoms:
             return [elem1,elem2]
         
-        raise Exception(f"Inorganic Atom Outside Bracket {rules[0]}")
+        raise Exception(f"Inorganic Atom Outside Bracket {symbol_or_bracket} not allowed")
 
     
     @fill_none
