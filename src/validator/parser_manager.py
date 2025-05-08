@@ -2,7 +2,7 @@ from typing import List, Optional, Union
 from dataclasses import dataclass, field
 import functools
 
-    from chem import chem
+from chem import chem
 
 def fill_none(func):
     """

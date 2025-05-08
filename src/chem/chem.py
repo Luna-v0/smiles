@@ -57,6 +57,29 @@ class Atom:
     def __hash__(self):
         return hash(self.symbol)
 
+
+class BracketAtom(Atom):
+
+    def __init__(self, isotope: Optional[int], symbol: str, chiral: Optional[int],
+                                 hcount: Optional[int], charge: Optional[int],
+                                mol_map: Optional[int]) :
+        """
+        Create a Bracket Atom with the given symbol, charge and hidrogens.
+
+        Args:
+            symbol: The symbol of the atom
+            charge: The charge of the atom
+            hidrogens: The amount of hydrogens in the atom
+        """
+        super().__init__(symbol=symbol)
+        self.charge = charge
+        self.hidrogens = hcont
+        self.isotope = isotope
+        self.chiral = chiral
+        self.mol_map = mol_map
+
+        self.solo_valency = self.check_valency()
+
     def _octate_rule(self, layer: int) -> bool:
         """
         Check if the atom is a noble gas or if it is a Helium
@@ -68,7 +91,7 @@ class Atom:
         """
         return self.electrons_by_layers[layer] == 8 or (layer == len(self.electrons_by_layers)-1 and self.electrons_by_layers[layer] == 2)
 
-    def check_valency(self, charge: int = 0, hidrogens: int = 0) -> bool:
+    def compute_valency(self) -> bool:
         """
         Check if the valency of the current atom would be stable given more charge and hidrogens
 
@@ -79,12 +102,12 @@ class Atom:
         Returns:
             If that kept the Atom with a stable valency
         """
-        if hidrogens is None:
+        if self.hidrogens is None:
             hidrogens = 0
-        if charge is None:
+        if self.charge is None:
             charge = 0
 
-        acc = hidrogens - charge
+        acc = self.hidrogens - self.charge
 
         if sum(self.electrons_by_layers) < -acc:
             return False
@@ -110,7 +133,15 @@ class Atom:
             if electron > -acc:
                 return self._octate_rule(x)
 
+            self.electrons_by_layers[x] = 0
+
             acc += electron
+
+        # filter the layers that are not 0
+        self.electrons_by_layers = [x for x in self.electrons_by_layers if x != 0]
+        self.valency_layer = len(self.electrons_by_layers) - 1
+        self.electrons_in_valency = self.electrons_by_layers[0]
+
 
         # if it just keeps removing electrons more than the maximum
         return False
@@ -123,7 +154,7 @@ class Atom:
             acc: The accumulated charge to be handled.
 
         Returns:
-            If the atom remains stable after adding electrons.
+            If the atom remains stable after adding electrons and the amount of electrons.
         """
         max_valency_per_layer = [2, 8, 18, 32, 32, 18, 8, 2]
 
@@ -138,24 +169,34 @@ class Atom:
         # now we check if there is any layer left to add electrons
         for x in range(len(self.electrons_by_layers)):
             electron = self.electrons_by_layers[x]
-            if electron + acc > max_valency_per_layer[len(self.electrons_by_layers) - 1]:
-                # the octate rule or if it is a noble gas like Helium
+            max_electrons_current_layer = max_valency_per_layer[len(self.electrons_by_layers) - 1]
+            if electron + acc > max_electrons_current_layer:
+                # update the valency layer
+                self.valency_layer = len(self.electrons_by_layers) - 1
+                self.electrons_in_valency = electon + acc
+                self.electrons_by_layers.insert(electron+acc, 0)
                 return self._octate_rule(x)
 
             acc -= electron
             self.electrons_by_layers[x] = max_valency_per_layer[len(
                 self.electrons_by_layers) - 1]
-            self.electrons_by_layers.insert(x, 0)
+            self.electrons_by_layers.insert(self.electrons_by_layers[x], 0)
+            
 
         # if it just keeps adding electrons more than the maximum
         for x in range(self.valency_layer, len(max_valency_per_layer)):
             electron = self.electrons_by_layers[x]
             if electron + acc > max_valency_per_layer[x]:
+                # update the valency layer
+                self.valency_layer = len(self.electrons_by_layers) - 1
+                self.electrons_in_valency = self.electrons_by_layers[0]
+
                 return self._octate_rule(x)
 
             acc -= electron
             self.electrons_by_layers[x] = max_valency_per_layer[x]
-            self.electrons_by_layers.insert(x, 0)
+            self.electrons_by_layers.insert(max_valency_per_layer[x], 0)
+
 
         return False
 
@@ -237,8 +278,8 @@ class Chem:
         """
 
         return self.look_up_table[symbol].check_valency(
-            charge=charge,
-            hidrogens=hcount
+            charge=charge if charge is not None else 0,
+            hidrogens=hcount if hcount is not None else 0
         )
 
 
