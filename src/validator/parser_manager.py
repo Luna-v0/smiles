@@ -74,10 +74,19 @@ class ParserManager:
         """
         Parses the internal bracket and checks for valency.
         """
-        if not chem.validate_valency_bracket(isotope, symbol, chiral, hcount, charge, mol_map): 
-            raise Exception(f"Invalid valency in Bracket [{','.join([str(x) for x in mol if x is not None])}]")
 
-        return chem.valency
+        br_atom = BracketAtom(
+            isotope=istope,
+            symbol=symbol,
+            chiral=chiral,
+            hcount=hcount,
+            charge=charge,
+            map=mol_map
+        )
+
+        self.current_chain.append(br_atom)
+
+        return br_atom
 
     @fill_none
     def listify(self,base_element, recursion):
