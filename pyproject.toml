@@ -5,6 +5,7 @@ description = "A LALR(1) parser using SLY"
 dependencies = [
   "mkdocs>=1.6.1",
   "mkdocs-material>=9.6.12",
+  "mkdocstrings[python]>=0.29.1",
   "notebook>=7.4.1",
   "pandas>=2.2.3",
   "pymdown-extensions>=10.15",

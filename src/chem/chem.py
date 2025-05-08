@@ -59,6 +59,25 @@ class Atom:
 
 
 class BracketAtom(Atom):
+    """
+    
+    Class for handling atoms with different properties than the default values of periodic table atoms.
+
+    Attributes:
+        isotope: The isotope of the atom
+        symbol: The symbol of the atom
+        chiral: The chiral of the atom
+        hidrogens: The amount of hydrogens in the atom
+        charge: The charge of the atom
+        mol_map: The map of the atom
+    """
+
+    hidrogens: Optional[int] = field(default=None)
+    charge: Optional[int] = field(default=None)
+    isotope: Optional[int] = field(default=None)
+    chiral: Optional[int] = field(default=None)
+    mol_map: Optional[int] = field(default=None)
+
 
     def __init__(self, isotope: Optional[int], symbol: str, chiral: Optional[int],
                                  hcount: Optional[int], charge: Optional[int],
@@ -67,9 +86,12 @@ class BracketAtom(Atom):
         Create a Bracket Atom with the given symbol, charge and hidrogens.
 
         Args:
+            isotope: The isotope of the atom
             symbol: The symbol of the atom
+            chiral: The chiral of the atom
+            hcount: The amount of hydrogens in the atom
             charge: The charge of the atom
-            hidrogens: The amount of hydrogens in the atom
+            mol_map: The map of the atom
         """
         super().__init__(symbol=symbol)
         self.charge = charge
@@ -94,10 +116,6 @@ class BracketAtom(Atom):
     def compute_valency(self) -> bool:
         """
         Check if the valency of the current atom would be stable given more charge and hidrogens
-
-        Args:
-            charge: The amount of charge added to the Atom.
-            hidrogens: The amount of Hidrogens added to the Atom.
 
         Returns:
             If that kept the Atom with a stable valency
