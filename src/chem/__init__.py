@@ -1,1 +1,1 @@
-from .chem import chem, Branch, Atom
+from .chem import chem, BracketAtom, Atom

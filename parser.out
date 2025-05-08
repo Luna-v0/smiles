@@ -3,8 +3,8 @@ Grammar:
 Rule 0     S' -> line
 Rule 1     line -> atom chain_branch
 Rule 2     line -> atom
-Rule 3     chain_branch -> chain_branch branch
-Rule 4     chain_branch -> chain_branch chains
+Rule 3     chain_branch -> branch chain_branch
+Rule 4     chain_branch -> chains chain_branch
 Rule 5     chain_branch -> branch
 Rule 6     chain_branch -> chains
 Rule 7     chains -> chain chains
@@ -154,8 +154,8 @@ state 2
 
     (1) line -> atom . chain_branch
     (2) line -> atom .
-    (3) chain_branch -> . chain_branch branch
-    (4) chain_branch -> . chain_branch chains
+    (3) chain_branch -> . branch chain_branch
+    (4) chain_branch -> . chains chain_branch
     (5) chain_branch -> . branch
     (6) chain_branch -> . chains
     (50) branch -> . ( inner_branch )
@@ -346,8 +346,24 @@ state 8
 state 9
 
     (1) line -> atom chain_branch .
-    (3) chain_branch -> chain_branch . branch
-    (4) chain_branch -> chain_branch . chains
+    $end            reduce using rule 1 (line -> atom chain_branch .)
+    .               reduce using rule 1 (line -> atom chain_branch .)
+    -               reduce using rule 1 (line -> atom chain_branch .)
+    [               reduce using rule 1 (line -> atom chain_branch .)
+    H               reduce using rule 1 (line -> atom chain_branch .)
+    semi_symbol     reduce using rule 1 (line -> atom chain_branch .)
+    semi_bond       reduce using rule 1 (line -> atom chain_branch .)
+    )               reduce using rule 1 (line -> atom chain_branch .)
+
+
+state 10
+
+    (3) chain_branch -> branch . chain_branch
+    (5) chain_branch -> branch .
+    (3) chain_branch -> . branch chain_branch
+    (4) chain_branch -> . chains chain_branch
+    (5) chain_branch -> . branch
+    (6) chain_branch -> . chains
     (50) branch -> . ( inner_branch )
     (7) chains -> . chain chains
     (8) chains -> . chain
@@ -373,8 +389,8 @@ state 9
   ! shift/reduce conflict for H resolved as shift
   ! shift/reduce conflict for semi_symbol resolved as shift
   ! shift/reduce conflict for semi_bond resolved as shift
-    $end            reduce using rule 1 (line -> atom chain_branch .)
-    )               reduce using rule 1 (line -> atom chain_branch .)
+    $end            reduce using rule 5 (chain_branch -> branch .)
+    )               reduce using rule 5 (chain_branch -> branch .)
     (               shift and go to state 12
     %               shift and go to state 17
     digit           shift and go to state 18
@@ -385,48 +401,74 @@ state 9
     semi_symbol     shift and go to state 7
     semi_bond       shift and go to state 22
 
-    atom                           shift and go to state 8
-    branch                         shift and go to state 27
-    chains                         shift and go to state 28
+    branch                         shift and go to state 10
+    chain_branch                   shift and go to state 27
+    chains                         shift and go to state 11
     chain                          shift and go to state 13
     rnum                           shift and go to state 14
+    atom                           shift and go to state 8
     bond                           shift and go to state 15
     dot_proxy                      shift and go to state 16
     bracket_atom                   shift and go to state 3
     symbol                         shift and go to state 4
     semi_bond_rule                 shift and go to state 20
 
-state 10
-
-    (5) chain_branch -> branch .
-    (               reduce using rule 5 (chain_branch -> branch .)
-    %               reduce using rule 5 (chain_branch -> branch .)
-    digit           reduce using rule 5 (chain_branch -> branch .)
-    -               reduce using rule 5 (chain_branch -> branch .)
-    .               reduce using rule 5 (chain_branch -> branch .)
-    [               reduce using rule 5 (chain_branch -> branch .)
-    H               reduce using rule 5 (chain_branch -> branch .)
-    semi_symbol     reduce using rule 5 (chain_branch -> branch .)
-    semi_bond       reduce using rule 5 (chain_branch -> branch .)
-    $end            reduce using rule 5 (chain_branch -> branch .)
-    )               reduce using rule 5 (chain_branch -> branch .)
-
-
 state 11
 
+    (4) chain_branch -> chains . chain_branch
     (6) chain_branch -> chains .
-    (               reduce using rule 6 (chain_branch -> chains .)
-    %               reduce using rule 6 (chain_branch -> chains .)
-    digit           reduce using rule 6 (chain_branch -> chains .)
-    -               reduce using rule 6 (chain_branch -> chains .)
-    .               reduce using rule 6 (chain_branch -> chains .)
-    [               reduce using rule 6 (chain_branch -> chains .)
-    H               reduce using rule 6 (chain_branch -> chains .)
-    semi_symbol     reduce using rule 6 (chain_branch -> chains .)
-    semi_bond       reduce using rule 6 (chain_branch -> chains .)
+    (3) chain_branch -> . branch chain_branch
+    (4) chain_branch -> . chains chain_branch
+    (5) chain_branch -> . branch
+    (6) chain_branch -> . chains
+    (50) branch -> . ( inner_branch )
+    (7) chains -> . chain chains
+    (8) chains -> . chain
+    (42) chain -> . rnum
+    (43) chain -> . atom
+    (44) chain -> . bond rnum
+    (45) chain -> . bond atom
+    (46) chain -> . dot_proxy
+    (62) rnum -> . % digit digit
+    (63) rnum -> . digit
+    (60) atom -> . bracket_atom
+    (61) atom -> . symbol
+    (57) bond -> . -
+    (58) bond -> . semi_bond_rule
+    (47) dot_proxy -> . . atom
+    (9) bracket_atom -> . [ internal_bracket ]
+    (48) symbol -> . H
+    (49) symbol -> . semi_symbol
+    (59) semi_bond_rule -> . semi_bond
+  ! shift/reduce conflict for - resolved as shift
+  ! shift/reduce conflict for . resolved as shift
+  ! shift/reduce conflict for [ resolved as shift
+  ! shift/reduce conflict for H resolved as shift
+  ! shift/reduce conflict for semi_symbol resolved as shift
+  ! shift/reduce conflict for semi_bond resolved as shift
     $end            reduce using rule 6 (chain_branch -> chains .)
     )               reduce using rule 6 (chain_branch -> chains .)
+    (               shift and go to state 12
+    %               shift and go to state 17
+    digit           shift and go to state 18
+    -               shift and go to state 19
+    .               shift and go to state 21
+    [               shift and go to state 5
+    H               shift and go to state 6
+    semi_symbol     shift and go to state 7
+    semi_bond       shift and go to state 22
 
+    chains                         shift and go to state 11
+    chain_branch                   shift and go to state 28
+    branch                         shift and go to state 10
+    chain                          shift and go to state 13
+    rnum                           shift and go to state 14
+    atom                           shift and go to state 8
+    bond                           shift and go to state 15
+    dot_proxy                      shift and go to state 16
+    bracket_atom                   shift and go to state 3
+    symbol                         shift and go to state 4
+    semi_bond_rule                 shift and go to state 20
 
 state 12
 
@@ -723,34 +765,28 @@ state 26
 
 state 27
 
-    (3) chain_branch -> chain_branch branch .
-    (               reduce using rule 3 (chain_branch -> chain_branch branch .)
-    %               reduce using rule 3 (chain_branch -> chain_branch branch .)
-    digit           reduce using rule 3 (chain_branch -> chain_branch branch .)
-    -               reduce using rule 3 (chain_branch -> chain_branch branch .)
-    .               reduce using rule 3 (chain_branch -> chain_branch branch .)
-    [               reduce using rule 3 (chain_branch -> chain_branch branch .)
-    H               reduce using rule 3 (chain_branch -> chain_branch branch .)
-    semi_symbol     reduce using rule 3 (chain_branch -> chain_branch branch .)
-    semi_bond       reduce using rule 3 (chain_branch -> chain_branch branch .)
-    $end            reduce using rule 3 (chain_branch -> chain_branch branch .)
-    )               reduce using rule 3 (chain_branch -> chain_branch branch .)
+    (3) chain_branch -> branch chain_branch .
+    $end            reduce using rule 3 (chain_branch -> branch chain_branch .)
+    .               reduce using rule 3 (chain_branch -> branch chain_branch .)
+    -               reduce using rule 3 (chain_branch -> branch chain_branch .)
+    [               reduce using rule 3 (chain_branch -> branch chain_branch .)
+    H               reduce using rule 3 (chain_branch -> branch chain_branch .)
+    semi_symbol     reduce using rule 3 (chain_branch -> branch chain_branch .)
+    semi_bond       reduce using rule 3 (chain_branch -> branch chain_branch .)
+    )               reduce using rule 3 (chain_branch -> branch chain_branch .)
 
 
 state 28
 
-    (4) chain_branch -> chain_branch chains .
-    (               reduce using rule 4 (chain_branch -> chain_branch chains .)
-    %               reduce using rule 4 (chain_branch -> chain_branch chains .)
-    digit           reduce using rule 4 (chain_branch -> chain_branch chains .)
-    -               reduce using rule 4 (chain_branch -> chain_branch chains .)
-    .               reduce using rule 4 (chain_branch -> chain_branch chains .)
-    [               reduce using rule 4 (chain_branch -> chain_branch chains .)
-    H               reduce using rule 4 (chain_branch -> chain_branch chains .)
-    semi_symbol     reduce using rule 4 (chain_branch -> chain_branch chains .)
-    semi_bond       reduce using rule 4 (chain_branch -> chain_branch chains .)
-    $end            reduce using rule 4 (chain_branch -> chain_branch chains .)
-    )               reduce using rule 4 (chain_branch -> chain_branch chains .)
+    (4) chain_branch -> chains chain_branch .
+    $end            reduce using rule 4 (chain_branch -> chains chain_branch .)
+    .               reduce using rule 4 (chain_branch -> chains chain_branch .)
+    -               reduce using rule 4 (chain_branch -> chains chain_branch .)
+    [               reduce using rule 4 (chain_branch -> chains chain_branch .)
+    H               reduce using rule 4 (chain_branch -> chains chain_branch .)
+    semi_symbol     reduce using rule 4 (chain_branch -> chains chain_branch .)
+    semi_bond       reduce using rule 4 (chain_branch -> chains chain_branch .)
+    )               reduce using rule 4 (chain_branch -> chains chain_branch .)
 
 
 state 29
@@ -1557,12 +1593,18 @@ shift/reduce conflict for [ in state 2 resolved as shift
 shift/reduce conflict for H in state 2 resolved as shift
 shift/reduce conflict for semi_symbol in state 2 resolved as shift
 shift/reduce conflict for semi_bond in state 2 resolved as shift
-shift/reduce conflict for - in state 9 resolved as shift
-shift/reduce conflict for . in state 9 resolved as shift
-shift/reduce conflict for [ in state 9 resolved as shift
-shift/reduce conflict for H in state 9 resolved as shift
-shift/reduce conflict for semi_symbol in state 9 resolved as shift
-shift/reduce conflict for semi_bond in state 9 resolved as shift
+shift/reduce conflict for - in state 10 resolved as shift
+shift/reduce conflict for . in state 10 resolved as shift
+shift/reduce conflict for [ in state 10 resolved as shift
+shift/reduce conflict for H in state 10 resolved as shift
+shift/reduce conflict for semi_symbol in state 10 resolved as shift
+shift/reduce conflict for semi_bond in state 10 resolved as shift
+shift/reduce conflict for - in state 11 resolved as shift
+shift/reduce conflict for . in state 11 resolved as shift
+shift/reduce conflict for [ in state 11 resolved as shift
+shift/reduce conflict for H in state 11 resolved as shift
+shift/reduce conflict for semi_symbol in state 11 resolved as shift
+shift/reduce conflict for semi_bond in state 11 resolved as shift
 shift/reduce conflict for % in state 13 resolved as shift
 shift/reduce conflict for digit in state 13 resolved as shift
 shift/reduce conflict for - in state 13 resolved as shift

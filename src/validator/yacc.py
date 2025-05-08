@@ -163,7 +163,7 @@ parser = SmilesParser()
 lexer = SmilesLex()
 
 
-def validate_smiles(mol: str, use_only_grammar: bool = False) -> tuple[bool, Exception | None]:
+def validate_smiles(mol: str) -> tuple[bool, Exception | None]:
     """
     Function for valdiating a SMILES molecule.
     
@@ -175,7 +175,6 @@ def validate_smiles(mol: str, use_only_grammar: bool = False) -> tuple[bool, Exc
         A Tuple containg in the first element if it is a valid SMILES and the second element a Exception.
     """
     try:
-        parser.use_only_grammar = use_only_grammar
         parser.parse(lexer.tokenize(mol))
         return True, None
     except Exception as e:
