@@ -3,7 +3,6 @@ from validator.lex import SmilesLex
 from src.chem.chem import chem
 from itertools import combinations
 from validator.parser_manager import parser_manager
-import inspect
 
 def generate_combinations(rule: str) -> list[str]:
     """
@@ -187,6 +186,7 @@ def validate_smiles(mol: str) -> tuple[bool, Exception | None]:
     """
     try:
         parser.parse(lexer.tokenize(mol))
+        parser_manager._reset()
         return True, None
     except Exception as e:
         return False, e

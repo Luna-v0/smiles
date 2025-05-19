@@ -1,8 +1,7 @@
 from typing import List, Optional, Union
 from dataclasses import dataclass, field
 import functools
-
-from chem import chem
+from chem import chem, BracketAtom
 
 def fill_none(func):
     """
@@ -43,12 +42,16 @@ class ParserManager:
     current_closed_rnum = list()
     current_chain = list() 
 
+    def __exit__(self):
+        self._reset()
+
     def _reset(self):
         """
         Resets the parser manager to its initial state.
         """
         self.current_open_rnum = list()
         self.current_closed_rnum = list()
+        self.current_chain = list()
 
     def chain(self, bond=None, atom=None, rnum=None, dot_proxy=None):
         
@@ -63,25 +66,31 @@ class ParserManager:
             return dot_proxy    
 
         if bond == ':' and atom and type(atom) == str and atom[0].isupper():
-            raise Exception(f"Aromatic bond cannot be use with Uppercase and collon {rules.atom}")
+            raise Exception(f"Aromatic bond cannot be use with Uppercase and collon {atom}")
         
         # TODO: need to check if the atom is not bracketed too
         
         return [atom, chem.number_of_electrons_per_bond(bond)]
     
+    def inner_branch(self, bond_dot=None, line=None, inner_branch=None):
+        """
+
+        """
+        pass
+
     @fill_none
     def internal_bracket(self, istope, symbol, chiral, hcount, charge, mol_map):
         """
         Parses the internal bracket and checks for valency.
         """
 
-        br_atom = chem.BracketAtom(
+        br_atom = BracketAtom(
             isotope=istope,
             symbol=symbol,
             chiral=chiral,
             hcount=hcount,
             charge=charge,
-            map=mol_map
+            mol_map=mol_map
         )
 
         self.current_chain.append(br_atom)
