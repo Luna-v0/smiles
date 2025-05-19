@@ -50,7 +50,7 @@ class ParserManager:
         self.current_open_rnum = list()
         self.current_closed_rnum = list()
 
-    def chain(self,bond, atom, rnum, dot_proxy):
+    def chain(self, bond=None, atom=None, rnum=None, dot_proxy=None):
         
         if bond is None:
             
@@ -75,7 +75,7 @@ class ParserManager:
         Parses the internal bracket and checks for valency.
         """
 
-        br_atom = BracketAtom(
+        br_atom = chem.BracketAtom(
             isotope=istope,
             symbol=symbol,
             chiral=chiral,

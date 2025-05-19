@@ -3,6 +3,7 @@ from validator.lex import SmilesLex
 from src.chem.chem import chem
 from itertools import combinations
 from validator.parser_manager import parser_manager
+import inspect
 
 def generate_combinations(rule: str) -> list[str]:
     """
@@ -53,6 +54,17 @@ def getAttributes(rules, properties):
     return values
 
 
+def dictify(obj):
+    result = {}
+    if hasattr(obj, '_namemap') and hasattr(obj, '_slice'):
+        for name, getter in obj._namemap.items():
+            try:
+                value = getter(obj._slice)
+            except Exception as e:
+                value = f"<error: {e}>"
+            result[name] = value
+    return result
+
 class SmilesParser(Parser):
     """
     Parser using the SLY library to parse SMILES strings.
@@ -92,11 +104,10 @@ class SmilesParser(Parser):
         if not chem.validate_valency_bracket(isotope, symbol, chiral, hcount, charge, mol_map): 
             raise Exception(f"Invalid valency in Bracket [{','.join([str(x) for x in mol if x is not None])}]")
         
-        
 
     @_('dot_proxy', 'bond atom', 'bond rnum', 'atom', 'rnum')  # type: ignore
     def chain(self, rules):
-        return parser_manager.chain(**rules)
+        return parser_manager.chain(**(dictify(rules)))
 
     @_('"." atom')  # type: ignore
     def dot_proxy(self, rules):
@@ -112,7 +123,7 @@ class SmilesParser(Parser):
 
     @_('bond_dot line', 'line', 'bond_dot line inner_branch', 'line inner_branch')    # type: ignore
     def inner_branch(self, rules):
-        return parser_manager.inner_branch(**rules)
+        return parser_manager.inner_branch(dictify(**rules))
 
     @_('bond', '"."')  # type: ignore
     def bond_dot(self, rules):
@@ -179,3 +190,4 @@ def validate_smiles(mol: str) -> tuple[bool, Exception | None]:
         return True, None
     except Exception as e:
         return False, e
+
