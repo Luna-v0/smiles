@@ -1,3 +1,3 @@
 from validator.yacc import validate_smiles
 
-print(validate_smiles("C1=CC=CC=C1"))
+print(validate_smiles("[H]c1c([H])c([H])c([H])c([H])c1[H]"))

@@ -88,7 +88,7 @@ class ParserManager:
             isotope=istope,
             symbol=symbol,
             chiral=chiral,
-            hcount=hcount,
+            hidrogens=hcount,
             charge=charge,
             mol_map=mol_map
         )

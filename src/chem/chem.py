@@ -57,7 +57,7 @@ class Atom:
     def __hash__(self):
         return hash(self.symbol)
 
-
+@dataclass
 class BracketAtom(Atom):
     """
     
@@ -78,10 +78,7 @@ class BracketAtom(Atom):
     chiral: Optional[int] = field(default=None)
     mol_map: Optional[int] = field(default=None)
 
-
-    def __init__(self, isotope: Optional[int], symbol: str, chiral: Optional[int],
-                                 hcount: Optional[int], charge: Optional[int],
-                                mol_map: Optional[int]) :
+    def __post_init__(self):
         """
         Create a Bracket Atom with the given symbol, charge and hidrogens.
 
@@ -93,14 +90,8 @@ class BracketAtom(Atom):
             charge: The charge of the atom
             mol_map: The map of the atom
         """
-        super().__init__(symbol=symbol)
-        self.charge = charge
-        self.hidrogens = hcont
-        self.isotope = isotope
-        self.chiral = chiral
-        self.mol_map = mol_map
-
-        self.solo_valency = self.check_valency()
+        super().__post_init__()
+        self.solo_valency = self.compute_valency()
 
     def _octate_rule(self, layer: int) -> bool:
         """
@@ -121,9 +112,9 @@ class BracketAtom(Atom):
             If that kept the Atom with a stable valency
         """
         if self.hidrogens is None:
-            hidrogens = 0
+            self.hidrogens = 0
         if self.charge is None:
-            charge = 0
+            self.charge = 0
 
         acc = self.hidrogens - self.charge
 
@@ -295,10 +286,9 @@ class Chem:
             If the valency of the atom is valid
         """
 
-        return self.look_up_table[symbol].check_valency(
+        return BracketAtom(symbol=symbol,
             charge=charge if charge is not None else 0,
-            hidrogens=hcount if hcount is not None else 0
-        )
+            hidrogens=hcount if hcount is not None else 0).compute_valency()
 
 
 chem = Chem()
