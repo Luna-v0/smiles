@@ -1,19 +1,24 @@
-from typing import List, Optional, Union
-from dataclasses import dataclass, field
 import functools
-from chem import chem, BracketAtom
+from dataclasses import dataclass, field
+from typing import List, Optional, Union
+
+from chem import BracketAtom, chem
+
 
 def fill_none(func):
     """
     Decorator to fill None values in the function arguments
     """
+
     @functools.wraps(func)
     def wrapper(self, *args, **kwargs):
         needed = func.__code__.co_argcount - 1  # minus self
         padded = (list(args) + [None] * needed)[:needed]
         print(f"padded: {padded} args: {args} kwargs: {kwargs}")
         return func(self, *padded, **kwargs)
+
     return wrapper
+
 
 @dataclass
 class ParserException(Exception):
@@ -25,6 +30,7 @@ class ParserException(Exception):
         parameter: The parameter that caused the error.
         message: The error message.
     """
+
     rule: str
     parameter: str
     message: str
@@ -33,15 +39,16 @@ class ParserException(Exception):
 class ParserManager:
     """
     Parser manager to parse the SMILES strings.
-    
-    Attributes: 
+
+    Attributes:
         current_open_rnum: The current open ring numbers.
         current_closed_rnum: The current closed ring numbers.
         current_chain: The current chain.
     """
+
     current_open_rnum = list()
     current_closed_rnum = list()
-    current_chain = list() 
+    current_chain = list()
 
     def __exit__(self):
         self._reset()
@@ -55,28 +62,28 @@ class ParserManager:
         self.current_chain = list()
 
     def chain(self, bond=None, atom=None, rnum=None, dot_proxy=None):
-        
+
         if bond is None:
-            
+
             if atom is not None:
                 return atom
 
             if rnum is not None:
                 return rnum
 
-            return dot_proxy    
+            return dot_proxy
 
-        if bond == ':' and atom and type(atom) == str and atom[0].isupper():
-            raise Exception(f"Aromatic bond cannot be use with Uppercase and collon {atom}")
-        
+        if bond == ":" and atom and type(atom) == str and atom[0].isupper():
+            raise Exception(
+                f"Aromatic bond cannot be use with Uppercase and collon {atom}"
+            )
+
         # TODO: need to check if the atom is not bracketed too
-        
-        return [atom, chem.number_of_electrons_per_bond(bond)]
-    
-    def inner_branch(self, bond_dot=None, line=None, inner_branch=None):
-        """
 
-        """
+        return [atom, chem.number_of_electrons_per_bond(bond)]
+
+    def inner_branch(self, bond_dot=None, line=None, inner_branch=None):
+        """ """
         pass
 
     @fill_none
@@ -91,7 +98,7 @@ class ParserManager:
             chiral=chiral,
             hidrogens=hcount,
             charge=charge,
-            mol_map=mol_map
+            mol_map=mol_map,
         )
 
         self.current_chain.append(br_atom)
@@ -99,7 +106,7 @@ class ParserManager:
         return br_atom
 
     @fill_none
-    def listify(self,base_element, recursion):
+    def listify(self, base_element, recursion):
         """
         Generic rule for dealing with rules in the following format:
 
@@ -111,15 +118,15 @@ class ParserManager:
         Returns:
             The parsed atom or chain branch.
         """
-        if recursion is None: return base_element
+        if recursion is None:
+            return base_element
 
         if type(recursion) == list:
-            return [base_element] + recursion 
+            return [base_element] + recursion
 
         return [base_element, recursion]
 
-
-    def atom(self, symbol_or_bracket:str):
+    def atom(self, symbol_or_bracket: str):
         """
         Parses the atom symbol or bracket and from this point on always returns the parser manager
         Args:
@@ -127,22 +134,30 @@ class ParserManager:
         Returns:
             The atom
         """
-        
-        if type(symbol_or_bracket) != str \
-            or len(symbol_or_bracket) == 1 \
-            or symbol_or_bracket in chem.organic_atoms:
-                return symbol_or_bracket
-        
-        elem1, elem2 = symbol_or_bracket
-        
-        if elem1 in chem.organic_atoms and elem2 in chem.organic_atoms:
-            return [elem1,elem2]
-        
-        raise Exception(f"Inorganic Atom Outside Bracket {symbol_or_bracket} not allowed")
 
-    
+        if (
+            type(symbol_or_bracket) != str
+            or len(symbol_or_bracket) == 1
+            or symbol_or_bracket in chem.organic_atoms
+        ):
+            return symbol_or_bracket
+
+        elem1, elem2 = symbol_or_bracket
+
+        if elem1 in chem.organic_atoms and elem2 in chem.organic_atoms:
+            return [elem1, elem2]
+
+        raise Exception(
+            f"Inorganic Atom Outside Bracket {symbol_or_bracket} not allowed"
+        )
+
     @fill_none
-    def ring_number(self, ring_number_or_symbol:str, ring_number1:Optional[str], ring_number2: Optional[str]) -> int:
+    def ring_number(
+        self,
+        ring_number_or_symbol: str,
+        ring_number1: Optional[str],
+        ring_number2: Optional[str],
+    ) -> int:
         """
         Parses the ring numbers provided.
         Args:
@@ -152,7 +167,7 @@ class ParserManager:
         Returns:
             The parsed ring number as an integer.
         """
-        if ring_number_or_symbol == '%':
+        if ring_number_or_symbol == "%":
             rnum = self.int([ring_number1, ring_number2])
         else:
             rnum = int(ring_number_or_symbol)
@@ -164,14 +179,14 @@ class ParserManager:
             raise ParserException(
                 rule="ring_number",
                 parameter=f"{rnum}",
-                message="Ring number already closed")
+                message="Ring number already closed",
+            )
         else:
             self.current_open_rnum.append(rnum)
-        
-        return rnum
-        
 
-    def int(self, digits:List[str]) -> int:
+        return rnum
+
+    def int(self, digits: List[str]) -> int:
         """
         Parses the provided digits to an integer.
         Args:
@@ -179,10 +194,10 @@ class ParserManager:
         Returns:
             The parsed integer.
         """
-        return int(''.join(digits))
-    
+        return int("".join(digits))
+
     @fill_none
-    def hcount(self, _, digit:Optional[str]) -> int:
+    def hcount(self, _, digit: Optional[str]) -> int:
         """
         Parses the hydrogen count.
         Args:
@@ -191,7 +206,7 @@ class ParserManager:
             The parsed hydrogen count.
         """
         return int(digit) if digit else 1
-    
+
     @fill_none
     def charge(self, charge1: str, charge2: Union[str, None, int]) -> int:
         """
@@ -205,17 +220,17 @@ class ParserManager:
         if charge2 is None:
             return 1 if charge1 == "+" else -1
 
-        if charge2 == '-':
+        if charge2 == "-":
             return -2
 
-        if charge2 == '+':
+        if charge2 == "+":
             return 2
 
-        if charge1 == '-': 
+        if charge1 == "-":
             return charge2 * -1
 
         return charge2
-        
+
     @fill_none
     def chiral(self, chiral1: str, chiral2: Optional[str]) -> str:
         """
@@ -228,7 +243,6 @@ class ParserManager:
             The current chiral rotation.
         """
         return "counterclockwise" if chiral2 else "clockwise"
-        
 
     @fill_none
     def fifteen(self, digit1: str, digit2: Optional[str]) -> int:
@@ -247,7 +261,8 @@ class ParserManager:
                 raise ParserException(
                     rule="fifteen",
                     parameter=f"{digit1} {digit2}",
-                    message="Cannot exceed 15")
+                    message="Cannot exceed 15",
+                )
             return x
 
         return int(digit1)
