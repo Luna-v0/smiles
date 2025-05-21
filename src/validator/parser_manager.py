@@ -11,6 +11,7 @@ def fill_none(func):
     def wrapper(self, *args, **kwargs):
         needed = func.__code__.co_argcount - 1  # minus self
         padded = (list(args) + [None] * needed)[:needed]
+        print(f"padded: {padded} args: {args} kwargs: {kwargs}")
         return func(self, *padded, **kwargs)
     return wrapper
 
@@ -84,7 +85,7 @@ class ParserManager:
         Parses the internal bracket and checks for valency.
         """
 
-        br_atom = BracketAtom(
+        br_atom = chem.BracketAtom(
             isotope=istope,
             symbol=symbol,
             chiral=chiral,

@@ -248,7 +248,7 @@ class Chem:
 
     def __init__(self, periodic_table_path='src/periodic-table-lookup.json'):
 
-        upper_organic_atoms = {"N", "O", "P",
+        upper_organic_atoms = {"N", "O", "P","H",
                                "S", "F", "Cl", "Br", "I", "C", "B"}
 
         with open(periodic_table_path) as JSON:  # loads the periodic table json
@@ -270,6 +270,24 @@ class Chem:
             electron_configuration=x["electron_configuration"])
             for x in look_up_table_json.values()}
 
+
+    def BracketAtom(self, symbol:str, **kwargs) -> BracketAtom:
+        """
+        Create a Bracket Atom with the given symbol, charge and hidrogens.
+
+        Args:
+            symbol: The symbol of the atom
+            chiral: The chiral of the atom
+            hcount: The amount of hydrogens in the atom
+            charge: The charge of the atom
+            map: The map of the atom
+        """
+        if symbol not in self.pt_symbols:
+            raise Exception(f"Invalid Symbol {symbol}")
+
+        base_atom = self.look_up_table.get(symbol)
+        return BracketAtom(symbol=symbol, electron_configuration=base_atom.electron_configuration, **kwargs)
+
     def validate_valency_bracket(self, isotope: Optional[int], symbol: str, chiral: Optional[int],
                                  hcount: Optional[int], charge: Optional[int],
                                  map: Optional[int]) -> bool:
@@ -286,7 +304,7 @@ class Chem:
             If the valency of the atom is valid
         """
 
-        return BracketAtom(symbol=symbol,
+        return self.BracketAtom(symbol=symbol,
             charge=charge if charge is not None else 0,
             hidrogens=hcount if hcount is not None else 0).compute_valency()
 

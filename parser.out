@@ -10,33 +10,33 @@ Rule 6     chain_branch -> chains
 Rule 7     chains -> chain chains
 Rule 8     chains -> chain
 Rule 9     bracket_atom -> [ internal_bracket ]
-Rule 10    internal_bracket -> isotope symbol chiral hcount charge map
-Rule 11    internal_bracket -> symbol chiral hcount charge map
-Rule 12    internal_bracket -> isotope symbol hcount charge map
-Rule 13    internal_bracket -> isotope symbol chiral charge map
-Rule 14    internal_bracket -> isotope symbol chiral hcount map
+Rule 10    internal_bracket -> isotope symbol chiral hcount charge mol_map
+Rule 11    internal_bracket -> symbol chiral hcount charge mol_map
+Rule 12    internal_bracket -> isotope symbol hcount charge mol_map
+Rule 13    internal_bracket -> isotope symbol chiral charge mol_map
+Rule 14    internal_bracket -> isotope symbol chiral hcount mol_map
 Rule 15    internal_bracket -> isotope symbol chiral hcount charge
-Rule 16    internal_bracket -> symbol hcount charge map
-Rule 17    internal_bracket -> symbol chiral charge map
-Rule 18    internal_bracket -> symbol chiral hcount map
+Rule 16    internal_bracket -> symbol hcount charge mol_map
+Rule 17    internal_bracket -> symbol chiral charge mol_map
+Rule 18    internal_bracket -> symbol chiral hcount mol_map
 Rule 19    internal_bracket -> symbol chiral hcount charge
-Rule 20    internal_bracket -> isotope symbol charge map
-Rule 21    internal_bracket -> isotope symbol hcount map
+Rule 20    internal_bracket -> isotope symbol charge mol_map
+Rule 21    internal_bracket -> isotope symbol hcount mol_map
 Rule 22    internal_bracket -> isotope symbol hcount charge
-Rule 23    internal_bracket -> isotope symbol chiral map
+Rule 23    internal_bracket -> isotope symbol chiral mol_map
 Rule 24    internal_bracket -> isotope symbol chiral charge
 Rule 25    internal_bracket -> isotope symbol chiral hcount
-Rule 26    internal_bracket -> symbol charge map
-Rule 27    internal_bracket -> symbol hcount map
+Rule 26    internal_bracket -> symbol charge mol_map
+Rule 27    internal_bracket -> symbol hcount mol_map
 Rule 28    internal_bracket -> symbol hcount charge
-Rule 29    internal_bracket -> symbol chiral map
+Rule 29    internal_bracket -> symbol chiral mol_map
 Rule 30    internal_bracket -> symbol chiral charge
 Rule 31    internal_bracket -> symbol chiral hcount
-Rule 32    internal_bracket -> isotope symbol map
+Rule 32    internal_bracket -> isotope symbol mol_map
 Rule 33    internal_bracket -> isotope symbol charge
 Rule 34    internal_bracket -> isotope symbol hcount
 Rule 35    internal_bracket -> isotope symbol chiral
-Rule 36    internal_bracket -> symbol map
+Rule 36    internal_bracket -> symbol mol_map
 Rule 37    internal_bracket -> symbol charge
 Rule 38    internal_bracket -> symbol hcount
 Rule 39    internal_bracket -> symbol chiral
@@ -75,9 +75,9 @@ Rule 71    charge -> - -
 Rule 72    charge -> -
 Rule 73    charge -> + +
 Rule 74    charge -> +
-Rule 75    map -> : digit
-Rule 76    map -> : digit digit
-Rule 77    map -> : digit digit digit
+Rule 75    mol_map -> : digit
+Rule 76    mol_map -> : digit digit
+Rule 77    mol_map -> : digit digit digit
 Rule 78    chiral -> @ @
 Rule 79    chiral -> @
 Rule 80    fifteen -> digit
@@ -120,7 +120,7 @@ inner_branch         : 50 51 52
 internal_bracket     : 9
 isotope              : 10 12 13 14 15 20 21 22 23 24 25 32 33 34 35 40
 line                 : 51 52 53 54 0
-map                  : 10 11 12 13 14 16 17 18 20 21 23 26 27 29 32 36
+mol_map              : 10 11 12 13 14 16 17 18 20 21 23 26 27 29 32 36
 rnum                 : 42 44
 semi_bond_rule       : 58
 symbol               : 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 61
@@ -242,33 +242,33 @@ state 4
 state 5
 
     (9) bracket_atom -> [ . internal_bracket ]
-    (10) internal_bracket -> . isotope symbol chiral hcount charge map
-    (11) internal_bracket -> . symbol chiral hcount charge map
-    (12) internal_bracket -> . isotope symbol hcount charge map
-    (13) internal_bracket -> . isotope symbol chiral charge map
-    (14) internal_bracket -> . isotope symbol chiral hcount map
+    (10) internal_bracket -> . isotope symbol chiral hcount charge mol_map
+    (11) internal_bracket -> . symbol chiral hcount charge mol_map
+    (12) internal_bracket -> . isotope symbol hcount charge mol_map
+    (13) internal_bracket -> . isotope symbol chiral charge mol_map
+    (14) internal_bracket -> . isotope symbol chiral hcount mol_map
     (15) internal_bracket -> . isotope symbol chiral hcount charge
-    (16) internal_bracket -> . symbol hcount charge map
-    (17) internal_bracket -> . symbol chiral charge map
-    (18) internal_bracket -> . symbol chiral hcount map
+    (16) internal_bracket -> . symbol hcount charge mol_map
+    (17) internal_bracket -> . symbol chiral charge mol_map
+    (18) internal_bracket -> . symbol chiral hcount mol_map
     (19) internal_bracket -> . symbol chiral hcount charge
-    (20) internal_bracket -> . isotope symbol charge map
-    (21) internal_bracket -> . isotope symbol hcount map
+    (20) internal_bracket -> . isotope symbol charge mol_map
+    (21) internal_bracket -> . isotope symbol hcount mol_map
     (22) internal_bracket -> . isotope symbol hcount charge
-    (23) internal_bracket -> . isotope symbol chiral map
+    (23) internal_bracket -> . isotope symbol chiral mol_map
     (24) internal_bracket -> . isotope symbol chiral charge
     (25) internal_bracket -> . isotope symbol chiral hcount
-    (26) internal_bracket -> . symbol charge map
-    (27) internal_bracket -> . symbol hcount map
+    (26) internal_bracket -> . symbol charge mol_map
+    (27) internal_bracket -> . symbol hcount mol_map
     (28) internal_bracket -> . symbol hcount charge
-    (29) internal_bracket -> . symbol chiral map
+    (29) internal_bracket -> . symbol chiral mol_map
     (30) internal_bracket -> . symbol chiral charge
     (31) internal_bracket -> . symbol chiral hcount
-    (32) internal_bracket -> . isotope symbol map
+    (32) internal_bracket -> . isotope symbol mol_map
     (33) internal_bracket -> . isotope symbol charge
     (34) internal_bracket -> . isotope symbol hcount
     (35) internal_bracket -> . isotope symbol chiral
-    (36) internal_bracket -> . symbol map
+    (36) internal_bracket -> . symbol mol_map
     (37) internal_bracket -> . symbol charge
     (38) internal_bracket -> . symbol hcount
     (39) internal_bracket -> . symbol chiral
@@ -687,18 +687,18 @@ state 23
 
 state 24
 
-    (10) internal_bracket -> isotope . symbol chiral hcount charge map
-    (12) internal_bracket -> isotope . symbol hcount charge map
-    (13) internal_bracket -> isotope . symbol chiral charge map
-    (14) internal_bracket -> isotope . symbol chiral hcount map
+    (10) internal_bracket -> isotope . symbol chiral hcount charge mol_map
+    (12) internal_bracket -> isotope . symbol hcount charge mol_map
+    (13) internal_bracket -> isotope . symbol chiral charge mol_map
+    (14) internal_bracket -> isotope . symbol chiral hcount mol_map
     (15) internal_bracket -> isotope . symbol chiral hcount charge
-    (20) internal_bracket -> isotope . symbol charge map
-    (21) internal_bracket -> isotope . symbol hcount map
+    (20) internal_bracket -> isotope . symbol charge mol_map
+    (21) internal_bracket -> isotope . symbol hcount mol_map
     (22) internal_bracket -> isotope . symbol hcount charge
-    (23) internal_bracket -> isotope . symbol chiral map
+    (23) internal_bracket -> isotope . symbol chiral mol_map
     (24) internal_bracket -> isotope . symbol chiral charge
     (25) internal_bracket -> isotope . symbol chiral hcount
-    (32) internal_bracket -> isotope . symbol map
+    (32) internal_bracket -> isotope . symbol mol_map
     (33) internal_bracket -> isotope . symbol charge
     (34) internal_bracket -> isotope . symbol hcount
     (35) internal_bracket -> isotope . symbol chiral
@@ -712,18 +712,18 @@ state 24
 
 state 25
 
-    (11) internal_bracket -> symbol . chiral hcount charge map
-    (16) internal_bracket -> symbol . hcount charge map
-    (17) internal_bracket -> symbol . chiral charge map
-    (18) internal_bracket -> symbol . chiral hcount map
+    (11) internal_bracket -> symbol . chiral hcount charge mol_map
+    (16) internal_bracket -> symbol . hcount charge mol_map
+    (17) internal_bracket -> symbol . chiral charge mol_map
+    (18) internal_bracket -> symbol . chiral hcount mol_map
     (19) internal_bracket -> symbol . chiral hcount charge
-    (26) internal_bracket -> symbol . charge map
-    (27) internal_bracket -> symbol . hcount map
+    (26) internal_bracket -> symbol . charge mol_map
+    (27) internal_bracket -> symbol . hcount mol_map
     (28) internal_bracket -> symbol . hcount charge
-    (29) internal_bracket -> symbol . chiral map
+    (29) internal_bracket -> symbol . chiral mol_map
     (30) internal_bracket -> symbol . chiral charge
     (31) internal_bracket -> symbol . chiral hcount
-    (36) internal_bracket -> symbol . map
+    (36) internal_bracket -> symbol . mol_map
     (37) internal_bracket -> symbol . charge
     (38) internal_bracket -> symbol . hcount
     (39) internal_bracket -> symbol . chiral
@@ -738,9 +738,9 @@ state 25
     (72) charge -> . -
     (73) charge -> . + +
     (74) charge -> . +
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 41 (internal_bracket -> symbol .)
     @               shift and go to state 45
     H               shift and go to state 46
@@ -751,7 +751,7 @@ state 25
     chiral                         shift and go to state 41
     hcount                         shift and go to state 42
     charge                         shift and go to state 43
-    map                            shift and go to state 44
+    mol_map                        shift and go to state 44
 
 state 26
 
@@ -956,18 +956,18 @@ state 39
 
 state 40
 
-    (10) internal_bracket -> isotope symbol . chiral hcount charge map
-    (12) internal_bracket -> isotope symbol . hcount charge map
-    (13) internal_bracket -> isotope symbol . chiral charge map
-    (14) internal_bracket -> isotope symbol . chiral hcount map
+    (10) internal_bracket -> isotope symbol . chiral hcount charge mol_map
+    (12) internal_bracket -> isotope symbol . hcount charge mol_map
+    (13) internal_bracket -> isotope symbol . chiral charge mol_map
+    (14) internal_bracket -> isotope symbol . chiral hcount mol_map
     (15) internal_bracket -> isotope symbol . chiral hcount charge
-    (20) internal_bracket -> isotope symbol . charge map
-    (21) internal_bracket -> isotope symbol . hcount map
+    (20) internal_bracket -> isotope symbol . charge mol_map
+    (21) internal_bracket -> isotope symbol . hcount mol_map
     (22) internal_bracket -> isotope symbol . hcount charge
-    (23) internal_bracket -> isotope symbol . chiral map
+    (23) internal_bracket -> isotope symbol . chiral mol_map
     (24) internal_bracket -> isotope symbol . chiral charge
     (25) internal_bracket -> isotope symbol . chiral hcount
-    (32) internal_bracket -> isotope symbol . map
+    (32) internal_bracket -> isotope symbol . mol_map
     (33) internal_bracket -> isotope symbol . charge
     (34) internal_bracket -> isotope symbol . hcount
     (35) internal_bracket -> isotope symbol . chiral
@@ -982,9 +982,9 @@ state 40
     (72) charge -> . -
     (73) charge -> . + +
     (74) charge -> . +
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 40 (internal_bracket -> isotope symbol .)
     @               shift and go to state 45
     H               shift and go to state 46
@@ -995,15 +995,15 @@ state 40
     chiral                         shift and go to state 55
     hcount                         shift and go to state 56
     charge                         shift and go to state 57
-    map                            shift and go to state 58
+    mol_map                        shift and go to state 58
 
 state 41
 
-    (11) internal_bracket -> symbol chiral . hcount charge map
-    (17) internal_bracket -> symbol chiral . charge map
-    (18) internal_bracket -> symbol chiral . hcount map
+    (11) internal_bracket -> symbol chiral . hcount charge mol_map
+    (17) internal_bracket -> symbol chiral . charge mol_map
+    (18) internal_bracket -> symbol chiral . hcount mol_map
     (19) internal_bracket -> symbol chiral . hcount charge
-    (29) internal_bracket -> symbol chiral . map
+    (29) internal_bracket -> symbol chiral . mol_map
     (30) internal_bracket -> symbol chiral . charge
     (31) internal_bracket -> symbol chiral . hcount
     (39) internal_bracket -> symbol chiral .
@@ -1015,9 +1015,9 @@ state 41
     (72) charge -> . -
     (73) charge -> . + +
     (74) charge -> . +
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 39 (internal_bracket -> symbol chiral .)
     H               shift and go to state 46
     +               shift and go to state 47
@@ -1026,12 +1026,12 @@ state 41
 
     hcount                         shift and go to state 59
     charge                         shift and go to state 60
-    map                            shift and go to state 61
+    mol_map                        shift and go to state 61
 
 state 42
 
-    (16) internal_bracket -> symbol hcount . charge map
-    (27) internal_bracket -> symbol hcount . map
+    (16) internal_bracket -> symbol hcount . charge mol_map
+    (27) internal_bracket -> symbol hcount . mol_map
     (28) internal_bracket -> symbol hcount . charge
     (38) internal_bracket -> symbol hcount .
     (69) charge -> . + fifteen
@@ -1040,33 +1040,33 @@ state 42
     (72) charge -> . -
     (73) charge -> . + +
     (74) charge -> . +
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 38 (internal_bracket -> symbol hcount .)
     +               shift and go to state 47
     -               shift and go to state 48
     :               shift and go to state 49
 
     charge                         shift and go to state 62
-    map                            shift and go to state 63
+    mol_map                        shift and go to state 63
 
 state 43
 
-    (26) internal_bracket -> symbol charge . map
+    (26) internal_bracket -> symbol charge . mol_map
     (37) internal_bracket -> symbol charge .
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 37 (internal_bracket -> symbol charge .)
     :               shift and go to state 49
 
-    map                            shift and go to state 64
+    mol_map                        shift and go to state 64
 
 state 44
 
-    (36) internal_bracket -> symbol map .
-    ]               reduce using rule 36 (internal_bracket -> symbol map .)
+    (36) internal_bracket -> symbol mol_map .
+    ]               reduce using rule 36 (internal_bracket -> symbol mol_map .)
 
 
 state 45
@@ -1122,9 +1122,9 @@ state 48
 
 state 49
 
-    (75) map -> : . digit
-    (76) map -> : . digit digit
-    (77) map -> : . digit digit digit
+    (75) mol_map -> : . digit
+    (76) mol_map -> : . digit digit
+    (77) mol_map -> : . digit digit digit
     digit           shift and go to state 72
 
 
@@ -1214,11 +1214,11 @@ state 54
 
 state 55
 
-    (10) internal_bracket -> isotope symbol chiral . hcount charge map
-    (13) internal_bracket -> isotope symbol chiral . charge map
-    (14) internal_bracket -> isotope symbol chiral . hcount map
+    (10) internal_bracket -> isotope symbol chiral . hcount charge mol_map
+    (13) internal_bracket -> isotope symbol chiral . charge mol_map
+    (14) internal_bracket -> isotope symbol chiral . hcount mol_map
     (15) internal_bracket -> isotope symbol chiral . hcount charge
-    (23) internal_bracket -> isotope symbol chiral . map
+    (23) internal_bracket -> isotope symbol chiral . mol_map
     (24) internal_bracket -> isotope symbol chiral . charge
     (25) internal_bracket -> isotope symbol chiral . hcount
     (35) internal_bracket -> isotope symbol chiral .
@@ -1230,9 +1230,9 @@ state 55
     (72) charge -> . -
     (73) charge -> . + +
     (74) charge -> . +
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 35 (internal_bracket -> isotope symbol chiral .)
     H               shift and go to state 46
     +               shift and go to state 47
@@ -1241,12 +1241,12 @@ state 55
 
     hcount                         shift and go to state 75
     charge                         shift and go to state 76
-    map                            shift and go to state 77
+    mol_map                        shift and go to state 77
 
 state 56
 
-    (12) internal_bracket -> isotope symbol hcount . charge map
-    (21) internal_bracket -> isotope symbol hcount . map
+    (12) internal_bracket -> isotope symbol hcount . charge mol_map
+    (21) internal_bracket -> isotope symbol hcount . mol_map
     (22) internal_bracket -> isotope symbol hcount . charge
     (34) internal_bracket -> isotope symbol hcount .
     (69) charge -> . + fifteen
@@ -1255,39 +1255,39 @@ state 56
     (72) charge -> . -
     (73) charge -> . + +
     (74) charge -> . +
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 34 (internal_bracket -> isotope symbol hcount .)
     +               shift and go to state 47
     -               shift and go to state 48
     :               shift and go to state 49
 
     charge                         shift and go to state 78
-    map                            shift and go to state 79
+    mol_map                        shift and go to state 79
 
 state 57
 
-    (20) internal_bracket -> isotope symbol charge . map
+    (20) internal_bracket -> isotope symbol charge . mol_map
     (33) internal_bracket -> isotope symbol charge .
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 33 (internal_bracket -> isotope symbol charge .)
     :               shift and go to state 49
 
-    map                            shift and go to state 80
+    mol_map                        shift and go to state 80
 
 state 58
 
-    (32) internal_bracket -> isotope symbol map .
-    ]               reduce using rule 32 (internal_bracket -> isotope symbol map .)
+    (32) internal_bracket -> isotope symbol mol_map .
+    ]               reduce using rule 32 (internal_bracket -> isotope symbol mol_map .)
 
 
 state 59
 
-    (11) internal_bracket -> symbol chiral hcount . charge map
-    (18) internal_bracket -> symbol chiral hcount . map
+    (11) internal_bracket -> symbol chiral hcount . charge mol_map
+    (18) internal_bracket -> symbol chiral hcount . mol_map
     (19) internal_bracket -> symbol chiral hcount . charge
     (31) internal_bracket -> symbol chiral hcount .
     (69) charge -> . + fifteen
@@ -1296,57 +1296,57 @@ state 59
     (72) charge -> . -
     (73) charge -> . + +
     (74) charge -> . +
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 31 (internal_bracket -> symbol chiral hcount .)
     +               shift and go to state 47
     -               shift and go to state 48
     :               shift and go to state 49
 
     charge                         shift and go to state 81
-    map                            shift and go to state 82
+    mol_map                        shift and go to state 82
 
 state 60
 
-    (17) internal_bracket -> symbol chiral charge . map
+    (17) internal_bracket -> symbol chiral charge . mol_map
     (30) internal_bracket -> symbol chiral charge .
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 30 (internal_bracket -> symbol chiral charge .)
     :               shift and go to state 49
 
-    map                            shift and go to state 83
+    mol_map                        shift and go to state 83
 
 state 61
 
-    (29) internal_bracket -> symbol chiral map .
-    ]               reduce using rule 29 (internal_bracket -> symbol chiral map .)
+    (29) internal_bracket -> symbol chiral mol_map .
+    ]               reduce using rule 29 (internal_bracket -> symbol chiral mol_map .)
 
 
 state 62
 
-    (16) internal_bracket -> symbol hcount charge . map
+    (16) internal_bracket -> symbol hcount charge . mol_map
     (28) internal_bracket -> symbol hcount charge .
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 28 (internal_bracket -> symbol hcount charge .)
     :               shift and go to state 49
 
-    map                            shift and go to state 84
+    mol_map                        shift and go to state 84
 
 state 63
 
-    (27) internal_bracket -> symbol hcount map .
-    ]               reduce using rule 27 (internal_bracket -> symbol hcount map .)
+    (27) internal_bracket -> symbol hcount mol_map .
+    ]               reduce using rule 27 (internal_bracket -> symbol hcount mol_map .)
 
 
 state 64
 
-    (26) internal_bracket -> symbol charge map .
-    ]               reduce using rule 26 (internal_bracket -> symbol charge map .)
+    (26) internal_bracket -> symbol charge mol_map .
+    ]               reduce using rule 26 (internal_bracket -> symbol charge mol_map .)
 
 
 state 65
@@ -1407,10 +1407,10 @@ state 71
 
 state 72
 
-    (75) map -> : digit .
-    (76) map -> : digit . digit
-    (77) map -> : digit . digit digit
-    ]               reduce using rule 75 (map -> : digit .)
+    (75) mol_map -> : digit .
+    (76) mol_map -> : digit . digit
+    (77) mol_map -> : digit . digit digit
+    ]               reduce using rule 75 (mol_map -> : digit .)
     digit           shift and go to state 86
 
 
@@ -1429,8 +1429,8 @@ state 74
 
 state 75
 
-    (10) internal_bracket -> isotope symbol chiral hcount . charge map
-    (14) internal_bracket -> isotope symbol chiral hcount . map
+    (10) internal_bracket -> isotope symbol chiral hcount . charge mol_map
+    (14) internal_bracket -> isotope symbol chiral hcount . mol_map
     (15) internal_bracket -> isotope symbol chiral hcount . charge
     (25) internal_bracket -> isotope symbol chiral hcount .
     (69) charge -> . + fifteen
@@ -1439,87 +1439,87 @@ state 75
     (72) charge -> . -
     (73) charge -> . + +
     (74) charge -> . +
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 25 (internal_bracket -> isotope symbol chiral hcount .)
     +               shift and go to state 47
     -               shift and go to state 48
     :               shift and go to state 49
 
     charge                         shift and go to state 87
-    map                            shift and go to state 88
+    mol_map                        shift and go to state 88
 
 state 76
 
-    (13) internal_bracket -> isotope symbol chiral charge . map
+    (13) internal_bracket -> isotope symbol chiral charge . mol_map
     (24) internal_bracket -> isotope symbol chiral charge .
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 24 (internal_bracket -> isotope symbol chiral charge .)
     :               shift and go to state 49
 
-    map                            shift and go to state 89
+    mol_map                        shift and go to state 89
 
 state 77
 
-    (23) internal_bracket -> isotope symbol chiral map .
-    ]               reduce using rule 23 (internal_bracket -> isotope symbol chiral map .)
+    (23) internal_bracket -> isotope symbol chiral mol_map .
+    ]               reduce using rule 23 (internal_bracket -> isotope symbol chiral mol_map .)
 
 
 state 78
 
-    (12) internal_bracket -> isotope symbol hcount charge . map
+    (12) internal_bracket -> isotope symbol hcount charge . mol_map
     (22) internal_bracket -> isotope symbol hcount charge .
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 22 (internal_bracket -> isotope symbol hcount charge .)
     :               shift and go to state 49
 
-    map                            shift and go to state 90
+    mol_map                        shift and go to state 90
 
 state 79
 
-    (21) internal_bracket -> isotope symbol hcount map .
-    ]               reduce using rule 21 (internal_bracket -> isotope symbol hcount map .)
+    (21) internal_bracket -> isotope symbol hcount mol_map .
+    ]               reduce using rule 21 (internal_bracket -> isotope symbol hcount mol_map .)
 
 
 state 80
 
-    (20) internal_bracket -> isotope symbol charge map .
-    ]               reduce using rule 20 (internal_bracket -> isotope symbol charge map .)
+    (20) internal_bracket -> isotope symbol charge mol_map .
+    ]               reduce using rule 20 (internal_bracket -> isotope symbol charge mol_map .)
 
 
 state 81
 
-    (11) internal_bracket -> symbol chiral hcount charge . map
+    (11) internal_bracket -> symbol chiral hcount charge . mol_map
     (19) internal_bracket -> symbol chiral hcount charge .
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 19 (internal_bracket -> symbol chiral hcount charge .)
     :               shift and go to state 49
 
-    map                            shift and go to state 91
+    mol_map                        shift and go to state 91
 
 state 82
 
-    (18) internal_bracket -> symbol chiral hcount map .
-    ]               reduce using rule 18 (internal_bracket -> symbol chiral hcount map .)
+    (18) internal_bracket -> symbol chiral hcount mol_map .
+    ]               reduce using rule 18 (internal_bracket -> symbol chiral hcount mol_map .)
 
 
 state 83
 
-    (17) internal_bracket -> symbol chiral charge map .
-    ]               reduce using rule 17 (internal_bracket -> symbol chiral charge map .)
+    (17) internal_bracket -> symbol chiral charge mol_map .
+    ]               reduce using rule 17 (internal_bracket -> symbol chiral charge mol_map .)
 
 
 state 84
 
-    (16) internal_bracket -> symbol hcount charge map .
-    ]               reduce using rule 16 (internal_bracket -> symbol hcount charge map .)
+    (16) internal_bracket -> symbol hcount charge mol_map .
+    ]               reduce using rule 16 (internal_bracket -> symbol hcount charge mol_map .)
 
 
 state 85
@@ -1531,58 +1531,58 @@ state 85
 
 state 86
 
-    (76) map -> : digit digit .
-    (77) map -> : digit digit . digit
-    ]               reduce using rule 76 (map -> : digit digit .)
+    (76) mol_map -> : digit digit .
+    (77) mol_map -> : digit digit . digit
+    ]               reduce using rule 76 (mol_map -> : digit digit .)
     digit           shift and go to state 92
 
 
 state 87
 
-    (10) internal_bracket -> isotope symbol chiral hcount charge . map
+    (10) internal_bracket -> isotope symbol chiral hcount charge . mol_map
     (15) internal_bracket -> isotope symbol chiral hcount charge .
-    (75) map -> . : digit
-    (76) map -> . : digit digit
-    (77) map -> . : digit digit digit
+    (75) mol_map -> . : digit
+    (76) mol_map -> . : digit digit
+    (77) mol_map -> . : digit digit digit
     ]               reduce using rule 15 (internal_bracket -> isotope symbol chiral hcount charge .)
     :               shift and go to state 49
 
-    map                            shift and go to state 93
+    mol_map                        shift and go to state 93
 
 state 88
 
-    (14) internal_bracket -> isotope symbol chiral hcount map .
-    ]               reduce using rule 14 (internal_bracket -> isotope symbol chiral hcount map .)
+    (14) internal_bracket -> isotope symbol chiral hcount mol_map .
+    ]               reduce using rule 14 (internal_bracket -> isotope symbol chiral hcount mol_map .)
 
 
 state 89
 
-    (13) internal_bracket -> isotope symbol chiral charge map .
-    ]               reduce using rule 13 (internal_bracket -> isotope symbol chiral charge map .)
+    (13) internal_bracket -> isotope symbol chiral charge mol_map .
+    ]               reduce using rule 13 (internal_bracket -> isotope symbol chiral charge mol_map .)
 
 
 state 90
 
-    (12) internal_bracket -> isotope symbol hcount charge map .
-    ]               reduce using rule 12 (internal_bracket -> isotope symbol hcount charge map .)
+    (12) internal_bracket -> isotope symbol hcount charge mol_map .
+    ]               reduce using rule 12 (internal_bracket -> isotope symbol hcount charge mol_map .)
 
 
 state 91
 
-    (11) internal_bracket -> symbol chiral hcount charge map .
-    ]               reduce using rule 11 (internal_bracket -> symbol chiral hcount charge map .)
+    (11) internal_bracket -> symbol chiral hcount charge mol_map .
+    ]               reduce using rule 11 (internal_bracket -> symbol chiral hcount charge mol_map .)
 
 
 state 92
 
-    (77) map -> : digit digit digit .
-    ]               reduce using rule 77 (map -> : digit digit digit .)
+    (77) mol_map -> : digit digit digit .
+    ]               reduce using rule 77 (mol_map -> : digit digit digit .)
 
 
 state 93
 
-    (10) internal_bracket -> isotope symbol chiral hcount charge map .
-    ]               reduce using rule 10 (internal_bracket -> isotope symbol chiral hcount charge map .)
+    (10) internal_bracket -> isotope symbol chiral hcount charge mol_map .
+    ]               reduce using rule 10 (internal_bracket -> isotope symbol chiral hcount charge mol_map .)
 
 
 Conflicts:

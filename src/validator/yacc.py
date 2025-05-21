@@ -56,6 +56,7 @@ def getAttributes(rules, properties):
 def dictify(obj):
     result = {}
     if hasattr(obj, '_namemap') and hasattr(obj, '_slice'):
+        print(obj._namemap)
         for name, getter in obj._namemap.items():
             try:
                 value = getter(obj._slice)
@@ -91,22 +92,17 @@ class SmilesParser(Parser):
     def bracket_atom(self, rules):
         return rules.internal_bracket
 
-    @_(*generate_combinations('isotope? symbol chiral? hcount? charge? map?')) # type: ignore
+    @_(*generate_combinations('isotope? symbol chiral? hcount? charge? mol_map?')) # type: ignore
     def internal_bracket(self, rules):
-        
-        mol = getAttributes(rules, ['isotope', 'symbol', 'chiral','hcount', 'charge', 'map'])
-        
-        isotope, symbol, chiral, hcount, charge, mol_map = mol
-
-        if self.use_only_grammar: return
-
-        if not chem.validate_valency_bracket(isotope, symbol, chiral, hcount, charge, mol_map): 
-            raise Exception(f"Invalid valency in Bracket [{','.join([str(x) for x in mol if x is not None])}]")
-        
+        return parser_manager.internal_bracket(
+            *getAttributes(rules, ['isotope', 'symbol', 'chiral', 'hcount', 'charge', 'mol_map'])
+            )
 
     @_('dot_proxy', 'bond atom', 'bond rnum', 'atom', 'rnum')  # type: ignore
     def chain(self, rules):
-        return parser_manager.chain(**(dictify(rules)))
+        return parser_manager.chain(
+            *getAttributes(rules, ['bond', 'atom', 'rnum', 'dot_proxy']) 
+                )
 
     @_('"." atom')  # type: ignore
     def dot_proxy(self, rules):
@@ -122,7 +118,9 @@ class SmilesParser(Parser):
 
     @_('bond_dot line', 'line', 'bond_dot line inner_branch', 'line inner_branch')    # type: ignore
     def inner_branch(self, rules):
-        return parser_manager.inner_branch(dictify(**rules))
+        return parser_manager.inner_branch(
+            *getAttributes(rules, ['bond_dot', 'line', 'inner_branch'])
+            )
 
     @_('bond', '"."')  # type: ignore
     def bond_dot(self, rules):
@@ -157,7 +155,7 @@ class SmilesParser(Parser):
         return parser_manager.charge(*rules)
 
     @_('":" digit digit digit', '":" digit digit', '":" digit')  # type: ignore
-    def map(self, rules):
+    def mol_map(self, rules):
         return parser_manager.int(*rules[1:])
 
     @_('"@"', '"@" "@"')  # type: ignore
@@ -189,5 +187,6 @@ def validate_smiles(mol: str) -> tuple[bool, Exception | None]:
         parser_manager._reset()
         return True, None
     except Exception as e:
+        raise e
         return False, e
 
