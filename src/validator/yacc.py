@@ -194,6 +194,7 @@ def validate_smiles(mol: str) -> tuple[bool, Exception | None]:
     """
     try:
         parser.parse(lexer.tokenize(mol))
+        parser_manager.validate_branch()
         parser_manager._reset()
         return True, None
     except Exception as e:

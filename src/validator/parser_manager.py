@@ -14,7 +14,6 @@ def fill_none(func):
     def wrapper(self, *args, **kwargs):
         needed = func.__code__.co_argcount - 1  # minus self
         padded = (list(args) + [None] * needed)[:needed]
-        print(f"padded: {padded} args: {args} kwargs: {kwargs}")
         return func(self, *padded, **kwargs)
 
     return wrapper
@@ -84,7 +83,28 @@ class ParserManager:
 
     def inner_branch(self, bond_dot=None, line=None, inner_branch=None):
         """ """
+        if bond_dot == ".":
+            self.validate_branch()
+            self._reset()
+
         pass
+
+    def validate_branch(self) -> bool:
+        """
+        Validates based on the current state of the parser manager
+        """
+
+        if len(self.current_open_rnum) != 0:
+            raise ParserException(
+                rule="validate_branch",
+                parameter=f"{self.current_open_rnum}",
+                message="Unclosed ring numbers",
+            )
+
+        for atom in self.current_chain:
+            pass
+
+        return True
 
     @fill_none
     def internal_bracket(self, istope, symbol, chiral, hcount, charge, mol_map):
@@ -134,13 +154,11 @@ class ParserManager:
         Returns:
             The atom
         """
-
-        if (
-            type(symbol_or_bracket) != str
-            or len(symbol_or_bracket) == 1
-            or symbol_or_bracket in chem.organic_atoms
-        ):
+        if type(symbol_or_bracket) != str:
             return symbol_or_bracket
+
+        if len(symbol_or_bracket) == 1 or symbol_or_bracket in chem.organic_atoms:
+            return chem.Atom(symbol_or_bracket, aromatic=True)
 
         elem1, elem2 = symbol_or_bracket
 
@@ -168,6 +186,9 @@ class ParserManager:
             The parsed ring number as an integer.
         """
         if ring_number_or_symbol == "%":
+            assert (
+                ring_number1 is not None and ring_number2 is not None
+            ), "Ring number must be a string"
             rnum = self.int([ring_number1, ring_number2])
         else:
             rnum = int(ring_number_or_symbol)

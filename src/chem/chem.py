@@ -24,6 +24,7 @@ class Atom:
     layers: List[int] = field(init=False)
     electrons_by_layers: List[int] = field(init=False)
     electron_configuration: List[str] = field(default_factory=list)
+    aromatic: bool = field(default=False)
 
     def __post_init__(self):
         """
@@ -275,6 +276,33 @@ class Chem:
             for x in look_up_table_json.values()
         }
 
+    def Atom(self, symbol: str, aromatic: bool = False) -> Atom:
+        """
+        Create an Atom with the given symbol, charge and hidrogens.
+
+        Args:
+            symbol: The symbol of the atom
+            chiral: The chiral of the atom
+            hcount: The amount of hydrogens in the atom
+            charge: The charge of the atom
+            map: The map of the atom
+        """
+
+        if symbol.title() != symbol:
+            symbol = symbol.title()
+            print(symbol)
+
+        if symbol not in self.pt_symbols:
+            raise Exception(f"Invalid Symbol {symbol}")
+
+        base_atom = self.look_up_table[symbol]
+
+        return Atom(
+            symbol=symbol,
+            electron_configuration=base_atom.electron_configuration,
+            aromatic=aromatic,
+        )
+
     def BracketAtom(self, symbol: str, **kwargs) -> BracketAtom:
         """
         Create a Bracket Atom with the given symbol, charge and hidrogens.
@@ -289,7 +317,12 @@ class Chem:
         if symbol not in self.pt_symbols:
             raise Exception(f"Invalid Symbol {symbol}")
 
-        base_atom = self.look_up_table.get(symbol)
+        base_atom = self.look_up_table[symbol]
+
+        if symbol.title() != symbol:  # if the symbol is not lowercase
+            symbol = symbol.title()
+            kwargs["aromatic"] = True
+
         return BracketAtom(
             symbol=symbol,
             electron_configuration=base_atom.electron_configuration,
