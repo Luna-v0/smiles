@@ -290,7 +290,6 @@ class Chem:
 
         if symbol.title() != symbol:
             symbol = symbol.title()
-            print(symbol)
 
         if symbol not in self.pt_symbols:
             raise Exception(f"Invalid Symbol {symbol}")
