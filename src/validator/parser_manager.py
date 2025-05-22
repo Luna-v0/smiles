@@ -2,7 +2,7 @@ import functools
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
-from chem import BracketAtom, chem
+from chem import Atom, BracketAtom, chem
 
 
 def fill_none(func):
@@ -47,7 +47,7 @@ class ParserManager:
 
     current_open_rnum = list()
     current_closed_rnum = list()
-    current_chain = list()
+    current_chain: list[Atom] = list()
 
     def __exit__(self):
         self._reset()
@@ -101,8 +101,14 @@ class ParserManager:
                 message="Unclosed ring numbers",
             )
 
-        for atom in self.current_chain:
-            pass
+        starting_aromacity = self.current_chain[0].aromatic
+        for atom in self.current_chain[1:]:
+            if atom.aromatic != starting_aromacity:
+                raise ParserException(
+                    rule="validate_branch",
+                    parameter=f"{atom}",
+                    message="Aromaticity mismatch",
+                )
 
         return True
 
