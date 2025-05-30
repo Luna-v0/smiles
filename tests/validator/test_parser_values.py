@@ -25,3 +25,18 @@ def test_benzene():
         True,
         None,
     ), "Failed to validate aromatic ring with lowercase syntax and bracketed carbon"
+
+
+def test_naftalina():
+    assert validate_smiles("c1ccc2ccccc2c1") == (
+        True,
+        None,
+    ), "Failed to validate naphthalene structure"
+    assert validate_smiles("C1=CC=CC=C1C2=CC=CC=C2") == (
+        True,
+        None,
+    ), "Failed to validate naphthalene structure with uppercase syntax"
+    assert validate_smiles("c1ccccc1C2=CC=CC=C2") == (
+        True,
+        None,
+    ), "Failed to validate naphthalene structure with aromatic carbon and non-aromatic carbon"
