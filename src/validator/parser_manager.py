@@ -49,6 +49,13 @@ class ParserManager:
     current_closed_rnum = list()
     current_chain: list[Atom] = list()
 
+    def __enter__(self):
+        """
+        Initializes the parser manager.
+        """
+        self._reset()
+        return self
+
     def __exit__(self):
         self._reset()
 
@@ -191,22 +198,44 @@ class ParserManager:
         Returns:
             The parsed ring number as an integer.
         """
+        rnum = -1
+        raiser = lambda msg: ParserException(
+            rule="ring_number",
+            parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
+            message=msg,
+        )
+
         if ring_number_or_symbol == "%":
-            assert (
-                ring_number1 is not None and ring_number2 is not None
-            ), "Ring number must be a string"
-            rnum = self.int([ring_number1, ring_number2])
+            if ring_number1 is None:
+                raiser(msg="Ring number cannot be just '%'")
+
+            digits = ring_number1 + (ring_number2 or "")
+            if not digits.isdigit():
+                raiser(msg="Ring number must be a digit or '%'")
+            rnum = int(digits)
+        elif ring_number_or_symbol.isdigit():
+            if ring_number2 is not None:
+                raiser(
+                    msg="Ring number cannot have more than one digit after the first"
+                )
+            digits = ring_number_or_symbol + (ring_number1 or "")
+            if not digits.isdigit():
+                raiser(
+                    msg="Ring number must be a digit or a number with a leading digit"
+                )
+            rnum = int(digits)
         else:
-            rnum = int(ring_number_or_symbol)
+            raiser(msg="Ring number must be a digit or a number with a leading digit")
+
+        if rnum < 1:
+            raiser(msg="Ring number must be greater than 0")
 
         if rnum in self.current_open_rnum:
             self.current_open_rnum.remove(rnum)
             self.current_closed_rnum.append(rnum)
         elif rnum in self.current_closed_rnum:
-            raise ParserException(
-                rule="ring_number",
-                parameter=f"{rnum}",
-                message="Ring number already closed",
+            raiser(
+                msg="Ring number already closed",
             )
         else:
             self.current_open_rnum.append(rnum)
@@ -232,6 +261,13 @@ class ParserManager:
         Returns:
             The parsed hydrogen count.
         """
+        if not digit.isdigit():
+            raise ParserException(
+                rule="hcount",
+                parameter=digit,
+                message="Hydrogen count must be a digit",
+            )
+
         return int(digit) if digit else 1
 
     @fill_none
@@ -246,6 +282,13 @@ class ParserManager:
         """
         if charge2 is None:
             return 1 if charge1 == "+" else -1
+
+        if type(charge2) == str and charge2 != charge1:
+            raise ParserException(
+                rule="charge",
+                parameter=f"{charge1} {charge2}",
+                message="Charge mismatch",
+            )
 
         if charge2 == "-":
             return -2
