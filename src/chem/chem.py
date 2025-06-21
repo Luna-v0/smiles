@@ -14,7 +14,7 @@ class Atom:
         valency_layer: The last electron layer number
         electrons_in_valency: Amount of electrons in the valency layer
         layers: Indexes of all layers
-        electrons_by_layer: Amount of electons in each layer
+        electrons_by_layer: Amount of electrons in each layer
         electron_configuration: The electron configuration of the atom
     """
 
@@ -195,7 +195,7 @@ class BracketAtom(Atom):
             if electron + acc > max_electrons_current_layer:
                 # update the valency layer
                 self.valency_layer = len(self.electrons_by_layers) - 1
-                self.electrons_in_valency = electon + acc
+                self.electrons_in_valency = electron + acc
                 self.electrons_by_layers.insert(electron + acc, 0)
                 return self._octate_rule(x)
 
