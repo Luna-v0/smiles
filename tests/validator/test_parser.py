@@ -1,5 +1,6 @@
 import pytest
 
+from chem import Atom, BracketAtom
 from validator.parser_manager import ParserException, ParserManager
 
 
@@ -11,6 +12,60 @@ def parser_manager():
     pm = ParserManager()
     pm._reset()  # Ensure the parser manager is reset before each test
     return pm
+
+
+def test_validate_branch(parser_manager: ParserManager):
+    """
+    Test the validate_branch method of the ParserManager.
+    """
+    # Test with no open ring numbers
+    assert (
+        parser_manager.validate_branch() is True
+    ), "Should return True when no open ring numbers"
+
+
+def test_internal_bracket(parser_manager: ParserManager):
+    """ """
+    assert parser_manager.internal_bracket(None, "C") == BracketAtom(
+        "C"
+    ), "Internal bracket should return BracketAtom('C', 'O')"
+    assert (
+        len(parser_manager.current_chain) == 1
+    ), "Current chain should have one atom after internal bracket"
+
+
+def test_listify(parser_manager: ParserManager):
+    assert parser_manager.listify("C") == [
+        "C"
+    ], "Listify should return a list with one element 'C'"
+    assert parser_manager.listify(["C", "O"]) == [
+        "O",
+        "C",
+    ], "Listify should return a list with elements 'O' and 'C' in that order"
+    assert parser_manager.listify(["C", "O", "N"]) == [
+        "N",
+        "O",
+        "C",
+    ], "Listify should return a list with elements 'N', 'O', and 'C' in that order"
+
+
+def test_atom(parser_manager: ParserManager):
+    """
+    Test the atom parser with valid and invalid inputs.
+    """
+
+    assert parser_manager.atom("C") == Atom("C"), "Parsing 'C' should return Atom('C')"
+    assert parser_manager.atom("Na") == Atom(
+        "Na"
+    ), "Parsing 'Na' should return Atom('Na')"
+
+    ## TODO missing tests with bracket atom
+
+    with pytest.raises(ParserException):
+        parser_manager.atom("X")
+
+    with pytest.raises(ParserException):
+        parser_manager.atom("au")
 
 
 def test_fifteen(parser_manager: ParserManager):
@@ -84,7 +139,7 @@ def test_hcount(parser_manager: ParserManager):
         ), "Should raise ParserException for invalid hydrogen count"
 
 
-def ring_number(parser_manager: ParserManager):
+def test_ring_number(parser_manager: ParserManager):
     """
     Test the ring number parser.
     """

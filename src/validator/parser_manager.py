@@ -167,11 +167,14 @@ class ParserManager:
         Returns:
             The atom
         """
+
+        # TODO maybe I'm missing to add to the chain here?
+
         if type(symbol_or_bracket) != str:
             return symbol_or_bracket
 
         if len(symbol_or_bracket) == 1 or symbol_or_bracket in chem.organic_atoms:
-            return chem.Atom(symbol_or_bracket, aromatic=True)
+            return chem.Atom(symbol_or_bracket, aromatic=symbol_or_bracket.islower())
 
         elem1, elem2 = symbol_or_bracket
 
