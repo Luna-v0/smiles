@@ -1,0 +1,10 @@
+molecule_name,smiles,is_valid,description
+Benzene_Aromatic,c1ccccc1,True,
+Benzene_NonAromatic,C1=CC=CC=C1,True,
+Benzene_Mapped,C1=CC=C=C1C,True,
+Benzene_BracketH,[H]c1c([H])c([H])c([H])c([H])c1[H],True,
+Benzene_InvalidBond,c1ccccc1C,False,Cannot join aromatic carbon ring with a Non-aromatic carbon
+Benzene_BracketedC,c1[c]cccc1,True,
+Naphthalene_Aromatic,c1ccc2ccccc2c1,True,
+Naphthalene_NonAromatic,C1=CC=CC=C1C2=CC=CC=C2,True,
+Naphthalene_Mixed,c1ccccc1C2=CC=CC=C2,True,

@@ -1,9 +1,9 @@
 import os
+import re
 from dataclasses import dataclass, field
 from json import load
 from pathlib import Path
 from typing import List, Optional
-import re
 
 from .atomic import Atom, BracketAtom
 
@@ -48,15 +48,6 @@ class Graph:
             self.adjacency_list[atom2] = []
         self.adjacency_list[atom1].append((atom2, bond_type))
         self.adjacency_list[atom2].append((atom1, bond_type))
-        print(f"DEBUG: Added edge: {atom1.symbol}-{atom2.symbol} with type {bond_type}")
-        print(f"DEBUG: Adjacency list for {atom1.symbol}: {self.adjacency_list[atom1]}")
-        print(f"DEBUG: Adjacency list for {atom2.symbol}: {self.adjacency_list[atom2]}")
-        print(f"Added edge: {atom1.symbol}-{atom2.symbol} with type {bond_type}")
-        print(f"Adjacency list for {atom1.symbol}: {self.adjacency_list[atom1]}")
-        print(f"Adjacency list for {atom2.symbol}: {self.adjacency_list[atom2]}")
-        print(f"Added edge: {atom1.symbol}-{atom2.symbol} with type {bond_type}")
-        print(f"Adjacency list for {atom1.symbol}: {self.adjacency_list[atom1]}")
-        print(f"Adjacency list for {atom2.symbol}: {self.adjacency_list[atom2]}")
 
     def get_acyclic_subgraphs(self) -> List[List[Atom]]:
         """
@@ -137,7 +128,7 @@ class Graph:
                     pi_electrons += 1
                 elif bond_type == "=":  # Double bond
                     pi_electrons += 2
-                elif bond_type == "#": # Triple bond
+                elif bond_type == "#":  # Triple bond
                     pi_electrons += 4
 
             if not (pi_electrons - 2) % 4 == 0:
@@ -225,7 +216,6 @@ class Chemistry:
         """
         if symbol.title() != symbol:
             symbol = symbol.title()
-            print(symbol)
         if symbol not in self.pt_symbols:
             raise Exception(f"Invalid Symbol {symbol}")
         base_atom = self.look_up_table[symbol]
@@ -258,7 +248,17 @@ class Chemistry:
 
         return BracketAtom(
             symbol,
-            (base_atom.electron_configuration if base_atom.electron_configuration else "").replace("[He] ", "").replace("[Ne] ", "").replace("[Ar] ", "").replace("[Kr] ", "").replace("[Xe] ", "").replace("[Rn] ", ""),
+            (
+                base_atom.electron_configuration
+                if base_atom.electron_configuration
+                else ""
+            )
+            .replace("[He] ", "")
+            .replace("[Ne] ", "")
+            .replace("[Ar] ", "")
+            .replace("[Kr] ", "")
+            .replace("[Xe] ", "")
+            .replace("[Rn] ", ""),
             hidrogens=hidrogens,
             charge=charge,
             **kwargs,

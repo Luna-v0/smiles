@@ -62,7 +62,6 @@ def getAttributes(rules, properties):
 def dictify(obj):
     result = {}
     if hasattr(obj, "_namemap") and hasattr(obj, "_slice"):
-        print(obj._namemap)
         for name, getter in obj._namemap.items():
             try:
                 value = getter(obj._slice)
@@ -117,7 +116,7 @@ class SmilesParser(Parser):
             chiral=getAttributes(rules, "chiral"),
             hcount=getAttributes(rules, "hcount"),
             charge=getAttributes(rules, "charge"),
-            mol_map=getAttributes(rules, "mol_map")
+            mol_map=getAttributes(rules, "mol_map"),
         )
 
     @_("bond atom", "bond rnum", "atom", "rnum")  # type: ignore
@@ -125,7 +124,7 @@ class SmilesParser(Parser):
         return parser_manager.chain(
             bond=getAttributes(rules, "bond"),
             atom=getAttributes(rules, "atom"),
-            rnum=getAttributes(rules, "rnum")
+            rnum=getAttributes(rules, "rnum"),
         )
 
     @_('"." atom')  # type: ignore
@@ -149,23 +148,25 @@ class SmilesParser(Parser):
         if len(rules) == 2:
             # Cases: "bond_dot line" or "line inner_branch"
             # Check if rules[0] is a bond_dot (token) or a line (non-terminal)
-            if hasattr(rules, 'bond_dot'): # This checks if the rule was "bond_dot line"
+            if hasattr(
+                rules, "bond_dot"
+            ):  # This checks if the rule was "bond_dot line"
                 bond_dot = rules[0]
                 line_content = rules[1]
-            else: # This must be "line inner_branch"
+            else:  # This must be "line inner_branch"
                 line_content = rules[0]
                 inner_branch_content = rules[1]
-        elif len(rules) == 3: # Case: "bond_dot line inner_branch"
+        elif len(rules) == 3:  # Case: "bond_dot line inner_branch"
             bond_dot = rules[0]
             line_content = rules[1]
             inner_branch_content = rules[2]
-        elif len(rules) == 1: # Case: "line"
+        elif len(rules) == 1:  # Case: "line"
             line_content = rules[0]
 
         return parser_manager.inner_branch(
             bond_dot=bond_dot,
             line=line_content,
-            inner_branch_content=inner_branch_content
+            inner_branch_content=inner_branch_content,
         )
 
     @_("bond", '"."')  # type: ignore
@@ -186,10 +187,16 @@ class SmilesParser(Parser):
 
     @_("digit", '"%" digit digit ')  # type: ignore
     def rnum(self, rules):
-        if len(rules) == 1: # Case: digit
-            return parser_manager.ring_number(ring_number_or_symbol=rules[0], ring_number1=None, ring_number2=None)
-        elif len(rules) == 3: # Case: "%" digit digit
-            return parser_manager.ring_number(ring_number_or_symbol=rules[0], ring_number1=rules[1], ring_number2=rules[2])
+        if len(rules) == 1:  # Case: digit
+            return parser_manager.ring_number(
+                ring_number_or_symbol=rules[0], ring_number1=None, ring_number2=None
+            )
+        elif len(rules) == 3:  # Case: "%" digit digit
+            return parser_manager.ring_number(
+                ring_number_or_symbol=rules[0],
+                ring_number1=rules[1],
+                ring_number2=rules[2],
+            )
 
     @_("digit digit digit", "digit digit", "digit")  # type: ignore
     def isotope(self, rules):
@@ -245,8 +252,7 @@ def validate_smiles(mol: str) -> tuple[bool, Exception | None]:
     """
     try:
         parser.parse(lexer.tokenize(mol))
-        
-        
+
         parser_manager._reset()
         return True, None
     except Exception as e:

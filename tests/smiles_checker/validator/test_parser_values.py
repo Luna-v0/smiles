@@ -1,42 +1,14 @@
+import pytest
+import pandas as pd
 from smiles_checker import validate_smiles
 
+# Load test data from CSV
+test_data = pd.read_csv('tests/smiles_checker/validator/test_molecules_from_values.csv')
 
-def test_benzene():
-    assert validate_smiles("c1ccccc1") == (
-        True,
-        None,
-    ), "Failed to validate aromatic ring with lowercase syntax"
-    assert validate_smiles("C1=CC=CC=C1") == (
-        True,
-        None,
-    ), "Failed to validate aromatic ring with uppercase syntax"
-    assert validate_smiles("C1=CC=C=C1C") == (
-        True,
-        None,
-    ), "Failed to validate aromatic ring with uppercase syntax with mapping at the end"
-    assert validate_smiles("[H]c1c([H])c([H])c([H])c([H])c1[H]") == (
-        True,
-        None,
-    ), "Failed to validate aromatic ring with bracket hydrogens"
-    assert (
-        validate_smiles("c1ccccc1C")[0] == False
-    ), "Cannot join aromatic carbon ring with a Non-aromatic carbon"
-    assert validate_smiles("c1[c]cccc1") == (
-        True,
-        None,
-    ), "Failed to validate aromatic ring with lowercase syntax and bracketed carbon"
-
-
-def test_naftalina():
-    assert validate_smiles("c1ccc2ccccc2c1") == (
-        True,
-        None,
-    ), "Failed to validate naphthalene structure"
-    assert validate_smiles("C1=CC=CC=C1C2=CC=CC=C2") == (
-        True,
-        None,
-    ), "Failed to validate naphthalene structure with uppercase syntax"
-    assert validate_smiles("c1ccccc1C2=CC=CC=C2") == (
-        True,
-        None,
-    ), "Failed to validate naphthalene structure with aromatic carbon and non-aromatic carbon"
+@pytest.mark.parametrize("molecule_name,smiles,is_valid,description", test_data.values)
+def test_smiles_validation(molecule_name, smiles, is_valid, description):
+    result, _ = validate_smiles(smiles)
+    if is_valid:
+        assert result is True, f"Expected {smiles} to be valid, but it was invalid. Molecule: {molecule_name}"
+    else:
+        assert result is False, f"Expected {smiles} to be invalid, but it was valid. Molecule: {molecule_name}. Description: {description}"

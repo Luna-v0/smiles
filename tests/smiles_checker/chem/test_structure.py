@@ -1,6 +1,7 @@
-from smiles_checker.chem.structure import Graph
 from smiles_checker.chem.atomic import Atom, BracketAtom
 from smiles_checker.chem.chemistry import chemistry
+from smiles_checker.chem.structure import Graph
+
 
 def test_add_edge():
     graph = Graph()
@@ -9,6 +10,7 @@ def test_add_edge():
     graph.add_edge(atom1, atom2, bond_type="-")
     assert atom2 in [a for a, b in graph.adjacency_list[atom1]]
     assert atom1 in [a for a, b in graph.adjacency_list[atom2]]
+
 
 def test_get_acyclic_subgraphs():
     graph = Graph()
@@ -23,6 +25,7 @@ def test_get_acyclic_subgraphs():
     assert [atom1, atom2] in subgraphs or [atom2, atom1] in subgraphs
     assert [atom3, atom4] in subgraphs or [atom4, atom3] in subgraphs
 
+
 def test_add_cycle():
     graph = Graph()
     atom1 = Atom("C")
@@ -32,12 +35,13 @@ def test_add_cycle():
     graph.add_cycle(cycle)
     assert cycle in graph.cycles
 
+
 def test_check_valency_for_aba():
     graph = Graph()
-    atom1 = chemistry.BracketAtom("C", hidrogens=3) # Methane, should be valid
-    atom2 = chemistry.BracketAtom("O", hidrogens=0) # Hydroxyl, should be valid
-    atom3 = chemistry.BracketAtom("N", hidrogens=1) # Amine, should be valid
-    atom4 = chemistry.BracketAtom("F") # Fluorine, should be valid
+    atom1 = chemistry.BracketAtom("C", hidrogens=3)  # Methane, should be valid
+    atom2 = chemistry.BracketAtom("O", hidrogens=0)  # Hydroxyl, should be valid
+    atom3 = chemistry.BracketAtom("N", hidrogens=1)  # Amine, should be valid
+    atom4 = chemistry.BracketAtom("F")  # Fluorine, should be valid
 
     graph.add_edge(atom1, atom2, bond_type="-")
     graph.add_edge(atom2, atom3, bond_type="-")
@@ -45,9 +49,10 @@ def test_check_valency_for_aba():
 
     assert graph.check_valency_for_aba() == True
 
-    atom5 = chemistry.BracketAtom("C", hidrogens=1) # Invalid carbon
+    atom5 = chemistry.BracketAtom("C", hidrogens=1)  # Invalid carbon
     graph.add_edge(atom4, atom5, bond_type="-")
     assert graph.check_valency_for_aba() == False
+
 
 def test_huckel():
     graph = Graph()
@@ -86,13 +91,17 @@ def test_huckel():
 
     assert graph2.huckel() == False
 
+
 def test_get_acyclic_subgraphs_single_node():
     graph = Graph()
     atom1 = Atom("C")
-    graph.add_edge(atom1, atom1, bond_type="-") # Self-loop, but still a single node for DFS
+    graph.add_edge(
+        atom1, atom1, bond_type="-"
+    )  # Self-loop, but still a single node for DFS
     subgraphs = graph.get_acyclic_subgraphs()
     assert len(subgraphs) == 1
     assert subgraphs[0] == [atom1]
+
 
 def test_get_acyclic_subgraphs_disconnected_nodes():
     graph = Graph()
@@ -108,6 +117,7 @@ def test_get_acyclic_subgraphs_disconnected_nodes():
     assert [atom2] in subgraphs
     assert [atom3] in subgraphs
 
+
 def test_get_acyclic_subgraphs_connected_nodes():
     graph = Graph()
     atom1 = Atom("C")
@@ -122,6 +132,7 @@ def test_get_acyclic_subgraphs_connected_nodes():
     assert atom2 in subgraphs[0]
     assert atom3 in subgraphs[0]
 
+
 def test_get_acyclic_subgraphs_with_cycle():
     graph = Graph()
     atom1 = Atom("C")
@@ -129,7 +140,7 @@ def test_get_acyclic_subgraphs_with_cycle():
     atom3 = Atom("O")
     graph.add_edge(atom1, atom2, bond_type="-")
     graph.add_edge(atom2, atom3, bond_type="-")
-    graph.add_edge(atom3, atom1, bond_type="-") # Create a cycle
+    graph.add_edge(atom3, atom1, bond_type="-")  # Create a cycle
     subgraphs = graph.get_acyclic_subgraphs()
     assert len(subgraphs) == 1
     assert len(subgraphs[0]) == 3
@@ -137,11 +148,13 @@ def test_get_acyclic_subgraphs_with_cycle():
     assert atom2 in subgraphs[0]
     assert atom3 in subgraphs[0]
 
+
 def test_check_valency_for_aba_non_bracket_atom():
     graph = Graph()
     atom1 = Atom("C")
     graph.add_edge(atom1, atom1, bond_type="-")
     assert graph.check_valency_for_aba() == True
+
 
 def test_huckel_non_aromatic_cycle():
     graph = Graph()
@@ -156,6 +169,7 @@ def test_huckel_non_aromatic_cycle():
     graph.add_cycle([atom1, atom2, atom3, atom4])
     assert graph.huckel() == False
 
+
 def test_get_acyclic_subgraphs_complex():
     graph = Graph()
     atom1 = Atom("C")
@@ -166,21 +180,33 @@ def test_get_acyclic_subgraphs_complex():
 
     graph.add_edge(atom1, atom2, bond_type="-")
     graph.add_edge(atom2, atom3, bond_type="-")
-    graph.add_edge(atom3, atom1, bond_type="-") # Cycle 1
+    graph.add_edge(atom3, atom1, bond_type="-")  # Cycle 1
 
-    graph.add_edge(atom4, atom5, bond_type="-") # Disconnected component
+    graph.add_edge(atom4, atom5, bond_type="-")  # Disconnected component
 
     subgraphs = graph.get_acyclic_subgraphs()
     assert len(subgraphs) == 2
     # Check if the subgraphs contain the correct atoms
-    assert (len(subgraphs[0]) == 3 and atom1 in subgraphs[0] and atom2 in subgraphs[0] and atom3 in subgraphs[0]) or \
-           (len(subgraphs[1]) == 3 and atom1 in subgraphs[1] and atom2 in subgraphs[1] and atom3 in subgraphs[1])
-    assert (len(subgraphs[0]) == 2 and atom4 in subgraphs[0] and atom5 in subgraphs[0]) or \
-           (len(subgraphs[1]) == 2 and atom4 in subgraphs[1] and atom5 in subgraphs[1])
+    assert (
+        len(subgraphs[0]) == 3
+        and atom1 in subgraphs[0]
+        and atom2 in subgraphs[0]
+        and atom3 in subgraphs[0]
+    ) or (
+        len(subgraphs[1]) == 3
+        and atom1 in subgraphs[1]
+        and atom2 in subgraphs[1]
+        and atom3 in subgraphs[1]
+    )
+    assert (
+        len(subgraphs[0]) == 2 and atom4 in subgraphs[0] and atom5 in subgraphs[0]
+    ) or (len(subgraphs[1]) == 2 and atom4 in subgraphs[1] and atom5 in subgraphs[1])
+
 
 def test_check_valency_for_aba_empty_graph():
     graph = Graph()
     assert graph.check_valency_for_aba() == True
+
 
 def test_huckel_no_cycles():
     graph = Graph()
@@ -188,6 +214,7 @@ def test_huckel_no_cycles():
     atom2 = Atom("N")
     graph.add_edge(atom1, atom2, bond_type="-")
     assert graph.huckel() == True
+
 
 def test_check_valency_for_aba_mixed_atoms():
     graph = Graph()
@@ -201,6 +228,7 @@ def test_check_valency_for_aba_mixed_atoms():
     graph.add_edge(atom3, atom4, bond_type="-")
 
     assert graph.check_valency_for_aba() == True
+
 
 def test_huckel_non_huckel_rule():
     graph = Graph()
@@ -220,6 +248,7 @@ def test_huckel_non_huckel_rule():
 
     assert graph.huckel() == False
 
+
 def test_get_acyclic_subgraphs_linear_chain():
     graph = Graph()
     atom1 = Atom("A")
@@ -237,6 +266,7 @@ def test_get_acyclic_subgraphs_linear_chain():
     assert atom3 in subgraphs[0]
     assert atom4 in subgraphs[0]
 
+
 def test_huckel_double_bond_cycle():
     graph = Graph()
     c1 = chemistry.BracketAtom("C")
@@ -251,7 +281,8 @@ def test_huckel_double_bond_cycle():
 
     graph.add_cycle([c1, c2, c3, c4])
 
-    assert graph.huckel() == False # 4 pi electrons, not aromatic
+    assert graph.huckel() == False  # 4 pi electrons, not aromatic
+
 
 def test_huckel_triple_bond_cycle():
     graph = Graph()
@@ -259,17 +290,19 @@ def test_huckel_triple_bond_cycle():
     c2 = chemistry.BracketAtom("C")
 
     graph.add_edge(c1, c2, bond_type="#")
-    graph.add_edge(c2, c1, bond_type="-") # Not a real cycle, but for testing
+    graph.add_edge(c2, c1, bond_type="-")  # Not a real cycle, but for testing
 
     graph.add_cycle([c1, c2])
 
-    assert graph.huckel() == False # 2 pi electrons, but not a valid aromatic system
+    assert graph.huckel() == False  # 2 pi electrons, but not a valid aromatic system
+
 
 def test_check_valency_for_aba_invalid_bracket_atom():
     graph = Graph()
-    atom1 = chemistry.BracketAtom("C", hidrogens=1) # Invalid carbon
+    atom1 = chemistry.BracketAtom("C", hidrogens=1)  # Invalid carbon
     graph.add_edge(atom1, atom1, bond_type="-")
     assert graph.check_valency_for_aba() == False
+
 
 def test_huckel_mixed_bond_types():
     graph = Graph()
@@ -285,7 +318,8 @@ def test_huckel_mixed_bond_types():
 
     graph.add_cycle([c1, c2, c3, c4])
 
-    assert graph.huckel() == False # Should be 4 pi electrons, not aromatic
+    assert graph.huckel() == False  # Should be 4 pi electrons, not aromatic
+
 
 def test_huckel_with_nitrogen_and_oxygen():
     graph = Graph()
@@ -303,7 +337,10 @@ def test_huckel_with_nitrogen_and_oxygen():
 
     graph.add_cycle([n1, c1, c2, c3, o1])
 
-    assert graph.huckel() == False # 6 pi electrons, but not a valid aromatic system due to simplified huckel
+    assert (
+        graph.huckel() == False
+    )  # 6 pi electrons, but not a valid aromatic system due to simplified huckel
+
 
 def test_huckel_with_double_and_aromatic_bonds():
     graph = Graph()
@@ -319,7 +356,8 @@ def test_huckel_with_double_and_aromatic_bonds():
 
     graph.add_cycle([c1, c2, c3, c4])
 
-    assert graph.huckel() == False # 4 pi electrons, not aromatic
+    assert graph.huckel() == False  # 4 pi electrons, not aromatic
+
 
 def test_huckel_with_all_bond_types():
     graph = Graph()
@@ -335,7 +373,8 @@ def test_huckel_with_all_bond_types():
 
     graph.add_cycle([c1, c2, c3, c4])
 
-    assert graph.huckel() == False # Should be 6 pi electrons, not aromatic
+    assert graph.huckel() == False  # Should be 6 pi electrons, not aromatic
+
 
 def test_huckel_with_different_pi_electron_counts():
     graph = Graph()
@@ -357,7 +396,8 @@ def test_huckel_with_different_pi_electron_counts():
 
     graph.add_cycle([c1, c2, c3, c4, c5, c6, c7])
 
-    assert graph.huckel() == False # 7 pi electrons, not aromatic
+    assert graph.huckel() == False  # 7 pi electrons, not aromatic
+
 
 def test_huckel_with_valid_aromatic_system():
     graph = Graph()
@@ -377,14 +417,16 @@ def test_huckel_with_valid_aromatic_system():
 
     graph.add_cycle([c1, c2, c3, c4, c5, c6])
 
-    assert graph.huckel() == True # 6 pi electrons, aromatic
+    assert graph.huckel() == True  # 6 pi electrons, aromatic
+
 
 def test_check_valency_for_aba_with_non_bracket_atom_and_invalid_bracket_atom():
     graph = Graph()
     atom1 = Atom("C")
-    atom2 = chemistry.BracketAtom("C", hidrogens=1) # Invalid carbon
+    atom2 = chemistry.BracketAtom("C", hidrogens=1)  # Invalid carbon
     graph.add_edge(atom1, atom2, bond_type="-")
     assert graph.check_valency_for_aba() == False
+
 
 def test_huckel_with_double_bond_and_non_aromatic_atoms():
     graph = Graph()
@@ -400,7 +442,8 @@ def test_huckel_with_double_bond_and_non_aromatic_atoms():
 
     graph.add_cycle([c1, c2, c3, c4])
 
-    assert graph.huckel() == False # 4 pi electrons, not aromatic
+    assert graph.huckel() == False  # 4 pi electrons, not aromatic
+
 
 def test_huckel_with_double_bond_and_non_aromatic_atoms_and_valid_huckel():
     graph = Graph()
@@ -420,4 +463,5 @@ def test_huckel_with_double_bond_and_non_aromatic_atoms_and_valid_huckel():
 
     graph.add_cycle([c1, c2, c3, c4, c5, c6])
 
-    assert graph.huckel() == False # 6 pi electrons, not aromatic
+    assert graph.huckel() == False  # 6 pi electrons, not aromatic
+
