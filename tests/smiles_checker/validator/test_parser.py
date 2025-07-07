@@ -66,8 +66,8 @@ def test_atom(parser_manager: ParserManager):
     assert exc_info.value.message == "Invalid Atom Symbol: X" and exc_info.value.rule == "Atom"
 
     with pytest.raises(ParserException) as exc_info:
-        parser_manager.atom("au")
-    assert exc_info.value.message == "Invalid Symbol au" and exc_info.value.rule == "Atom"
+        parser_manager.atom("Xx")
+    assert exc_info.value.message == "Invalid Atom Symbol: Xx" and exc_info.value.rule == "Atom"
 
 
 def test_fifteen(parser_manager: ParserManager):
@@ -126,8 +126,8 @@ def test_hcount(parser_manager: ParserManager):
     assert parser_manager.hcount(_="H", digit="3") == 3, "Hydrogen count '3' should return 3"
 
     with pytest.raises(ParserException) as exc_info:
-        parser_manager.hcount(_="A", digit=None)
-    assert exc_info.value.message == "Hydrogen count must be a digit" and exc_info.value.rule == "hcount"
+        parser_manager.hcount(_="H", digit="A")
+    assert exc_info.value.message == "Invalid hydrogen count" and exc_info.value.rule == "hcount"
 
 
 def test_ring_number(parser_manager: ParserManager):

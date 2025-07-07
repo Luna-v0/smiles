@@ -187,7 +187,17 @@ class Chemistry:
         Returns:
             bool: True if the molecule is aromatic, False otherwise.
         """
-        return self.mol_graph.huckel() and self.mol_graph.check_valency_for_aba()
+        if not self.mol_graph.huckel():
+            return False
+
+        # Check for aromatic atoms bonded to non-aromatic atoms
+        for atom, neighbors in self.mol_graph.adjacency_list.items():
+            if atom.aromatic:
+                for neighbor, _ in neighbors:
+                    if not neighbor.aromatic:
+                        return False
+
+        return True
 
 
 chemistry = Chemistry()

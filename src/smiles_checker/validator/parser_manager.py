@@ -1,5 +1,4 @@
-import functools
-from dataclasses import dataclass, field
+from dataclasses import field
 from typing import List, Optional, Union
 
 from smiles_checker.chem.atomic import Atom, BracketAtom
@@ -7,35 +6,13 @@ from smiles_checker.chem.chemistry import chemistry as chem
 from smiles_checker.exceptions import ParserException
 
 
-@dataclass
-class ParserException(Exception):
-    """
-    Exception for parser errors.
-
-    Args:
-        rule: The rule that caused the error.
-        parameter: The parameter that caused the error.
-        message: The error message.
-    """
-
-    rule: str
-    parameter: str
-    message: str
-
-
 class ParserManager:
-    """
-    Parser manager to parse the SMILES strings.
-
-    Attributes:
-        current_open_rnum: The current open ring numbers.
-        current_closed_rnum: The current closed ring numbers.
-        current_chain: The current chain.
-    """
-
-    current_open_rnum = list()
-    current_closed_rnum = list()
-    current_chain: list[Atom] = list()
+    def __init__(self):
+        self.current_open_rnum = []
+        self.current_closed_rnum = []
+        self.current_chain = []
+        self.last_atom = None
+        self.ring_atoms = {}
 
     def __enter__(self):
         """
@@ -51,35 +28,63 @@ class ParserManager:
         """
         Resets the parser manager to its initial state.
         """
-        self.current_open_rnum = list()
-        self.current_closed_rnum = list()
-        self.current_chain = list()
+        self.current_open_rnum = []
+        self.current_closed_rnum = []
+        self.current_chain = []
+        self.last_atom = None
+        self.ring_atoms = {}
 
     def chain(self, bond=None, atom=None, rnum=None, dot_proxy=None):
-
-        if bond is None:
-
-            if atom is not None:
-                return atom
-
-            if rnum is not None:
-                return rnum
-
+        # Rule 43: chain -> atom
+        if atom is not None and bond is None and rnum is None and dot_proxy is None:
+            if self.last_atom:
+                chem.mol_graph.add_edge(self.last_atom, atom, "-")  # Default single bond
+            self.last_atom = atom
+            return atom
+        # Rule 45: chain -> bond atom
+        elif bond is not None and atom is not None and rnum is None and dot_proxy is None:
+            if self.last_atom:
+                chem.mol_graph.add_edge(self.last_atom, atom, bond)
+            self.last_atom = atom
+            return atom
+        # Rule 42: chain -> rnum
+        elif rnum is not None and bond is None and atom is None and dot_proxy is None:
+            if rnum in self.current_open_rnum:
+                ring_opening_atom = self.ring_atoms.pop(rnum)
+                if self.last_atom:
+                    bond_type = ":" if self.last_atom.aromatic and ring_opening_atom.aromatic else "-"
+                    chem.mol_graph.add_edge(self.last_atom, ring_opening_atom, bond_type)
+                self.current_open_rnum.remove(rnum)
+                self.current_closed_rnum.append(rnum)
+            else:
+                if self.last_atom: # Only store if there's a last_atom to connect to
+                    self.ring_atoms[rnum] = self.last_atom
+                self.current_open_rnum.append(rnum)
+            return rnum
+        # Rule 44: chain -> bond rnum
+        elif bond is not None and rnum is not None and atom is None and dot_proxy is None:
+            if rnum in self.current_open_rnum:
+                ring_opening_atom = self.ring_atoms.pop(rnum)
+                if self.last_atom:
+                    chem.mol_graph.add_edge(self.last_atom, ring_opening_atom, bond)
+                self.current_open_rnum.remove(rnum)
+                self.current_closed_rnum.append(rnum)
+            else:
+                if self.last_atom: # Only store if there's a last_atom to connect to
+                    self.ring_atoms[rnum] = self.last_atom
+                self.current_open_rnum.append(rnum)
+            return rnum
+        # Rule 46: chain -> dot_proxy
+        elif dot_proxy is not None and bond is None and atom is None and rnum is None:
+            self.last_atom = None # Disconnect chain
             return dot_proxy
-
-        if bond == ":" and atom and type(atom) == str and atom[0].isupper():
-            raise Exception(
-                f"Aromatic bond cannot be use with Uppercase and collon {atom}"
-            )
-
-        # TODO: need to check if the atom is not bracketed too
-
-        return [atom, chem.number_of_electrons_per_bond(bond)]
+        else:
+            raise Exception(f"Invalid chain rule combination: bond={bond}, atom={atom}, rnum={rnum}, dot_proxy={dot_proxy}")
 
     def inner_branch(self, bond_dot=None, line=None, inner_branch=None):
+        print(f"DEBUG: inner_branch called with bond_dot={bond_dot}, line={line}, inner_branch={inner_branch}")
         """ """
         if bond_dot == ".":
-            self.validate_branch()
             self._reset()
 
         pass
@@ -157,6 +162,7 @@ class ParserManager:
 
         atom_obj = chem.Atom(symbol_or_bracket, aromatic=symbol_or_bracket.islower())
         self.current_chain.append(atom_obj)
+        self.last_atom = atom_obj
         return atom_obj
 
     def ring_number(
@@ -231,6 +237,8 @@ class ParserManager:
                 message="Ring number already closed",
             )
         else:
+            if self.last_atom:
+                self.ring_atoms[rnum] = self.last_atom
             self.current_open_rnum.append(rnum)
 
         return rnum

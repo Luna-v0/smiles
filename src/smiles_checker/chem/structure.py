@@ -48,6 +48,9 @@ class Graph:
             self.adjacency_list[atom2] = []
         self.adjacency_list[atom1].append((atom2, bond_type))
         self.adjacency_list[atom2].append((atom1, bond_type))
+        print(f"DEBUG: Added edge: {atom1.symbol}-{atom2.symbol} with type {bond_type}")
+        print(f"DEBUG: Adjacency list for {atom1.symbol}: {self.adjacency_list[atom1]}")
+        print(f"DEBUG: Adjacency list for {atom2.symbol}: {self.adjacency_list[atom2]}")
         print(f"Added edge: {atom1.symbol}-{atom2.symbol} with type {bond_type}")
         print(f"Adjacency list for {atom1.symbol}: {self.adjacency_list[atom1]}")
         print(f"Adjacency list for {atom2.symbol}: {self.adjacency_list[atom2]}")
