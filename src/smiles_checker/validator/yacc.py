@@ -2,9 +2,9 @@ from itertools import combinations
 
 from sly import Parser
 
-from src.chem.chem import chem
-from validator.lex import SmilesLex
-from validator.parser_manager import parser_manager
+from smiles_checker.chem import chemistry
+from smiles_checker.validator.lex import SmilesLex
+from smiles_checker.validator.parser_manager import parser_manager
 
 
 def generate_combinations(rule: str) -> list[str]:

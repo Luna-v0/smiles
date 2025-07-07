@@ -1,7 +1,7 @@
 import pytest
 
-from chem import Atom, BracketAtom
-from validator.parser_manager import ParserException, ParserManager
+from smiles_checker.chem import Atom, BracketAtom
+from smiles_checker.validator.parser_manager import ParserException, ParserManager
 
 
 @pytest.fixture(scope="function")

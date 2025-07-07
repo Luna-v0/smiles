@@ -1,0 +1,1 @@
+from .validator.yacc import validate_smiles

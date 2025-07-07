@@ -2,9 +2,9 @@ import re
 
 from sly import Lexer
 
-from src.chem.chem import chem
+from smiles_checker.chem.molecule import chemistry
 
-pt = chem.pt_symbols
+pt = chemistry.pt_symbols
 
 
 def generate_regex_from_list(elem_list: list[str]) -> str:

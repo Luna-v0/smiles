@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
-from json import load
 from typing import List, Optional
+import re
+from .chemistry import _parse_electron_configuration
 
 
 @dataclass
@@ -25,6 +26,7 @@ class Atom:
     electrons_by_layers: List[int] = field(init=False)
     electron_configuration: List[str] = field(default_factory=list)
     aromatic: bool = field(default=False)
+    _subshell_electrons: dict[tuple[int, str], int] = field(init=False)
 
     def __post_init__(self):
         """
@@ -33,24 +35,30 @@ class Atom:
         if isinstance(self.electron_configuration, str):
             self.electron_configuration = self.electron_configuration.split(" ")
 
-        self.valency_layer = max([int(x[0]) for x in self.electron_configuration])
+        self._subshell_electrons = _parse_electron_configuration(self.electron_configuration)
+
+        self.valency_layer = max([n for n, _ in self._subshell_electrons.keys()])
         self.electrons_in_valency = sum(
-            [
-                int(x[2])
-                for x in self.electron_configuration
-                if int(x[0]) == self.valency_layer
-            ]
+            electrons
+            for (n, _), electrons in self._subshell_electrons.items()
+            if n == self.valency_layer
         )
 
-        _layers = {int(x[0]) for x in self.electron_configuration}
+        _layers = {n for n, _ in self._subshell_electrons.keys()}
 
         self.layers = list(_layers)
         self.layers.sort(reverse=True)
 
         self.electrons_by_layers = [
-            sum([int(x[2]) for x in self.electron_configuration if x[0] == layer_n])
+            sum(electrons for (n, _), electrons in self._subshell_electrons.items() if n == layer_n)
             for layer_n in self.layers
         ]
+
+    def get_total_electrons_in_subshell(self, subshell_type: str) -> int:
+        """
+        Returns the total number of electrons in a given subshell type (s, p, d, f) across all principal quantum numbers.
+        """
+        return sum(electrons for (_, s), electrons in self._subshell_electrons.items() if s == subshell_type)
 
     def __eq__(self, other):
         if not isinstance(other, Atom):
@@ -62,7 +70,7 @@ class Atom:
 
 
 @dataclass
-class BracketAtom(Atom):
+class BracketAtom:
     """
 
     Class for handling atoms with different properties than the default values of periodic table atoms.
@@ -83,19 +91,39 @@ class BracketAtom(Atom):
     mol_map: Optional[int] = field(default=None)
 
     def __post_init__(self):
-        """
-        Create a Bracket Atom with the given symbol, charge and hidrogens.
-
-        Args:
-            isotope: The isotope of the atom
-            symbol: The symbol of the atom
-            chiral: The chiral of the atom
-            hcount: The amount of hydrogens in the atom
-            charge: The charge of the atom
-            mol_map: The map of the atom
-        """
         super().__post_init__()
+        if self.hidrogens is None:
+            self.hidrogens = 0
+        if self.charge is None:
+            self.charge = 0
+
+        # Adjust electrons based on charge and hydrogens
+        # This is a simplified model and might need refinement for complex cases
+        total_charge_effect = self.charge - self.hidrogens # Positive charge means fewer electrons, negative means more
+
+        # Distribute charge effect across subshells, prioritizing outermost
+        # This is a very basic model and doesn't account for orbital filling rules
+        for (n, subshell), electrons in reversed(list(self._subshell_electrons.items())):
+            if total_charge_effect == 0:
+                break
+            
+            if total_charge_effect > 0: # Remove electrons
+                removed = min(electrons, total_charge_effect)
+                self._subshell_electrons[(n, subshell)] -= removed
+                total_charge_effect -= removed
+            else: # Add electrons
+                added = min(self._max_electrons_in_subshell(subshell) - electrons, -total_charge_effect)
+                self._subshell_electrons[(n, subshell)] += added
+                total_charge_effect += added
+
         self.solo_valency = self.compute_valency()
+
+    def _max_electrons_in_subshell(self, subshell_type: str) -> int:
+        if subshell_type == 's': return 2
+        if subshell_type == 'p': return 6
+        if subshell_type == 'd': return 10
+        if subshell_type == 'f': return 14
+        return 0 # Should not happen
 
     def _octate_rule(self, layer: int) -> bool:
         """
@@ -222,140 +250,8 @@ class BracketAtom(Atom):
         return False
 
 
-class Chem:
-    """
-    Class for handling Chemistry Domain Logic.
-
-    Attributes:
-        organic_atoms: A fixed list of all possible organic atoms
-        pt_symbols: All the periodic table symbols
-        look_up_table: A look up table for all atoms
-    """
-
-    def number_of_electrons_per_bond(self, bond: str) -> int:
-        """
-        Get the number of electrons per bond.
-
-        Args:
-            bond: The bond to get the number of electrons from.
-
-        Returns:
-            The number of electrons per bond.
-        """
-        bonds = {"=": 2, "#": 3, "$": 4, "/": 1, "\\": 1, "-": 1, ".": 0}
-
-        if bond in bonds:
-            return bonds[bond]
-
-        raise Exception(f"Invalid Bond {bond}")
-
-    def __init__(self, periodic_table_path="src/periodic-table-lookup.json"):
-
-        upper_organic_atoms = {"N", "O", "P", "H", "S", "F", "Cl", "Br", "I", "C", "B"}
-
-        with open(periodic_table_path) as JSON:  # loads the periodic table json
-            look_up_table_json = dict(load(JSON))
-
-        # set of all organic atoms
-        self.organic_atoms = {
-            atom.lower() for atom in upper_organic_atoms
-        } | upper_organic_atoms
-
-        # set of all periodic table symbols
-        self.pt_symbols = [
-            look_up_table_json[x]["symbol"] for x in look_up_table_json["order"]
-        ]
-
-        look_up_table_json.pop("order")
-
-        # creates a look up table for all atoms
-        self.look_up_table = {
-            x["symbol"]: Atom(
-                symbol=x["symbol"], electron_configuration=x["electron_configuration"]
-            )
-            for x in look_up_table_json.values()
-        }
-
-    def Atom(self, symbol: str, aromatic: bool = False) -> Atom:
-        """
-        Create an Atom with the given symbol, charge and hidrogens.
-
-        Args:
-            symbol: The symbol of the atom
-            chiral: The chiral of the atom
-            hcount: The amount of hydrogens in the atom
-            charge: The charge of the atom
-            map: The map of the atom
-        """
-
-        if symbol.title() != symbol:
-            symbol = symbol.title()
-            print(symbol)
-
-        if symbol not in self.pt_symbols:
-            raise Exception(f"Invalid Symbol {symbol}")
-
-        base_atom = self.look_up_table[symbol]
-
-        return Atom(
-            symbol=symbol,
-            electron_configuration=base_atom.electron_configuration,
-            aromatic=aromatic,
-        )
-
-    def BracketAtom(self, symbol: str, **kwargs) -> BracketAtom:
-        """
-        Create a Bracket Atom with the given symbol, charge and hidrogens.
-
-        Args:
-            symbol: The symbol of the atom
-            chiral: The chiral of the atom
-            hcount: The amount of hydrogens in the atom
-            charge: The charge of the atom
-            map: The map of the atom
-        """
-        if symbol not in self.pt_symbols:
-            raise Exception(f"Invalid Symbol {symbol}")
-
-        base_atom = self.look_up_table[symbol]
-
-        if symbol.title() != symbol:  # if the symbol is not lowercase
-            symbol = symbol.title()
-            kwargs["aromatic"] = True
-
-        return BracketAtom(
-            symbol=symbol,
-            electron_configuration=base_atom.electron_configuration,
-            **kwargs,
-        )
-
-    def validate_valency_bracket(
-        self,
-        isotope: Optional[int],
-        symbol: str,
-        chiral: Optional[int],
-        hcount: Optional[int],
-        charge: Optional[int],
-        map: Optional[int],
-    ) -> bool:
-        """
-        Validate the valency of a single bracket atom (if it is not a part of a aromatic ring)
-        Args:
-            isotope: The isotope of the atom
-            symbol: The symbol of the atom
-            chiral: The chiral of the atom
-            hcount: The amount of hydrogens in the atom
-            charge: The charge of the atom
-            map: The map of the atom
-        Returns:
-            If the valency of the atom is valid
-        """
-
-        return self.BracketAtom(
-            symbol=symbol,
-            charge=charge if charge is not None else 0,
-            hidrogens=hcount if hcount is not None else 0,
-        ).compute_valency()
 
 
-chem = Chem()
+
+
+

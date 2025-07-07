@@ -1,4 +1,4 @@
-from validator.yacc import validate_smiles
+from smiles_checker import validate_smiles
 
 
 def test_benzene():

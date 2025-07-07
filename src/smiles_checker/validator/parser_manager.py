@@ -2,7 +2,7 @@ import functools
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
-from chem import Atom, BracketAtom, chem
+from smiles_checker.chem import Atom, BracketAtom, chemistry
 
 
 def fill_none(func):
