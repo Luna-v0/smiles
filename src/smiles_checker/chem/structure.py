@@ -2,10 +2,10 @@ import os
 from dataclasses import dataclass, field
 from json import load
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import List, Optional
+import re
 
 from .atomic import Atom, BracketAtom
-from .chemistry import _parse_electron_configuration
 
 
 @dataclass
@@ -20,7 +20,7 @@ class Graph:
     using a auxiliary data structure.
     """
 
-    adjacency_list: dict[Atom, List[Atom]] = field(default_factory=dict)
+    adjacency_list: dict[Atom, List[tuple[Atom, str]]] = field(default_factory=dict)
     cycles: List[List[Atom]] = field(default_factory=list)
 
     def add_cycle(self, cycle: List[Atom]):
@@ -30,7 +30,7 @@ class Graph:
         """
         self.cycles.append(cycle)
 
-    def add_edge(self, atom1: Atom, atom2: Atom):
+    def add_edge(self, atom1: Atom, atom2: Atom, bond_type: str = "-"):
         """
         Add an edge between two atoms in the graph.
         """
@@ -38,8 +38,8 @@ class Graph:
             self.adjacency_list[atom1] = []
         if atom2 not in self.adjacency_list:
             self.adjacency_list[atom2] = []
-        self.adjacency_list[atom1].append(atom2)
-        self.adjacency_list[atom2].append(atom1)
+        self.adjacency_list[atom1].append((atom2, bond_type))
+        self.adjacency_list[atom2].append((atom1, bond_type))
 
     def get_acyclic_subgraphs(self) -> List[List[Atom]]:
         """
@@ -53,7 +53,7 @@ class Graph:
             visited.add(atom)
             current_subgraph.append(atom)
 
-            for neighbor in self.adjacency_list.get(atom, []):
+            for neighbor, _ in self.adjacency_list.get(atom, []):
                 if neighbor not in visited:
                     dfs(neighbor, current_subgraph)
 
@@ -78,7 +78,8 @@ class Graph:
         ]
 
         for atom in bracket_atoms:
-            if not atom.compute_valency():
+            bonds = len(self.adjacency_list.get(atom, []))
+            if not atom.compute_valency(bonds=bonds):
                 return False
         return True
 
@@ -87,10 +88,27 @@ class Graph:
         Computes the Huckel's 4n + 2 rule for aromaticity.
         """
 
-        for atoms in self.cycles:
-            pi_electrons = sum(
-                atom.get_total_electrons_in_subshell("p") for atom in atoms
-            )
+        for atoms_in_cycle in self.cycles:
+            pi_electrons = 0
+            for i, atom in enumerate(atoms_in_cycle):
+                # Find the bond type between the current atom and the next atom in the cycle
+                # (and between the last and first atom to close the cycle)
+                next_atom = atoms_in_cycle[(i + 1) % len(atoms_in_cycle)]
+                bond_type = None
+                for neighbor, b_type in self.adjacency_list.get(atom, []):
+                    if neighbor == next_atom:
+                        bond_type = b_type
+                        break
+
+                if bond_type == ":":  # Aromatic bond
+                    # In an aromatic system, each atom contributes 1 pi electron
+                    # This is a simplification, as some atoms (N, O, S) can contribute 2
+                    # based on lone pairs. For now, we'll stick to 1 for aromatic bonds.
+                    pi_electrons += 1
+                elif bond_type == "=":  # Double bond
+                    pi_electrons += 2
+                # Single bonds ('-') and triple bonds ('#') do not contribute pi electrons to aromaticity
+
             if not (pi_electrons - 2) % 4 == 0:
                 return False
 
@@ -181,8 +199,8 @@ class Chemistry:
             raise Exception(f"Invalid Symbol {symbol}")
         base_atom = self.look_up_table[symbol]
         return Atom(
-            symbol=symbol,
-            electron_configuration=base_atom.electron_configuration,
+            symbol,
+            base_atom.electron_configuration,
             aromatic=aromatic,
         )
 
@@ -203,9 +221,15 @@ class Chemistry:
         if symbol.title() != symbol:  # if the symbol is not lowercase
             symbol = symbol.title()
             kwargs["aromatic"] = True
+
+        hidrogens = kwargs.pop("hidrogens", None)
+        charge = kwargs.pop("charge", None)
+
         return BracketAtom(
-            symbol=symbol,
-            electron_configuration=base_atom.electron_configuration,
+            symbol,
+            (base_atom.electron_configuration if base_atom.electron_configuration else "").replace("[He] ", "").replace("[Ne] ", "").replace("[Ar] ", "").replace("[Kr] ", "").replace("[Xe] ", "").replace("[Rn] ", ""),
+            hidrogens=hidrogens,
+            charge=charge,
             **kwargs,
         )
 

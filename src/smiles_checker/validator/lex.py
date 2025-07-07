@@ -2,7 +2,7 @@ import re
 
 from sly import Lexer
 
-from smiles_checker.chem.molecule import chemistry
+from smiles_checker.chem.chemistry import chemistry
 
 pt = chemistry.pt_symbols
 

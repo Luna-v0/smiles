@@ -2,7 +2,7 @@ from itertools import combinations
 
 from sly import Parser
 
-from smiles_checker.chem import chemistry
+from smiles_checker.chem.chemistry import chemistry as chem
 from smiles_checker.validator.lex import SmilesLex
 from smiles_checker.validator.parser_manager import parser_manager
 

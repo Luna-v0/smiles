@@ -2,7 +2,8 @@ import functools
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
-from smiles_checker.chem import Atom, BracketAtom, chemistry
+from smiles_checker.chem.atomic import Atom, BracketAtom
+from smiles_checker.chem.chemistry import chemistry as chem
 
 
 def fill_none(func):
@@ -109,13 +110,8 @@ class ParserManager:
             )
 
         starting_aromacity = self.current_chain[0].aromatic
-        for atom in self.current_chain[1:]:
-            if atom.aromatic != starting_aromacity:
-                raise ParserException(
-                    rule="validate_branch",
-                    parameter=f"{atom}",
-                    message="Aromaticity mismatch",
-                )
+        if not self.current_chain:
+            return True
 
         return True
 
@@ -174,7 +170,9 @@ class ParserManager:
             return symbol_or_bracket
 
         if len(symbol_or_bracket) == 1 or symbol_or_bracket in chem.organic_atoms:
-            return chem.Atom(symbol_or_bracket, aromatic=symbol_or_bracket.islower())
+            atom_obj = chem.Atom(symbol_or_bracket, aromatic=symbol_or_bracket.islower())
+            self.current_chain.append(atom_obj)
+            return atom_obj
 
         elem1, elem2 = symbol_or_bracket
 
@@ -264,14 +262,14 @@ class ParserManager:
         Returns:
             The parsed hydrogen count.
         """
-        if not digit.isdigit():
+        if digit is None or not digit.isdigit():
             raise ParserException(
                 rule="hcount",
                 parameter=digit,
                 message="Hydrogen count must be a digit",
             )
 
-        return int(digit) if digit else 1
+        return int(digit) if digit is not None else 1
 
     @fill_none
     def charge(self, charge1: str, charge2: Union[str, None, int]) -> int:
