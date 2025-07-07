@@ -134,26 +134,47 @@ def test_ring_number(parser_manager: ParserManager):
     """
     Test the ring number parser.
     """
+    parser_manager.atom("C") # Set a last_atom for ring opening
     assert parser_manager.ring_number(ring_number_or_symbol="1", ring_number1=None, ring_number2=None) == 1, "Ring number 1 opened"
+    parser_manager.atom("C") # Set a last_atom for ring opening
     assert parser_manager.ring_number(ring_number_or_symbol="2", ring_number1=None, ring_number2=None) == 2, "Ring number 2 opened"
+    parser_manager.atom("C") # Set a last_atom for ring opening
     assert parser_manager.ring_number(ring_number_or_symbol="3", ring_number1=None, ring_number2=None) == 3, "Ring number 3 opened"
 
+    parser_manager.atom("C") # Set a last_atom for ring opening
     assert parser_manager.ring_number(ring_number_or_symbol="1", ring_number1=None, ring_number2=None) == 1, "Ring number 1 closed"
+    parser_manager.atom("C") # Set a last_atom for ring opening
     assert parser_manager.ring_number(ring_number_or_symbol="2", ring_number1=None, ring_number2=None) == 2, "Ring number 2 closed"
+    parser_manager.atom("C") # Set a last_atom for ring opening
     assert parser_manager.ring_number(ring_number_or_symbol="3", ring_number1=None, ring_number2=None) == 3, "Ring number 3 closed"
 
+    parser_manager.atom("C") # Set a last_atom for ring opening
     assert parser_manager.ring_number(ring_number_or_symbol="4", ring_number1=None, ring_number2=None) == 4, "Ring number 4 opened"
+    parser_manager.atom("C") # Set a last_atom for ring opening
     assert parser_manager.ring_number(ring_number_or_symbol="4", ring_number1=None, ring_number2=None) == 4, "Ring number 4 closed"
 
+    parser_manager.atom("C") # Set a last_atom for ring opening
     assert parser_manager.ring_number(ring_number_or_symbol="%", ring_number1="5", ring_number2=None) == 5, "Ring number 5 opened"
+    parser_manager.atom("C") # Set a last_atom for ring opening
     assert parser_manager.ring_number(ring_number_or_symbol="%", ring_number1="5", ring_number2=None) == 5, "Ring number 5 closed"
 
     with pytest.raises(ParserException) as exc_info:
         parser_manager.ring_number(ring_number_or_symbol="A", ring_number1=None, ring_number2=None)
     assert exc_info.value.message == "Ring number must be a digit or a number with a leading digit"
 
+    # Reset parser_manager for this specific test case to ensure last_atom is None
+    parser_manager._reset()
     with pytest.raises(ParserException) as exc_info:
         parser_manager.ring_number(ring_number_or_symbol="1", ring_number1=None, ring_number2=None)
+    assert exc_info.value.message == "Cannot open a ring without a preceding atom"
+
+    # Open and close a ring to set up for "Ring number already closed"
+    parser_manager.atom("C")
+    parser_manager.ring_number(ring_number_or_symbol="6", ring_number1=None, ring_number2=None)
+    parser_manager.atom("C")
+    parser_manager.ring_number(ring_number_or_symbol="6", ring_number1=None, ring_number2=None)
+    with pytest.raises(ParserException) as exc_info:
+        parser_manager.ring_number(ring_number_or_symbol="6", ring_number1=None, ring_number2=None)
     assert exc_info.value.message == "Ring number already closed"
 
     with pytest.raises(ParserException) as exc_info:

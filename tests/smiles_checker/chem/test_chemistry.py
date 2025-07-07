@@ -1,5 +1,6 @@
 from smiles_checker.chem import Atom, chemistry
 import pytest
+from smiles_checker.exceptions import ParserException
 
 def test_atom():
     assert chemistry.Atom("C") == chemistry.Atom(
@@ -108,12 +109,14 @@ def test_number_of_electrons_per_bond():
         chemistry.number_of_electrons_per_bond("invalid_bond")
 
 def test_atom_invalid_symbol():
-    with pytest.raises(Exception, match="Invalid Symbol X"):
+    with pytest.raises(ParserException) as exc_info:
         chemistry.Atom("X")
+    assert exc_info.value.message == "Invalid Atom Symbol: X"
 
 def test_bracket_atom_invalid_symbol():
-    with pytest.raises(Exception, match="Invalid Symbol Xx"):
+    with pytest.raises(ParserException) as exc_info:
         chemistry.BracketAtom("Xx")
+    assert exc_info.value.message == "Invalid Atom Symbol: Xx"
 
 def test_atom_empty_electron_configuration():
     atom = Atom("H", electron_configuration="")

@@ -120,13 +120,12 @@ class SmilesParser(Parser):
             mol_map=getAttributes(rules, "mol_map")
         )
 
-    @_("dot_proxy", "bond atom", "bond rnum", "atom", "rnum")  # type: ignore
+    @_("bond atom", "bond rnum", "atom", "rnum")  # type: ignore
     def chain(self, rules):
         return parser_manager.chain(
             bond=getAttributes(rules, "bond"),
             atom=getAttributes(rules, "atom"),
-            rnum=getAttributes(rules, "rnum"),
-            dot_proxy=getAttributes(rules, "dot_proxy")
+            rnum=getAttributes(rules, "rnum")
         )
 
     @_('"." atom')  # type: ignore
@@ -143,10 +142,30 @@ class SmilesParser(Parser):
 
     @_("bond_dot line", "line", "bond_dot line inner_branch", "line inner_branch")  # type: ignore
     def inner_branch(self, rules):
+        bond_dot = None
+        line_content = None
+        inner_branch_content = None
+
+        if len(rules) == 2:
+            # Cases: "bond_dot line" or "line inner_branch"
+            # Check if rules[0] is a bond_dot (token) or a line (non-terminal)
+            if hasattr(rules, 'bond_dot'): # This checks if the rule was "bond_dot line"
+                bond_dot = rules[0]
+                line_content = rules[1]
+            else: # This must be "line inner_branch"
+                line_content = rules[0]
+                inner_branch_content = rules[1]
+        elif len(rules) == 3: # Case: "bond_dot line inner_branch"
+            bond_dot = rules[0]
+            line_content = rules[1]
+            inner_branch_content = rules[2]
+        elif len(rules) == 1: # Case: "line"
+            line_content = rules[0]
+
         return parser_manager.inner_branch(
-            bond_dot=getAttributes(rules, "bond_dot"),
-            line=getAttributes(rules, "line"),
-            inner_branch=getAttributes(rules, "inner_branch")
+            bond_dot=bond_dot,
+            line=line_content,
+            inner_branch_content=inner_branch_content
         )
 
     @_("bond", '"."')  # type: ignore
@@ -226,8 +245,7 @@ def validate_smiles(mol: str) -> tuple[bool, Exception | None]:
     """
     try:
         parser.parse(lexer.tokenize(mol))
-        print(f"DEBUG: mol_graph adjacency_list: {chem.mol_graph.adjacency_list}")
-        print(f"DEBUG: mol_graph cycles: {chem.mol_graph.cycles}")
+        
         
         parser_manager._reset()
         return True, None

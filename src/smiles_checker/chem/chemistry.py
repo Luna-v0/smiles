@@ -1,15 +1,14 @@
 import os
+import re
 from dataclasses import dataclass, field
 from json import load
 from pathlib import Path
 from typing import List, Optional
-import re
+
+from smiles_checker.exceptions import ParserException
 
 from .atomic import Atom, BracketAtom
 from .structure import Graph
-
-
-from smiles_checker.exceptions import ParserException
 
 
 class Chemistry:
@@ -78,7 +77,14 @@ class Chemistry:
         # creates a look up table for all atoms
         self.look_up_table = {
             x["symbol"]: Atom(
-                symbol=x["symbol"], electron_configuration=x.get("electron_configuration", "").replace("[He] ", "").replace("[Ne] ", "").replace("[Ar] ", "").replace("[Kr] ", "").replace("[Xe] ", "").replace("[Rn] ", "")
+                symbol=x["symbol"],
+                electron_configuration=x.get("electron_configuration", "")
+                .replace("[He] ", "")
+                .replace("[Ne] ", "")
+                .replace("[Ar] ", "")
+                .replace("[Kr] ", "")
+                .replace("[Xe] ", "")
+                .replace("[Rn] ", ""),
             )
             for x in look_up_table_json.values()
         }
@@ -102,14 +108,22 @@ class Chemistry:
         processed_symbol = symbol.title()
         if processed_symbol not in self.pt_symbols:
             raise ParserException(
-                rule="Atom",
-                parameter=symbol,
-                message=f"Invalid Atom Symbol: {symbol}"
+                rule="Atom", parameter=symbol, message=f"Invalid Atom Symbol: {symbol}"
             )
         base_atom = self.look_up_table[processed_symbol]
         return Atom(
             processed_symbol,
-            (base_atom.electron_configuration if base_atom.electron_configuration else "").replace("[He] ", "").replace("[Ne] ", "").replace("[Ar] ", "").replace("[Kr] ", "").replace("[Xe] ", "").replace("[Rn] ", ""),
+            (
+                base_atom.electron_configuration
+                if base_atom.electron_configuration
+                else ""
+            )
+            .replace("[He] ", "")
+            .replace("[Ne] ", "")
+            .replace("[Ar] ", "")
+            .replace("[Kr] ", "")
+            .replace("[Xe] ", "")
+            .replace("[Rn] ", ""),
             aromatic=aromatic,
         )
 
@@ -132,7 +146,7 @@ class Chemistry:
             raise ParserException(
                 rule="bracketatom",
                 parameter=symbol,
-                message=f"Invalid Atom Symbol: {symbol}"
+                message=f"Invalid Atom Symbol: {symbol}",
             )
         base_atom = self.look_up_table[processed_symbol]
         if symbol.title() != symbol:  # if the symbol is not lowercase
@@ -143,7 +157,17 @@ class Chemistry:
 
         return BracketAtom(
             processed_symbol,
-            (base_atom.electron_configuration if base_atom.electron_configuration else "").replace("[He] ", "").replace("[Ne] ", "").replace("[Ar] ", "").replace("[Kr] ", "").replace("[Xe] ", "").replace("[Rn] ", ""),
+            (
+                base_atom.electron_configuration
+                if base_atom.electron_configuration
+                else ""
+            )
+            .replace("[He] ", "")
+            .replace("[Ne] ", "")
+            .replace("[Ar] ", "")
+            .replace("[Kr] ", "")
+            .replace("[Xe] ", "")
+            .replace("[Rn] ", ""),
             hidrogens=hidrogens,
             charge=charge,
             **kwargs,

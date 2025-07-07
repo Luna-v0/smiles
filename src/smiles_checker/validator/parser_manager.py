@@ -34,60 +34,93 @@ class ParserManager:
         self.last_atom = None
         self.ring_atoms = {}
 
-    def chain(self, bond=None, atom=None, rnum=None, dot_proxy=None):
-        # Rule 43: chain -> atom
-        if atom is not None and bond is None and rnum is None and dot_proxy is None:
+    def chain(self, bond=None, atom=None, rnum=None):
+        """
+        Handles the 'chain' rule in SMILES parsing, connecting atoms and managing ring closures.
+
+        Args:
+            bond (str, optional): The type of bond (e.g., "-", "=", "#"). Defaults to None.
+            atom (Atom, optional): The atom object. Defaults to None.
+            rnum (int, optional): The ring number. Defaults to None.
+        """
+        if atom is not None:
             if self.last_atom:
-                chem.mol_graph.add_edge(self.last_atom, atom, "-")  # Default single bond
+                # Default to single bond if not specified
+                actual_bond = bond if bond is not None else "-"
+                chem.mol_graph.add_edge(self.last_atom, atom, actual_bond)
             self.last_atom = atom
             return atom
-        # Rule 45: chain -> bond atom
-        elif bond is not None and atom is not None and rnum is None and dot_proxy is None:
-            if self.last_atom:
-                chem.mol_graph.add_edge(self.last_atom, atom, bond)
-            self.last_atom = atom
-            return atom
-        # Rule 42: chain -> rnum
-        elif rnum is not None and bond is None and atom is None and dot_proxy is None:
+        elif rnum is not None:
             if rnum in self.current_open_rnum:
                 ring_opening_atom = self.ring_atoms.pop(rnum)
                 if self.last_atom:
-                    bond_type = ":" if self.last_atom.aromatic and ring_opening_atom.aromatic else "-"
+                    # Determine bond type for ring closure
+                    bond_type = bond
+                    if bond is None:
+                        bond_type = ":" if self.last_atom.aromatic and ring_opening_atom.aromatic else "-"
                     chem.mol_graph.add_edge(self.last_atom, ring_opening_atom, bond_type)
                 self.current_open_rnum.remove(rnum)
                 self.current_closed_rnum.append(rnum)
             else:
-                if self.last_atom: # Only store if there's a last_atom to connect to
-                    self.ring_atoms[rnum] = self.last_atom
-                self.current_open_rnum.append(rnum)
-            return rnum
-        # Rule 44: chain -> bond rnum
-        elif bond is not None and rnum is not None and atom is None and dot_proxy is None:
-            if rnum in self.current_open_rnum:
-                ring_opening_atom = self.ring_atoms.pop(rnum)
                 if self.last_atom:
-                    chem.mol_graph.add_edge(self.last_atom, ring_opening_atom, bond)
-                self.current_open_rnum.remove(rnum)
-                self.current_closed_rnum.append(rnum)
-            else:
-                if self.last_atom: # Only store if there's a last_atom to connect to
                     self.ring_atoms[rnum] = self.last_atom
                 self.current_open_rnum.append(rnum)
             return rnum
-        # Rule 46: chain -> dot_proxy
-        elif dot_proxy is not None and bond is None and atom is None and rnum is None:
-            self.last_atom = None # Disconnect chain
-            return dot_proxy
         else:
-            raise Exception(f"Invalid chain rule combination: bond={bond}, atom={atom}, rnum={rnum}, dot_proxy={dot_proxy}")
+            raise ParserException(
+                rule="chain",
+                parameter=f"bond={bond}, atom={atom}, rnum={rnum}",
+                message="Invalid chain rule combination"
+            )
 
-    def inner_branch(self, bond_dot=None, line=None, inner_branch=None):
-        print(f"DEBUG: inner_branch called with bond_dot={bond_dot}, line={line}, inner_branch={inner_branch}")
-        """ """
+    def dot_proxy(self, atom: Atom):
+        """
+        Handles the '.' (dot) notation in SMILES, indicating disconnected structures.
+
+        Args:
+            atom (Atom): The atom following the dot, which starts a new disconnected chain.
+        """
+        self.last_atom = None  # Disconnect the current chain
+        self.current_chain.append(atom) # Add the new atom to the current chain
+        return atom
+
+    def inner_branch(self, bond_dot=None, line=None, inner_branch_content=None):
+        """
+        Handles the parsing of branches in SMILES strings.
+
+        Args:
+            bond_dot (str, optional): The bond or dot preceding the branch. Defaults to None.
+            line (list): The content of the branch (list of atoms/ring closures).
+            inner_branch_content (any, optional): Content of a nested inner branch. Defaults to None.
+        """
+        # Save the current state before processing the branch
+        original_last_atom = self.last_atom
+        original_current_chain = list(self.current_chain)
+
         if bond_dot == ".":
-            self._reset()
+            self.last_atom = None  # Disconnect chain for dot notation
 
-        pass
+        # Process the main line of the branch
+        if line:
+            # The 'line' is already processed by the 'chain' method in yacc.py
+            # and its effects on last_atom and mol_graph are already applied.
+            # We just need to ensure the connection from the original_last_atom
+            # to the first atom of the branch if a bond is specified.
+            if original_last_atom and line[0] and bond_dot and bond_dot != ".":
+                chem.mol_graph.add_edge(original_last_atom, line[0], bond_dot)
+
+        # Process nested inner branches if they exist
+        if inner_branch_content:
+            # This part assumes inner_branch_content is already processed recursively
+            # by the parser and its effects are handled. No explicit action needed here
+            # unless there's a specific connection logic for nested branches.
+            pass
+
+        # Restore the last_atom to connect the branch back to the main chain
+        self.last_atom = original_last_atom
+        self.current_chain = original_current_chain
+
+        return line # Return the processed branch content
 
     def validate_branch(self) -> bool:
         """
@@ -104,7 +137,16 @@ class ParserManager:
         if not self.current_chain:
             return True
 
-        starting_aromacity = self.current_chain[0].aromatic
+        # Validate the molecular graph structure
+        chem.mol_graph.validate_graph()
+
+        # Validate aromaticity
+        if not chem.validate_aromacity():
+            raise ParserException(
+                rule="validate_branch",
+                parameter="Aromaticity check failed",
+                message="Invalid aromaticity in molecule",
+            )
 
         return True
 
@@ -154,8 +196,6 @@ class ParserManager:
         Returns:
             The atom
         """
-
-        # TODO maybe I'm missing to add to the chain here?
 
         if type(symbol_or_bracket) != str:
             return symbol_or_bracket
@@ -226,21 +266,6 @@ class ParserManager:
                 parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
                 message="Ring number must be greater than 0"
             )
-
-        if rnum in self.current_open_rnum:
-            self.current_open_rnum.remove(rnum)
-            self.current_closed_rnum.append(rnum)
-        elif rnum in self.current_closed_rnum:
-            raise ParserException(
-                rule="ring_number",
-                parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
-                message="Ring number already closed",
-            )
-        else:
-            if self.last_atom:
-                self.ring_atoms[rnum] = self.last_atom
-            self.current_open_rnum.append(rnum)
-
         return rnum
 
     def int(self, digits: List[str]) -> int:
