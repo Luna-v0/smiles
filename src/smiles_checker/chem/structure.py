@@ -11,13 +11,14 @@ from .atomic import Atom, BracketAtom
 @dataclass
 class Graph:
     """
-    Class for handling molecular structures as graphs.
-    This class is used to represent molecules as graphs, where atoms are nodes
-    and bonds are edges.
+    Represents a molecular structure as a graph, where atoms are nodes and bonds are edges.
 
-    It uses the adjacency list representation for the graph.
-    It also needs to keep track of the cycles in the graph, which needs to be done
-    using a auxiliary data structure.
+    Uses an adjacency list representation for the graph and tracks cycles.
+
+    Attributes:
+        adjacency_list (dict[Atom, List[tuple[Atom, str]]]): Adjacency list where keys are Atom objects
+                                                            and values are lists of (neighbor_atom, bond_type) tuples.
+        cycles (List[List[Atom]]): A list of cycles detected in the graph, where each cycle is a list of Atom objects.
     """
 
     adjacency_list: dict[Atom, List[tuple[Atom, str]]] = field(default_factory=dict)
@@ -25,14 +26,21 @@ class Graph:
 
     def add_cycle(self, cycle: List[Atom]):
         """
-        Add a cycle to the graph.
-        A cycle is a list of atoms that are connected in a circular manner.
+        Adds a cycle (a list of connected atoms forming a ring) to the graph's cycle list.
+
+        Args:
+            cycle (List[Atom]): A list of Atom objects representing the cycle.
         """
         self.cycles.append(cycle)
 
     def add_edge(self, atom1: Atom, atom2: Atom, bond_type: str = "-"):
         """
-        Add an edge between two atoms in the graph.
+        Adds an edge (bond) between two atoms in the graph.
+
+        Args:
+            atom1 (Atom): The first atom.
+            atom2 (Atom): The second atom.
+            bond_type (str): The type of bond (e.g., "-" for single, "=" for double, "#" for triple, ":" for aromatic).
         """
         if atom1 not in self.adjacency_list:
             self.adjacency_list[atom1] = []
@@ -40,11 +48,23 @@ class Graph:
             self.adjacency_list[atom2] = []
         self.adjacency_list[atom1].append((atom2, bond_type))
         self.adjacency_list[atom2].append((atom1, bond_type))
+        print(f"Added edge: {atom1.symbol}-{atom2.symbol} with type {bond_type}")
+        print(f"Adjacency list for {atom1.symbol}: {self.adjacency_list[atom1]}")
+        print(f"Adjacency list for {atom2.symbol}: {self.adjacency_list[atom2]}")
+        print(f"Added edge: {atom1.symbol}-{atom2.symbol} with type {bond_type}")
+        print(f"Adjacency list for {atom1.symbol}: {self.adjacency_list[atom1]}")
+        print(f"Adjacency list for {atom2.symbol}: {self.adjacency_list[atom2]}")
 
     def get_acyclic_subgraphs(self) -> List[List[Atom]]:
         """
-        Get all acyclic subgraphs in the graph.
-        This method uses a depth-first search to find all acyclic subgraphs in the graph.
+        Identifies and returns all acyclic subgraphs within the molecular graph.
+
+        This method uses a depth-first search (DFS) to traverse the graph and identify
+        connected components that do not contain cycles.
+
+        Returns:
+            List[List[Atom]]: A list of lists, where each inner list represents an acyclic subgraph
+                              and contains the Atom objects belonging to that subgraph.
         """
         visited = set()
         acyclic_subgraphs = []
@@ -67,7 +87,13 @@ class Graph:
 
     def check_valency_for_aba(self) -> bool:
         """
-        Checks the valency for acyclic bracket atoms (ABA).
+        Checks the valency of all acyclic BracketAtom instances within the graph.
+
+        Iterates through all atoms in acyclic subgraphs and verifies their valency
+        using the compute_valency method of BracketAtom.
+
+        Returns:
+            bool: True if all acyclic BracketAtom instances have valid valency, False otherwise.
         """
         acyclic_subgraphs = self.get_acyclic_subgraphs()
         bracket_atoms: List[BracketAtom] = [
@@ -85,14 +111,18 @@ class Graph:
 
     def huckel(self) -> bool:
         """
-        Computes the Huckel's 4n + 2 rule for aromaticity.
+        Applies Huckel's rule (4n + 2 pi electrons) to determine if cyclic systems are aromatic.
+
+        This method calculates the total number of pi electrons within each detected cycle
+        based on bond types and checks if the 4n+2 rule is satisfied.
+
+        Returns:
+            bool: True if all cycles satisfy Huckel's rule, False otherwise.
         """
 
         for atoms_in_cycle in self.cycles:
             pi_electrons = 0
             for i, atom in enumerate(atoms_in_cycle):
-                # Find the bond type between the current atom and the next atom in the cycle
-                # (and between the last and first atom to close the cycle)
                 next_atom = atoms_in_cycle[(i + 1) % len(atoms_in_cycle)]
                 bond_type = None
                 for neighbor, b_type in self.adjacency_list.get(atom, []):
@@ -101,13 +131,11 @@ class Graph:
                         break
 
                 if bond_type == ":":  # Aromatic bond
-                    # In an aromatic system, each atom contributes 1 pi electron
-                    # This is a simplification, as some atoms (N, O, S) can contribute 2
-                    # based on lone pairs. For now, we'll stick to 1 for aromatic bonds.
                     pi_electrons += 1
                 elif bond_type == "=":  # Double bond
                     pi_electrons += 2
-                # Single bonds ('-') and triple bonds ('#') do not contribute pi electrons to aromaticity
+                elif bond_type == "#": # Triple bond
+                    pi_electrons += 4
 
             if not (pi_electrons - 2) % 4 == 0:
                 return False

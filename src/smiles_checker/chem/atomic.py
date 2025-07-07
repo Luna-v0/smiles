@@ -5,8 +5,13 @@ import re
 
 def _parse_electron_configuration(electron_config: str) -> frozenset[tuple[tuple[int, str], int]]:
     """
-    Parses a single electron configuration string (e.g., "1s2 2s2 2p6")
-    into a dictionary mapping (principal_quantum_number, subshell_type) to electron count.
+    Parses an electron configuration string into a frozenset of (principal_quantum_number, subshell_type), electron_count.
+
+    Args:
+        electron_config: The electron configuration string (e.g., "1s2 2s2 2p6").
+
+    Returns:
+        A frozenset of tuples, where each tuple contains (principal_quantum_number, subshell_type) and electron_count.
     """
     parsed_config = {}
     # Remove noble gas notations like [He], [Ne], etc.
@@ -28,16 +33,16 @@ def _parse_electron_configuration(electron_config: str) -> frozenset[tuple[tuple
 @dataclass(frozen=True)
 class Atom:
     """
-    Class for handling only the periodic table atom properties, more properties from
-    the periodic table lookup json could be added later.
+    Represents a chemical atom with its electron configuration and related properties.
 
-    Attribute:
-        symbol: The symbol of the atom
-        valency_layer: The last electron layer number
-        electrons_in_valency: Amount of electrons in the valency layer
-        layers: Indexes of all layers
-        electrons_by_layer: Amount of electrons in each layer
-        electron_configuration: The electron configuration of the atom
+    Attributes:
+        symbol (str): The chemical symbol of the atom.
+        valency_layer (int): The principal quantum number of the outermost electron shell.
+        electrons_in_valency (int): The number of electrons in the valency_layer.
+        layers (tuple[int, ...]): A sorted tuple of all occupied principal quantum numbers.
+        electrons_by_layers (tuple[int, ...]): A tuple of electron counts for each corresponding layer.
+        electron_configuration (str): The raw electron configuration string.
+        aromatic (bool): Indicates if the atom is part of an aromatic system.
     """
 
     symbol: str
@@ -49,35 +54,46 @@ class Atom:
     aromatic: bool = field(default=False)
     _subshell_electrons: frozenset[tuple[tuple[int, str], int]] = field(init=False)
 
-    def __post_init__(self):
+    def _calculate_electron_properties(self, subshell_electrons_data: frozenset[tuple[tuple[int, str], int]]):
         """
-        Builds valency_layer and electrons_in_valency.
-        """
-        
-        object.__setattr__(self, '_subshell_electrons', frozenset(_parse_electron_configuration(self.electron_configuration).items()))
-        
+        Calculates and sets valency_layer, electrons_in_valency, layers, and electrons_by_layers.
 
-        if not self._subshell_electrons:  # Handle empty electron configuration
+        Args:
+            subshell_electrons_data: A frozenset of (subshell, electron_count) tuples.
+        """
+        if not subshell_electrons_data:
             object.__setattr__(self, 'valency_layer', 0)
             object.__setattr__(self, 'electrons_in_valency', 0)
             object.__setattr__(self, 'layers', ())
             object.__setattr__(self, 'electrons_by_layers', ())
             return
 
-        object.__setattr__(self, 'valency_layer', max([n for (n, _), _ in self._subshell_electrons]))
+        object.__setattr__(self, 'valency_layer', max([n for (n, _), _ in subshell_electrons_data]))
         object.__setattr__(self, 'electrons_in_valency', sum(
             electrons
-            for (n, _), electrons in self._subshell_electrons
+            for (n, _), electrons in subshell_electrons_data
             if n == self.valency_layer
         ))
 
-        _layers = {n for (n, _), _ in self._subshell_electrons}
+        _layers = {n for (n, _), _ in subshell_electrons_data}
 
-        object.__setattr__(self, 'layers', tuple(_layers))
+        object.__setattr__(self, 'layers', tuple(sorted(list(_layers), reverse=True)))
         object.__setattr__(self, 'electrons_by_layers', tuple([
-            sum(electrons for (n, _), electrons in self._subshell_electrons if n == layer_n)
+            sum(electrons for (n, _), electrons in subshell_electrons_data if n == layer_n)
             for layer_n in self.layers
         ]))
+
+    
+
+    def __post_init__(self):
+        """
+        Builds valency_layer and electrons_in_valency.
+        """
+        
+        initial_subshell_electrons = frozenset(_parse_electron_configuration(self.electron_configuration).items())
+        object.__setattr__(self, '_subshell_electrons', initial_subshell_electrons)
+        
+        self._calculate_electron_properties(self._subshell_electrons)
 
     def get_total_electrons_in_subshell(self, subshell_type: str) -> int:
         """
@@ -94,20 +110,53 @@ class Atom:
                 return e
         return 0
 
+    def _next_subshell(self, subshell_type: str) -> str:
+        """
+        Determines the next subshell in the standard order (s, p, d, f).
+
+        Args:
+            subshell_type: The current subshell type (e.g., 's', 'p').
+
+        Returns:
+            The next subshell type, or 's' if at the end of the sequence or invalid input.
+        """
+        subshell_order = ['s', 'p', 'd', 'f']
+        try:
+            index = subshell_order.index(subshell_type)
+            return subshell_order[index + 1]
+        except (ValueError, IndexError):
+            return 's' # Start over or handle error
+
+    def _max_electrons_in_subshell(self, subshell_type: str) -> int:
+        """
+        Returns the maximum number of electrons a given subshell type can hold.
+
+        Args:
+            subshell_type: The subshell type (s, p, d, f).
+
+        Returns:
+            The maximum electron capacity of the subshell.
+        """
+        if subshell_type == 's': return 2
+        if subshell_type == 'p': return 6
+        if subshell_type == 'd': return 10
+        if subshell_type == 'f': return 14
+        return 0 # Should not happen
+
 
 @dataclass(frozen=True)
 class BracketAtom(Atom):
     """
+    Represents an atom within square brackets in SMILES, allowing for explicit specification of properties.
 
-    Class for handling atoms with different properties than the default values of periodic table atoms.
+    Inherits from Atom and adds properties like isotope, chiral, hydrogen count, charge, and mapping.
 
     Attributes:
-        isotope: The isotope of the atom
-        symbol: The symbol of the atom
-        chiral: The chiral of the atom
-        hidrogens: The amount of hydrogens in the atom
-        charge: The charge of the atom
-        mol_map: The map of the atom
+        hidrogens (Optional[int]): Number of implicit hydrogens attached to the atom.
+        charge (Optional[int]): The charge of the atom.
+        isotope (Optional[int]): The isotope number of the atom.
+        chiral (Optional[int]): Chiral specification (e.g., @ or @@).
+        mol_map (Optional[int]): Atom mapping number.
     """
 
     hidrogens: Optional[int] = field(default=None)
@@ -119,16 +168,15 @@ class BracketAtom(Atom):
     def __post_init__(self):
         super().__post_init__()
         
-        # Adjust electrons based on charge
         if self.charge is not None:
             charge_effect = -self.charge  # Positive charge means removing electrons, negative means adding
 
-            # Create a mutable copy of the subshell electrons
+            # Create a mutable dictionary from the frozenset for manipulation
             subshell_electrons = {k: v for k, v in self._subshell_electrons}
 
             if charge_effect < 0: # Remove electrons
                 electrons_to_remove = -charge_effect
-                # Sort subshells from outermost to innermost
+                # Sort subshells from outermost to innermost (higher n, then higher subshell type)
                 sorted_subshells = sorted([k for k, v in subshell_electrons.items()], key=lambda x: (x[0], {'s': 0, 'p': 1, 'd': 2, 'f': 3}[x[1]]), reverse=True)
 
                 for n, s in sorted_subshells:
@@ -176,34 +224,13 @@ class BracketAtom(Atom):
 
             object.__setattr__(self, '_subshell_electrons', frozenset(subshell_electrons.items()))
 
-            # Recalculate valency layer and electrons
-            if self._subshell_electrons:
-                object.__setattr__(self, 'valency_layer', max(n for (n, s), e in self._subshell_electrons))
-                object.__setattr__(self, 'electrons_in_valency', sum(e for (n, s), e in self._subshell_electrons if n == self.valency_layer))
-            else:
-                object.__setattr__(self, 'valency_layer', 0)
-                object.__setattr__(self, 'electrons_in_valency', 0)
-                object.__setattr__(self, 'layers', ())
-                object.__setattr__(self, 'electrons_by_layers', ())
+            self._calculate_electron_properties(self._subshell_electrons)
 
         object.__setattr__(self, 'solo_valency', self.compute_valency())
         
         
 
-    def _next_subshell(self, subshell_type: str) -> str:
-        subshell_order = ['s', 'p', 'd', 'f']
-        try:
-            index = subshell_order.index(subshell_type)
-            return subshell_order[index + 1]
-        except (ValueError, IndexError):
-            return 's' # Start over or handle error
-
-    def _max_electrons_in_subshell(self, subshell_type: str) -> int:
-        if subshell_type == 's': return 2
-        if subshell_type == 'p': return 6
-        if subshell_type == 'd': return 10
-        if subshell_type == 'f': return 14
-        return 0 # Should not happen
+    
 
     def _octate_rule(self, electrons: int) -> bool:
         """

@@ -236,3 +236,188 @@ def test_get_acyclic_subgraphs_linear_chain():
     assert atom2 in subgraphs[0]
     assert atom3 in subgraphs[0]
     assert atom4 in subgraphs[0]
+
+def test_huckel_double_bond_cycle():
+    graph = Graph()
+    c1 = chemistry.BracketAtom("C")
+    c2 = chemistry.BracketAtom("C")
+    c3 = chemistry.BracketAtom("C")
+    c4 = chemistry.BracketAtom("C")
+
+    graph.add_edge(c1, c2, bond_type="=")
+    graph.add_edge(c2, c3, bond_type="-")
+    graph.add_edge(c3, c4, bond_type="=")
+    graph.add_edge(c4, c1, bond_type="-")
+
+    graph.add_cycle([c1, c2, c3, c4])
+
+    assert graph.huckel() == False # 4 pi electrons, not aromatic
+
+def test_huckel_triple_bond_cycle():
+    graph = Graph()
+    c1 = chemistry.BracketAtom("C")
+    c2 = chemistry.BracketAtom("C")
+
+    graph.add_edge(c1, c2, bond_type="#")
+    graph.add_edge(c2, c1, bond_type="-") # Not a real cycle, but for testing
+
+    graph.add_cycle([c1, c2])
+
+    assert graph.huckel() == False # 2 pi electrons, but not a valid aromatic system
+
+def test_check_valency_for_aba_invalid_bracket_atom():
+    graph = Graph()
+    atom1 = chemistry.BracketAtom("C", hidrogens=1) # Invalid carbon
+    graph.add_edge(atom1, atom1, bond_type="-")
+    assert graph.check_valency_for_aba() == False
+
+def test_huckel_mixed_bond_types():
+    graph = Graph()
+    c1 = chemistry.BracketAtom("C", aromatic=True)
+    c2 = chemistry.BracketAtom("C", aromatic=True)
+    c3 = chemistry.BracketAtom("C", aromatic=True)
+    c4 = chemistry.BracketAtom("C", aromatic=True)
+
+    graph.add_edge(c1, c2, bond_type=":")
+    graph.add_edge(c2, c3, bond_type="=")
+    graph.add_edge(c3, c4, bond_type=":")
+    graph.add_edge(c4, c1, bond_type="-")
+
+    graph.add_cycle([c1, c2, c3, c4])
+
+    assert graph.huckel() == False # Should be 4 pi electrons, not aromatic
+
+def test_huckel_with_nitrogen_and_oxygen():
+    graph = Graph()
+    n1 = chemistry.BracketAtom("N", aromatic=True)
+    o1 = chemistry.BracketAtom("O", aromatic=True)
+    c1 = chemistry.BracketAtom("C", aromatic=True)
+    c2 = chemistry.BracketAtom("C", aromatic=True)
+    c3 = chemistry.BracketAtom("C", aromatic=True)
+
+    graph.add_edge(n1, c1, bond_type=":")
+    graph.add_edge(c1, c2, bond_type=":")
+    graph.add_edge(c2, c3, bond_type=":")
+    graph.add_edge(c3, o1, bond_type=":")
+    graph.add_edge(o1, n1, bond_type=":")
+
+    graph.add_cycle([n1, c1, c2, c3, o1])
+
+    assert graph.huckel() == False # 6 pi electrons, but not a valid aromatic system due to simplified huckel
+
+def test_huckel_with_double_and_aromatic_bonds():
+    graph = Graph()
+    c1 = chemistry.BracketAtom("C", aromatic=True)
+    c2 = chemistry.BracketAtom("C", aromatic=True)
+    c3 = chemistry.BracketAtom("C", aromatic=True)
+    c4 = chemistry.BracketAtom("C", aromatic=True)
+
+    graph.add_edge(c1, c2, bond_type=":")
+    graph.add_edge(c2, c3, bond_type="=")
+    graph.add_edge(c3, c4, bond_type=":")
+    graph.add_edge(c4, c1, bond_type="-")
+
+    graph.add_cycle([c1, c2, c3, c4])
+
+    assert graph.huckel() == False # 4 pi electrons, not aromatic
+
+def test_huckel_with_all_bond_types():
+    graph = Graph()
+    c1 = chemistry.BracketAtom("C", aromatic=True)
+    c2 = chemistry.BracketAtom("C", aromatic=True)
+    c3 = chemistry.BracketAtom("C", aromatic=True)
+    c4 = chemistry.BracketAtom("C", aromatic=True)
+
+    graph.add_edge(c1, c2, bond_type=":")
+    graph.add_edge(c2, c3, bond_type="=")
+    graph.add_edge(c3, c4, bond_type="#")
+    graph.add_edge(c4, c1, bond_type="-")
+
+    graph.add_cycle([c1, c2, c3, c4])
+
+    assert graph.huckel() == False # Should be 6 pi electrons, not aromatic
+
+def test_huckel_with_different_pi_electron_counts():
+    graph = Graph()
+    c1 = chemistry.BracketAtom("C", aromatic=True)
+    c2 = chemistry.BracketAtom("C", aromatic=True)
+    c3 = chemistry.BracketAtom("C", aromatic=True)
+    c4 = chemistry.BracketAtom("C", aromatic=True)
+    c5 = chemistry.BracketAtom("C", aromatic=True)
+    c6 = chemistry.BracketAtom("C", aromatic=True)
+    c7 = chemistry.BracketAtom("C", aromatic=True)
+
+    graph.add_edge(c1, c2, bond_type=":")
+    graph.add_edge(c2, c3, bond_type=":")
+    graph.add_edge(c3, c4, bond_type=":")
+    graph.add_edge(c4, c5, bond_type=":")
+    graph.add_edge(c5, c6, bond_type=":")
+    graph.add_edge(c6, c7, bond_type=":")
+    graph.add_edge(c7, c1, bond_type=":")
+
+    graph.add_cycle([c1, c2, c3, c4, c5, c6, c7])
+
+    assert graph.huckel() == False # 7 pi electrons, not aromatic
+
+def test_huckel_with_valid_aromatic_system():
+    graph = Graph()
+    c1 = chemistry.BracketAtom("C", aromatic=True)
+    c2 = chemistry.BracketAtom("C", aromatic=True)
+    c3 = chemistry.BracketAtom("C", aromatic=True)
+    c4 = chemistry.BracketAtom("C", aromatic=True)
+    c5 = chemistry.BracketAtom("C", aromatic=True)
+    c6 = chemistry.BracketAtom("C", aromatic=True)
+
+    graph.add_edge(c1, c2, bond_type=":")
+    graph.add_edge(c2, c3, bond_type=":")
+    graph.add_edge(c3, c4, bond_type=":")
+    graph.add_edge(c4, c5, bond_type=":")
+    graph.add_edge(c5, c6, bond_type=":")
+    graph.add_edge(c6, c1, bond_type=":")
+
+    graph.add_cycle([c1, c2, c3, c4, c5, c6])
+
+    assert graph.huckel() == True # 6 pi electrons, aromatic
+
+def test_check_valency_for_aba_with_non_bracket_atom_and_invalid_bracket_atom():
+    graph = Graph()
+    atom1 = Atom("C")
+    atom2 = chemistry.BracketAtom("C", hidrogens=1) # Invalid carbon
+    graph.add_edge(atom1, atom2, bond_type="-")
+    assert graph.check_valency_for_aba() == False
+
+def test_huckel_with_double_bond_and_non_aromatic_atoms():
+    graph = Graph()
+    c1 = chemistry.BracketAtom("C")
+    c2 = chemistry.BracketAtom("C")
+    c3 = chemistry.BracketAtom("C")
+    c4 = chemistry.BracketAtom("C")
+
+    graph.add_edge(c1, c2, bond_type="=")
+    graph.add_edge(c2, c3, bond_type="-")
+    graph.add_edge(c3, c4, bond_type="=")
+    graph.add_edge(c4, c1, bond_type="-")
+
+    graph.add_cycle([c1, c2, c3, c4])
+
+    assert graph.huckel() == False # 4 pi electrons, not aromatic
+
+def test_huckel_with_double_bond_and_non_aromatic_atoms_and_valid_huckel():
+    graph = Graph()
+    c1 = chemistry.BracketAtom("C")
+    c2 = chemistry.BracketAtom("C")
+    c3 = chemistry.BracketAtom("C")
+    c4 = chemistry.BracketAtom("C")
+    c5 = chemistry.BracketAtom("C")
+    c6 = chemistry.BracketAtom("C")
+
+    graph.add_edge(c1, c2, bond_type="=")
+    graph.add_edge(c2, c3, bond_type="-")
+    graph.add_edge(c3, c4, bond_type="=")
+    graph.add_edge(c4, c5, bond_type="-")
+    graph.add_edge(c5, c6, bond_type="=")
+    graph.add_edge(c6, c1, bond_type="-")
+
+    graph.add_cycle([c1, c2, c3, c4, c5, c6])
+
+    assert graph.huckel() == False # 6 pi electrons, not aromatic

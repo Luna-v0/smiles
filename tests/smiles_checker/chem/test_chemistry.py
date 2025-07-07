@@ -192,3 +192,7 @@ def test_validate_valency_bracket_with_charge():
 
 def test_validate_valency_bracket_with_hcount():
     assert chemistry.validate_valency_bracket(isotope=None, symbol="O", chiral=None, hcount=2, charge=0, map=None) == True
+
+def test_atom_next_subshell_invalid_input():
+    atom = Atom("H")
+    assert atom._next_subshell('z') == 's'

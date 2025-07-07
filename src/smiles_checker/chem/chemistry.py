@@ -11,13 +11,13 @@ from .structure import Graph
 
 class Chemistry:
     """
-    Class for handling Chemistry Domain Logic.
+    Handles chemical domain logic, including atom and molecule properties and validation.
 
     Attributes:
-        organic_atoms: A fixed list of all possible organic atoms
-        pt_symbols: All the periodic table symbols
-        look_up_table: A look up table for all atoms
-        mol_graph: A graph representation of the molecule
+        organic_atoms (set[str]): A set of common organic atom symbols (case-sensitive and lowercase).
+        pt_symbols (list[str]): A list of all valid periodic table symbols.
+        look_up_table (dict[str, Atom]): A lookup table for Atom objects by their symbol.
+        mol_graph (Graph): A graph representation of the molecule being processed.
     """
 
     organic_atoms: set[str]
@@ -42,7 +42,14 @@ class Chemistry:
 
         raise Exception(f"Invalid Bond {bond}")
 
-    def __init__(self, periodic_table_path=None):
+    def __init__(self, periodic_table_path: Optional[str] = None):
+        """
+        Initializes the Chemistry handler, loading periodic table data.
+
+        Args:
+            periodic_table_path (Optional[str]): Path to the periodic table JSON file.
+                                                 Defaults to '../periodic-table-lookup.json'.
+        """
         if periodic_table_path is None:
             periodic_table_path = os.path.join(
                 os.path.dirname(__file__), "..", "periodic-table-lookup.json"
@@ -77,14 +84,17 @@ class Chemistry:
 
     def Atom(self, symbol: str, aromatic: bool = False) -> Atom:
         """
-        Create an Atom with the given symbol, charge and hidrogens.
+        Creates an Atom object from a given symbol.
 
         Args:
-            symbol: The symbol of the atom
-            chiral: The chiral of the atom
-            hcount: The amount of hydrogens in the atom
-            charge: The charge of the atom
-            map: The map of the atom
+            symbol (str): The chemical symbol of the atom (e.g., "C", "N", "O").
+            aromatic (bool): Indicates if the atom is considered aromatic.
+
+        Returns:
+            Atom: An Atom object initialized with properties from the periodic table.
+
+        Raises:
+            Exception: If the provided symbol is not a valid periodic table element.
         """
         processed_symbol = symbol.title()
         if processed_symbol not in self.pt_symbols:
@@ -98,14 +108,17 @@ class Chemistry:
 
     def BracketAtom(self, symbol: str, **kwargs) -> BracketAtom:
         """
-        Create a Bracket Atom with the given symbol, charge and hidrogens.
+        Creates a BracketAtom object with additional properties.
 
         Args:
-            symbol: The symbol of the atom
-            chiral: The chiral of the atom
-            hcount: The amount of hydrogens in the atom
-            charge: The charge of the atom
-            map: The map of the atom
+            symbol (str): The chemical symbol of the atom.
+            **kwargs: Additional properties like hidrogens, charge, isotope, chiral, mol_map.
+
+        Returns:
+            BracketAtom: A BracketAtom object initialized with specified properties.
+
+        Raises:
+            Exception: If the provided symbol is not a valid periodic table element.
         """
         processed_symbol = symbol.title()
         if processed_symbol not in self.pt_symbols:
@@ -135,16 +148,18 @@ class Chemistry:
         map: Optional[int],
     ) -> bool:
         """
-        Validate the valency of a single bracket atom (if it is not a part of a aromatic ring)
+        Validates the valency of a single bracket atom.
+
         Args:
-            isotope: The isotope of the atom
-            symbol: The symbol of the atom
-            chiral: The chiral of the atom
-            hcount: The amount of hydrogens in the atom
-            charge: The charge of the atom
-            map: The map of the atom
+            isotope (Optional[int]): The isotope of the atom.
+            symbol (str): The symbol of the atom.
+            chiral (Optional[int]): The chiral specification of the atom.
+            hcount (Optional[int]): The amount of hydrogens in the atom.
+            charge (Optional[int]): The charge of the atom.
+            map (Optional[int]): The map of the atom.
+
         Returns:
-            If the valency of the atom is valid
+            bool: True if the valency of the atom is valid, False otherwise.
         """
         return self.BracketAtom(
             symbol=symbol,
@@ -154,10 +169,12 @@ class Chemistry:
 
     def validate_aromacity(self) -> bool:
         """
-        Validate the aromaticity of a molecule.
-        This method checks if the molecule is aromatic by checking if it satisfies Huckel's rule.
+        Validates the aromaticity of the molecule represented by the internal graph.
+
+        This method checks if the molecule satisfies Huckel's rule (4n + 2 pi electrons in a cyclic, planar, fully conjugated system).
+
         Returns:
-            If the molecule is aromatic
+            bool: True if the molecule is aromatic, False otherwise.
         """
         return self.mol_graph.huckel() and self.mol_graph.check_valency_for_aba()
 
