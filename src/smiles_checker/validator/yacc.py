@@ -86,15 +86,24 @@ class SmilesParser(Parser):
 
     @_("atom", "atom chain_branch")  # type: ignore
     def line(self, rules):
-        return parser_manager.listify(*rules)
+        if len(rules) == 1:
+            return parser_manager.listify(base_element=rules[0], recursion=None)
+        else:
+            return parser_manager.listify(base_element=rules[0], recursion=rules[1])
 
     @_("chains", "branch", "chains chain_branch", "branch chain_branch")  # type: ignore
     def chain_branch(self, rules):
-        return parser_manager.listify(*rules)
+        if len(rules) == 1:
+            return parser_manager.listify(base_element=rules[0], recursion=None)
+        else:
+            return parser_manager.listify(base_element=rules[0], recursion=rules[1])
 
     @_("chain", "chain chains")  # type: ignore
     def chains(self, rules):
-        return parser_manager.listify(*rules)
+        if len(rules) == 1:
+            return parser_manager.listify(base_element=rules[0], recursion=None)
+        else:
+            return parser_manager.listify(base_element=rules[0], recursion=rules[1])
 
     @_('"[" internal_bracket "]"')  # type: ignore
     def bracket_atom(self, rules):
@@ -103,15 +112,21 @@ class SmilesParser(Parser):
     @_(*generate_combinations("isotope? symbol chiral? hcount? charge? mol_map?"))  # type: ignore
     def internal_bracket(self, rules):
         return parser_manager.internal_bracket(
-            *getAttributes(
-                rules, ["isotope", "symbol", "chiral", "hcount", "charge", "mol_map"]
-            )
+            istope=getAttributes(rules, "isotope"),
+            symbol=getAttributes(rules, "symbol"),
+            chiral=getAttributes(rules, "chiral"),
+            hcount=getAttributes(rules, "hcount"),
+            charge=getAttributes(rules, "charge"),
+            mol_map=getAttributes(rules, "mol_map")
         )
 
     @_("dot_proxy", "bond atom", "bond rnum", "atom", "rnum")  # type: ignore
     def chain(self, rules):
         return parser_manager.chain(
-            *getAttributes(rules, ["bond", "atom", "rnum", "dot_proxy"])
+            bond=getAttributes(rules, "bond"),
+            atom=getAttributes(rules, "atom"),
+            rnum=getAttributes(rules, "rnum"),
+            dot_proxy=getAttributes(rules, "dot_proxy")
         )
 
     @_('"." atom')  # type: ignore
@@ -129,7 +144,9 @@ class SmilesParser(Parser):
     @_("bond_dot line", "line", "bond_dot line inner_branch", "line inner_branch")  # type: ignore
     def inner_branch(self, rules):
         return parser_manager.inner_branch(
-            *getAttributes(rules, ["bond_dot", "line", "inner_branch"])
+            bond_dot=getAttributes(rules, "bond_dot"),
+            line=getAttributes(rules, "line"),
+            inner_branch=getAttributes(rules, "inner_branch")
         )
 
     @_("bond", '"."')  # type: ignore
@@ -150,31 +167,46 @@ class SmilesParser(Parser):
 
     @_("digit", '"%" digit digit ')  # type: ignore
     def rnum(self, rules):
-        return parser_manager.ring_number(*rules)
+        if len(rules) == 1: # Case: digit
+            return parser_manager.ring_number(ring_number_or_symbol=rules[0], ring_number1=None, ring_number2=None)
+        elif len(rules) == 3: # Case: "%" digit digit
+            return parser_manager.ring_number(ring_number_or_symbol=rules[0], ring_number1=rules[1], ring_number2=rules[2])
 
     @_("digit digit digit", "digit digit", "digit")  # type: ignore
     def isotope(self, rules):
-        return parser_manager.int(*rules)
+        return parser_manager.int(list(rules))
 
     @_('"H" digit', '"H"')  # type: ignore
     def hcount(self, rules):
-        return parser_manager.hcount(*rules)
+        if len(rules) == 1:
+            return parser_manager.hcount(None, None)
+        else:
+            return parser_manager.hcount(None, rules[1])
 
     @_('"+"', '"+" "+"', '"-"', '"-" "-"', '"-" fifteen', '"+" fifteen')  # type: ignore
     def charge(self, rules):
-        return parser_manager.charge(*rules)
+        if len(rules) == 1:
+            return parser_manager.charge(charge1=rules[0], charge2=None)
+        else:
+            return parser_manager.charge(charge1=rules[0], charge2=rules[1])
 
     @_('":" digit digit digit', '":" digit digit', '":" digit')  # type: ignore
     def mol_map(self, rules):
-        return parser_manager.int(*rules[1:])
+        return parser_manager.int(list(rules[1:]))
 
     @_('"@"', '"@" "@"')  # type: ignore
     def chiral(self, rules):
-        return parser_manager.chiral(*rules)
+        if len(rules) == 1:
+            return parser_manager.chiral(chiral1=rules[0], chiral2=None)
+        else:
+            return parser_manager.chiral(chiral1=rules[0], chiral2=rules[1])
 
     @_("digit digit", "digit")  # type: ignore
     def fifteen(self, rules):
-        return parser_manager.fifteen(*rules)
+        if len(rules) == 1:
+            return parser_manager.fifteen(digit1=rules[0], digit2=None)
+        else:
+            return parser_manager.fifteen(digit1=rules[0], digit2=rules[1])
 
 
 parser = SmilesParser()

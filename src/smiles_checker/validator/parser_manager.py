@@ -4,20 +4,7 @@ from typing import List, Optional, Union
 
 from smiles_checker.chem.atomic import Atom, BracketAtom
 from smiles_checker.chem.chemistry import chemistry as chem
-
-
-def fill_none(func):
-    """
-    Decorator to fill None values in the function arguments
-    """
-
-    @functools.wraps(func)
-    def wrapper(self, *args, **kwargs):
-        needed = func.__code__.co_argcount - 1  # minus self
-        padded = (list(args) + [None] * needed)[:needed]
-        return func(self, *padded, **kwargs)
-
-    return wrapper
+from smiles_checker.exceptions import ParserException
 
 
 @dataclass
@@ -109,14 +96,14 @@ class ParserManager:
                 message="Unclosed ring numbers",
             )
 
-        starting_aromacity = self.current_chain[0].aromatic
         if not self.current_chain:
             return True
 
+        starting_aromacity = self.current_chain[0].aromatic
+
         return True
 
-    @fill_none
-    def internal_bracket(self, istope, symbol, chiral, hcount, charge, mol_map):
+    def internal_bracket(self, istope=None, symbol=None, chiral=None, hcount=None, charge=None, mol_map=None):
         """
         Parses the internal bracket and checks for valency.
         """
@@ -134,8 +121,7 @@ class ParserManager:
 
         return br_atom
 
-    @fill_none
-    def listify(self, base_element, recursion):
+    def listify(self, base_element=None, recursion=None):
         """
         Generic rule for dealing with rules in the following format:
 
@@ -148,7 +134,7 @@ class ParserManager:
             The parsed atom or chain branch.
         """
         if recursion is None:
-            return base_element
+            return [base_element]
 
         if type(recursion) == list:
             return [base_element] + recursion
@@ -169,26 +155,15 @@ class ParserManager:
         if type(symbol_or_bracket) != str:
             return symbol_or_bracket
 
-        if len(symbol_or_bracket) == 1 or symbol_or_bracket in chem.organic_atoms:
-            atom_obj = chem.Atom(symbol_or_bracket, aromatic=symbol_or_bracket.islower())
-            self.current_chain.append(atom_obj)
-            return atom_obj
+        atom_obj = chem.Atom(symbol_or_bracket, aromatic=symbol_or_bracket.islower())
+        self.current_chain.append(atom_obj)
+        return atom_obj
 
-        elem1, elem2 = symbol_or_bracket
-
-        if elem1 in chem.organic_atoms and elem2 in chem.organic_atoms:
-            return [elem1, elem2]
-
-        raise Exception(
-            f"Inorganic Atom Outside Bracket {symbol_or_bracket} not allowed"
-        )
-
-    @fill_none
     def ring_number(
         self,
-        ring_number_or_symbol: str,
-        ring_number1: Optional[str],
-        ring_number2: Optional[str],
+        ring_number_or_symbol: str = None,
+        ring_number1: Optional[str] = None,
+        ring_number2: Optional[str] = None,
     ) -> int:
         """
         Parses the ring numbers provided.
@@ -200,43 +175,60 @@ class ParserManager:
             The parsed ring number as an integer.
         """
         rnum = -1
-        raiser = lambda msg: ParserException(
-            rule="ring_number",
-            parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
-            message=msg,
-        )
 
         if ring_number_or_symbol == "%":
             if ring_number1 is None:
-                raiser(msg="Ring number cannot be just '%'")
+                raise ParserException(
+                    rule="ring_number",
+                    parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
+                    message="Ring number cannot be just '%'"
+                )
 
             digits = ring_number1 + (ring_number2 or "")
             if not digits.isdigit():
-                raiser(msg="Ring number must be a digit or '%'")
+                raise ParserException(
+                    rule="ring_number",
+                    parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
+                    message="Ring number must be a digit or '%'"
+                )
             rnum = int(digits)
         elif ring_number_or_symbol.isdigit():
             if ring_number2 is not None:
-                raiser(
-                    msg="Ring number cannot have more than one digit after the first"
+                raise ParserException(
+                    rule="ring_number",
+                    parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
+                    message="Ring number cannot have more than one digit after the first"
                 )
             digits = ring_number_or_symbol + (ring_number1 or "")
             if not digits.isdigit():
-                raiser(
-                    msg="Ring number must be a digit or a number with a leading digit"
+                raise ParserException(
+                    rule="ring_number",
+                    parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
+                    message="Ring number must be a digit or a number with a leading digit"
                 )
             rnum = int(digits)
         else:
-            raiser(msg="Ring number must be a digit or a number with a leading digit")
+            raise ParserException(
+                rule="ring_number",
+                parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
+                message="Ring number must be a digit or a number with a leading digit"
+            )
 
         if rnum < 1:
-            raiser(msg="Ring number must be greater than 0")
+            raise ParserException(
+                rule="ring_number",
+                parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
+                message="Ring number must be greater than 0"
+            )
 
         if rnum in self.current_open_rnum:
             self.current_open_rnum.remove(rnum)
             self.current_closed_rnum.append(rnum)
         elif rnum in self.current_closed_rnum:
-            raiser(
-                msg="Ring number already closed",
+            raise ParserException(
+                rule="ring_number",
+                parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
+                message="Ring number already closed",
             )
         else:
             self.current_open_rnum.append(rnum)
@@ -253,8 +245,7 @@ class ParserManager:
         """
         return int("".join(digits))
 
-    @fill_none
-    def hcount(self, _, digit: Optional[str]) -> int:
+    def hcount(self, _, digit: Optional[str] = None) -> int:
         """
         Parses the hydrogen count.
         Args:
@@ -262,17 +253,17 @@ class ParserManager:
         Returns:
             The parsed hydrogen count.
         """
-        if digit is None or not digit.isdigit():
+        if digit is None:
+            return 1
+        if not digit.isdigit():
             raise ParserException(
                 rule="hcount",
                 parameter=digit,
-                message="Hydrogen count must be a digit",
+                message="Invalid hydrogen count",
             )
+        return int(digit)
 
-        return int(digit) if digit is not None else 1
-
-    @fill_none
-    def charge(self, charge1: str, charge2: Union[str, None, int]) -> int:
+    def charge(self, charge1: str = None, charge2: Union[str, None, int] = None) -> int:
         """
         Parsers the charge string to an integer.
         Args:
@@ -302,8 +293,7 @@ class ParserManager:
 
         return charge2
 
-    @fill_none
-    def chiral(self, chiral1: str, chiral2: Optional[str]) -> str:
+    def chiral(self, chiral1: str = None, chiral2: Optional[str] = None) -> str:
         """
         Fixes the current chiral rotation
 
@@ -313,9 +303,8 @@ class ParserManager:
         Returns:
             The current chiral rotation.
         """
-        return "counterclockwise" if chiral2 else "clockwise"
+        return "counterclockwise" if chiral1 == "@" and chiral2 == "@" else "clockwise"
 
-    @fill_none
     def fifteen(self, digit1: str, digit2: Optional[str]) -> int:
         """
         Fixes fifteen as maximum value for valency

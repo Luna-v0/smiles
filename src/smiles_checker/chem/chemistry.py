@@ -9,6 +9,9 @@ from .atomic import Atom, BracketAtom
 from .structure import Graph
 
 
+from smiles_checker.exceptions import ParserException
+
+
 class Chemistry:
     """
     Handles chemical domain logic, including atom and molecule properties and validation.
@@ -98,7 +101,11 @@ class Chemistry:
         """
         processed_symbol = symbol.title()
         if processed_symbol not in self.pt_symbols:
-            raise Exception(f"Invalid Symbol {symbol}")
+            raise ParserException(
+                rule="Atom",
+                parameter=symbol,
+                message=f"Invalid Atom Symbol: {symbol}"
+            )
         base_atom = self.look_up_table[processed_symbol]
         return Atom(
             processed_symbol,
@@ -122,7 +129,11 @@ class Chemistry:
         """
         processed_symbol = symbol.title()
         if processed_symbol not in self.pt_symbols:
-            raise Exception(f"Invalid Symbol {symbol}")
+            raise ParserException(
+                rule="bracketatom",
+                parameter=symbol,
+                message=f"Invalid Atom Symbol: {symbol}"
+            )
         base_atom = self.look_up_table[processed_symbol]
         if symbol.title() != symbol:  # if the symbol is not lowercase
             kwargs["aromatic"] = True

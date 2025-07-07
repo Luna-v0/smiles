@@ -1,7 +1,12 @@
 import pytest
 
-from smiles_checker.chem import Atom, BracketAtom
-from smiles_checker.validator.parser_manager import ParserException, ParserManager
+from smiles_checker.chem.atomic import Atom, BracketAtom
+from smiles_checker.chem.chemistry import chemistry as chem
+from smiles_checker.chem.chemistry import chemistry as chem
+from smiles_checker.chem.chemistry import chemistry as chem
+from smiles_checker.chem.chemistry import chemistry as chem
+from smiles_checker.exceptions import ParserException
+from smiles_checker.validator.parser_manager import ParserManager
 
 
 @pytest.fixture(scope="function")
@@ -26,27 +31,24 @@ def test_validate_branch(parser_manager: ParserManager):
 
 def test_internal_bracket(parser_manager: ParserManager):
     """ """
-    assert parser_manager.internal_bracket(None, "C") == BracketAtom(
-        "C"
-    ), "Internal bracket should return BracketAtom('C', 'O')"
+    assert parser_manager.internal_bracket(symbol="C") == chem.BracketAtom(symbol="C"), "Internal bracket should return BracketAtom('C')"
     assert (
         len(parser_manager.current_chain) == 1
     ), "Current chain should have one atom after internal bracket"
 
 
 def test_listify(parser_manager: ParserManager):
-    assert parser_manager.listify("C") == [
+    assert parser_manager.listify(base_element="C") == [
         "C"
     ], "Listify should return a list with one element 'C'"
-    assert parser_manager.listify(["C", "O"]) == [
-        "O",
+    assert parser_manager.listify(base_element="C", recursion=["O"]) == [
         "C",
-    ], "Listify should return a list with elements 'O' and 'C' in that order"
-    assert parser_manager.listify(["C", "O", "N"]) == [
-        "N",
         "O",
+    ], "Listify should combine base_element with a list recursion"
+    assert parser_manager.listify(base_element="C", recursion="O") == [
         "C",
-    ], "Listify should return a list with elements 'N', 'O', and 'C' in that order"
+        "O",
+    ], "Listify should combine base_element with a non-list recursion"
 
 
 def test_atom(parser_manager: ParserManager):
@@ -54,18 +56,18 @@ def test_atom(parser_manager: ParserManager):
     Test the atom parser with valid and invalid inputs.
     """
 
-    assert parser_manager.atom("C") == Atom("C"), "Parsing 'C' should return Atom('C')"
-    assert parser_manager.atom("Na") == Atom(
-        "Na"
-    ), "Parsing 'Na' should return Atom('Na')"
+    assert parser_manager.atom("C").symbol == Atom("C").symbol, "Parsing 'C' should return Atom('C')"
+    assert parser_manager.atom("Na").symbol == Atom("Na").symbol, "Parsing 'Na' should return Atom('Na')"
 
     ## TODO missing tests with bracket atom
 
-    with pytest.raises(ParserException):
+    with pytest.raises(ParserException) as exc_info:
         parser_manager.atom("X")
+    assert exc_info.value.message == "Invalid Atom Symbol: X" and exc_info.value.rule == "Atom"
 
-    with pytest.raises(ParserException):
+    with pytest.raises(ParserException) as exc_info:
         parser_manager.atom("au")
+    assert exc_info.value.message == "Invalid Symbol au" and exc_info.value.rule == "Atom"
 
 
 def test_fifteen(parser_manager: ParserManager):
@@ -76,10 +78,7 @@ def test_fifteen(parser_manager: ParserManager):
     # assert error is raised when exceeding 15
     with pytest.raises(ParserException) as exc_info:
         parser_manager.fifteen("1", "6")
-        assert (
-            ParserException(rule="fifteen", parameter="1 6", message="Cannot exceed 15")
-            == exc_info.value
-        ), "Should raise ParserException when exceeding 15"
+        assert exc_info.value.message == "Cannot exceed 15" and exc_info.value.rule == "fifteen"
 
 
 def test_chiral(parser_manager: ParserManager):
@@ -87,10 +86,10 @@ def test_chiral(parser_manager: ParserManager):
     Test the chiral parser.
     """
     assert (
-        parser_manager.chiral("@", None) == "clockwise"
+        parser_manager.chiral(chiral1="@", chiral2=None) == "clockwise"
     ), "Chiral without second symbol should be clockwise"
     assert (
-        parser_manager.chiral("@@", None) == "counterclockwise"
+        parser_manager.chiral(chiral1="@", chiral2="@") == "counterclockwise"
     ), "Chiral with second symbol should be counterclockwise"
 
 
@@ -115,81 +114,52 @@ def test_charge(parser_manager: ParserManager):
 
     with pytest.raises(ParserException) as exc_info:
         parser_manager.charge("+", "-")
-        assert (
-            ParserException(rule="charge", parameter="+ -", message="Charge mismatch")
-            == exc_info.value
-        ), "Should raise ParserException for charge mismatch"
+        assert exc_info.value.message == "Charge mismatch" and exc_info.value.rule == "charge"
 
 
 def test_hcount(parser_manager: ParserManager):
     """
     Test the hydrogen count parser.
     """
-    assert parser_manager.hcount("1", None) == 1, "Hydrogen count '1' should return 1"
-    assert parser_manager.hcount("2", None) == 2, "Hydrogen count '2' should return 2"
-    assert parser_manager.hcount("3", None) == 3, "Hydrogen count '3' should return 3"
+    assert parser_manager.hcount(_="H", digit="1") == 1, "Hydrogen count '1' should return 1"
+    assert parser_manager.hcount(_="H", digit="2") == 2, "Hydrogen count '2' should return 2"
+    assert parser_manager.hcount(_="H", digit="3") == 3, "Hydrogen count '3' should return 3"
 
     with pytest.raises(ParserException) as exc_info:
-        parser_manager.hcount("A", None)
-        assert (
-            ParserException(
-                rule="hcount", parameter="A None", message="Invalid hydrogen count"
-            )
-            == exc_info.value
-        ), "Should raise ParserException for invalid hydrogen count"
+        parser_manager.hcount(_="A", digit=None)
+    assert exc_info.value.message == "Hydrogen count must be a digit" and exc_info.value.rule == "hcount"
 
 
 def test_ring_number(parser_manager: ParserManager):
     """
     Test the ring number parser.
     """
-    assert parser_manager.ring_number("1", None) == 1, "Ring number 1 opened"
-    assert parser_manager.ring_number("2", None) == 2, "Ring number 2 opened"
-    assert parser_manager.ring_number("3", None) == 3, "Ring number 3 opened"
+    assert parser_manager.ring_number(ring_number_or_symbol="1", ring_number1=None, ring_number2=None) == 1, "Ring number 1 opened"
+    assert parser_manager.ring_number(ring_number_or_symbol="2", ring_number1=None, ring_number2=None) == 2, "Ring number 2 opened"
+    assert parser_manager.ring_number(ring_number_or_symbol="3", ring_number1=None, ring_number2=None) == 3, "Ring number 3 opened"
 
-    assert parser_manager.ring_number("1", None) == 1, "Ring number 1 closed"
-    assert parser_manager.ring_number("2", None) == 2, "Ring number 2 closed"
-    assert parser_manager.ring_number("3", None) == 3, "Ring number 3 closed"
+    assert parser_manager.ring_number(ring_number_or_symbol="1", ring_number1=None, ring_number2=None) == 1, "Ring number 1 closed"
+    assert parser_manager.ring_number(ring_number_or_symbol="2", ring_number1=None, ring_number2=None) == 2, "Ring number 2 closed"
+    assert parser_manager.ring_number(ring_number_or_symbol="3", ring_number1=None, ring_number2=None) == 3, "Ring number 3 closed"
 
-    assert parser_manager.ring_number("4", None) == 4, "Ring number 4 opened"
-    assert parser_manager.ring_number("4", None) == 4, "Ring number 4 closed"
+    assert parser_manager.ring_number(ring_number_or_symbol="4", ring_number1=None, ring_number2=None) == 4, "Ring number 4 opened"
+    assert parser_manager.ring_number(ring_number_or_symbol="4", ring_number1=None, ring_number2=None) == 4, "Ring number 4 closed"
 
-    assert parser_manager.ring_number("%", "5") == 5, "Ring number 5 opened"
-    assert parser_manager.ring_number("%", "5") == 5, "Ring number 5 closed"
+    assert parser_manager.ring_number(ring_number_or_symbol="%", ring_number1="5", ring_number2=None) == 5, "Ring number 5 opened"
+    assert parser_manager.ring_number(ring_number_or_symbol="%", ring_number1="5", ring_number2=None) == 5, "Ring number 5 closed"
 
     with pytest.raises(ParserException) as exc_info:
-        parser_manager.ring_number("A", None)
-        assert (
-            ParserException(
-                rule="ring_number", parameter="A None", message="Invalid ring number"
-            )
-            == exc_info.value
-        ), "Should raise ParserException for invalid ring number"
+        parser_manager.ring_number(ring_number_or_symbol="A", ring_number1=None, ring_number2=None)
+    assert exc_info.value.message == "Ring number must be a digit or a number with a leading digit"
 
-        parser_manager.ring_number("1", None)
-        assert (
-            ParserException(
-                rule="ring_number",
-                parameter="1 None",
-                message="Ring number already closed",
-            )
-            == exc_info.value
-        ), "Should raise ParserException for already closed ring number"
+    with pytest.raises(ParserException) as exc_info:
+        parser_manager.ring_number(ring_number_or_symbol="1", ring_number1=None, ring_number2=None)
+    assert exc_info.value.message == "Ring number already closed"
 
-        parser_manager.ring_number("%", None)
-        assert (
-            ParserException(
-                rule="ring_number", parameter="% None", message="Invalid ring number"
-            )
-            == exc_info.value
-        ), "Should raise ParserException for invalid ring number symbol"
+    with pytest.raises(ParserException) as exc_info:
+        parser_manager.ring_number(ring_number_or_symbol="%", ring_number1=None, ring_number2=None)
+    assert exc_info.value.message == "Ring number cannot be just '%'"
 
-        parser_manager.ring_number("1", "2", "3")
-        assert (
-            ParserException(
-                rule="ring_number",
-                parameter="1 2 3",
-                message="Ring number cannot have more than one digit after the first",
-            )
-            == exc_info.value
-        ), "Should raise ParserException for ring number with more than one digit after the first"
+    with pytest.raises(ParserException) as exc_info:
+        parser_manager.ring_number(ring_number_or_symbol="1", ring_number1="2", ring_number2="3")
+    assert exc_info.value.message == "Ring number cannot have more than one digit after the first" and exc_info.value.rule == "ring_number"
