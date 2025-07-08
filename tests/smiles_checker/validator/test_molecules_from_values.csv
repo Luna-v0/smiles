@@ -1,10 +1,129 @@
 molecule_name,smiles,is_valid,description
-Benzene_Aromatic,c1ccccc1,True,
-Benzene_NonAromatic,C1=CC=CC=C1,True,
-Benzene_Mapped,C1=CC=C=C1C,True,
-Benzene_BracketH,[H]c1c([H])c([H])c([H])c([H])c1[H],True,
-Benzene_InvalidBond,c1ccccc1C,False,Cannot join aromatic carbon ring with a Non-aromatic carbon
-Benzene_BracketedC,c1[c]cccc1,True,
-Naphthalene_Aromatic,c1ccc2ccccc2c1,True,
-Naphthalene_NonAromatic,C1=CC=CC=C1C2=CC=CC=C2,True,
-Naphthalene_Mixed,c1ccccc1C2=CC=CC=C2,True,
+Naphthalene,c1ccc2ccccc2c1,True,
+Naphthalene,C1=CC=C2C=CC=CC2=C1,True,
+Naphthalene,c1[c]cc2ccccc2c1,True,
+Naphthalene,c1ccc2ccccc2c1C,False,Invalid bonding between aromatic and aliphatic carbon
+Biphenylene,c1ccc2c(c1)=c1ccccc1=2,True,
+Biphenylene,C1=CC2=C3C=CC=CC3=C2C=C1,True,
+Biphenylene,c1[c]cc2c(c1)=c1ccccc1=2,True,
+Biphenylene,c1ccc2c(c1)=c1ccccc1=2C,False,Invalid bonding between aromatic and aliphatic carbon
+Fluorene,c1ccc2c3ccccc3Cc2c1,True,
+Fluorene,C1=CC=C2C(=C1)CC1=CC=CC=C12,True,
+Fluorene,c1[c]cc2c3ccccc3Cc2c1,True,
+Fluorene,c1ccc2c3ccccc3Cc2c1C,False,Invalid bonding between aromatic and aliphatic carbon
+Acenaphthene,c1cc2c3c(cccc3c1)CC2,True,
+Acenaphthene,c1cc2c3c(cccc3c1)CC2,True,
+Acenaphthene,c1cc2c3c(cccc3c1)CC2C,False,Invalid bonding between aromatic and aliphatic carbon
+Acenaphthylene,c1cc2c3c(cccc3c1)C=C2,True,
+Acenaphthylene,C1=CC2=C3C(=C1)C=CC3=CC=C2,True,
+Acenaphthylene,c1cc2c3c(cccc3c1)C=C2,True,
+Acenaphthylene,c1cc2c3c(cccc3c1)C=C2C,False,Invalid bonding between aromatic and aliphatic carbon
+Anthracene,c1ccc2cc3ccccc3cc2c1,True,
+Anthracene,C1=CC=C2C=C3C=CC=CC3=CC=CC2=C1,True,
+Anthracene,c1c[c]c2cc3ccccc3cc2c1,True,
+Anthracene,c1ccc2cc3ccccc3cc2c1C,False,Invalid bonding between aromatic and aliphatic carbon
+Phenanthrene,c1ccc2c(c1)ccc3ccccc23,True,
+Phenanthrene,C1=CC=C2C(=C1)C=CC3=CC=CC=C32,True,
+Phenanthrene,c1cc[c]2c(c1)ccc3ccccc23,True,
+Phenanthrene,c1ccc2c(c1)ccc3ccccc23C,False,Invalid bonding between aromatic and aliphatic carbon
+Phenalene,C1=Cc2cccc3cccc(c23)C1,True,
+Phenalene,C1=CC2=CC=CC3=CC=CC=C3C2=C1,True,
+Phenalene,c1=[c]c2cccc3cccc(c23)C1,True,
+Phenalene,C1=Cc2cccc3cccc(c23)C1C,False,Invalid bonding between aromatic and aliphatic carbon
+Fluoranthene,C1=CC=C2C(=C1)C1=CC=CC3=CC=CC2=C13,True,
+Fluoranthene,C1=CC2=CC=CC3=CC=CC=C3C2=C1,True,
+Fluoranthene,c1cc-[c]2c(=c1)c1=cc=cc3=cc=cc2=c13,True,
+Fluoranthene,C1=CC=C2C(=C1)C1=CC=CC3=CC=CC2=C13C,False,Invalid bonding between aromatic and aliphatic carbon
+Tetracene,c1c2cc3cc4ccccc4cc3cc2ccc1,True,
+Tetracene,C1=CC=C2C=C3C=C4C=CC=CC4=CC=CC3=CC2=C1,True,
+Tetracene,c1[c]2cc3cc4ccccc4cc3cc2ccc1,True,
+Tetracene,c1c2cc3cc4ccccc4cc3cc2ccc1C,False,Invalid bonding between aromatic and aliphatic carbon
+Benz[a]anthracene,c1ccc2c(c1)ccc3c2cc4ccccc4c3,True,
+Benz[a]anthracene,C1=CC=C2C(=C1)C=CC3=CC=CC4=CC=CC=C4C3=C2,True,
+Benz[a]anthracene,c1cc[c]2c(c1)ccc3c2cc4ccccc4c3,True,
+Benz[a]anthracene,c1ccc2c(c1)ccc3c2cc4ccccc4c3C,False,Invalid bonding between aromatic and aliphatic carbon
+Chrysene,c1ccc2c(c1)ccc3c2ccc4c3cccc4,True,
+Chrysene,C1=CC=C2C(=C1)C=CC3=CC=CC4=CC=CC=C4C3=C2,True,
+Chrysene,c1cc[c]2c(c1)ccc3c2ccc4c3cccc4,True,
+Chrysene,c1ccc2c(c1)ccc3c2ccc4c3cccc4C,False,Invalid bonding between aromatic and aliphatic carbon
+Triphenylene,c1ccc2c(c1)c3ccccc3c4ccccc24,True,
+Triphenylene,C1=CC=C2C(=C1)C1=CC=CC=C1C1=CC=CC=C21,True,
+Triphenylene,c1cc[c]2c(c1)c3ccccc3c4ccccc24,True,
+Triphenylene,c1ccc2c(c1)c3ccccc3c4ccccc24C,False,Invalid bonding between aromatic and aliphatic carbon
+Pyrene,c1cc2cccc3c2c4c1cccc4cc3,True,
+Pyrene,C1=CC2=CC=C3C=CC=C4C=CC(=C43)C=C2,True,
+Pyrene,c1cc2cc[c]c3c2c4c1cccc4cc3,True,
+Pyrene,c1cc2cccc3c2c4c1cccc4cc3C,False,Invalid bonding between aromatic and aliphatic carbon
+Pentacene,c1ccc2cc3cc4cc5ccccc5cc4cc3cc2c1,True,
+Pentacene,C1=CC=CC2=CC=CC3=CC=CC4=CC=CC5=CC=CC=C5C4=C3C2=C1,True,
+Pentacene,c1cc[c]2cc3cc4cc5ccccc5cc4cc3cc2c1,True,
+Pentacene,c1ccc2cc3cc4cc5ccccc5cc4cc3cc2c1C,False,Invalid bonding between aromatic and aliphatic carbon
+Benzo[a]pyrene,c1ccc2c(c1)cc3ccc4cccc5c4c3c2cc5,True,
+Benzo[a]pyrene,c1ccc2c(c1)cc3ccc4cccc5c4c3c2cc5,True,
+Benzo[a]pyrene,c1cc[c]2c(c1)cc3ccc4cccc5c4c3c2cc5,True,
+Benzo[a]pyrene,c1ccc2c(c1)cc3ccc4cccc5c4c3c2cc5C,False,Invalid bonding between aromatic and aliphatic carbon
+Perylene,c1cc2cccc3c4cccc(c(c1)c2c3)c4cc5cccc5,True,
+Perylene,C1=CC2=C3C(=C1)C=CC=C3C3=C4C(=CC=CC4=CC=C23)C=C2,True,
+Perylene,c1cc2cccc3c4c[c]cc(c(c1)c2c3)c4cc5cccc5,True,
+Perylene,c1cc2cccc3c4cccc(c(c1)c2c3)c4cc5cccc5C,False,Invalid bonding between aromatic and aliphatic carbon
+Corannulene,c1cc2ccc3ccc4ccc5ccc1c1c2c3c4c51,True,
+Corannulene,c1cc2ccc3ccc4ccc5ccc1c1c2c3c4c51,True,
+Corannulene,c1cc2ccc3cc[c]4ccc5ccc1c1c2c3c4c51,True,
+Corannulene,c1cc2ccc3ccc4ccc5ccc1c1c2c3c4c51C,False,Invalid bonding between aromatic and aliphatic carbon
+Benzo[ghi]perylene,c1cc2ccc3ccc4ccc5cccc6c(c1)c2c3c4c56,True,
+Benzo[ghi]perylene,C1=CC2=CC=C3C=CC4=C5C6=C(C=CC=C6C(=C1)C2=C35)C=C4,True,
+Benzo[ghi]perylene,c1cc2cc[c]3ccc4ccc5cccc6c(c1)c2c3c4c56,True,
+Benzo[ghi]perylene,c1cc2ccc3ccc4ccc5cccc6c(c1)c2c3c4c56C,False,Invalid bonding between aromatic and aliphatic carbon
+Coronene,c1cc2ccc3ccc4ccc5ccc6ccc1c1c2c3c4c5c61,True,
+Coronene,C1=CC2=CC=C3C=CC4=CC=C5C=CC6=CC=CC=C6C5=C4C3=C2C=C1,True,
+Coronene,c1cc2ccc3ccc4ccc5ccc6cc[c]1c1c2c3c4c5c61,True,
+Coronene,c1cc2ccc3ccc4ccc5ccc6ccc1c1c2c3c4c5c61C,False,Invalid bonding between aromatic and aliphatic carbon
+Pyridine,c1ccncc1,True,
+Pyridine,C1=CC=NC=C1,True,
+Pyridine,c1c[c]ncc1,True,
+Pyridine,c1ccncc1C,False,Invalid bonding between aromatic and aliphatic carbon
+Thiophene,c1ccsc1,True,
+Thiophene,C1=CSC=C1,True,
+Thiophene,c1c[cs]c1,False,  <!-- (Note: [cs] is not a typical notation; normally [s] for aromatic S) -->
+Thiophene,c1ccsc1C,False,Invalid bonding between aromatic and aliphatic carbon
+Pyrrole,c1c[nH]cc1,True,
+Pyrrole,C1=CN=CC=C1,True,
+Pyrrole,c1c[nH]c[c]1,True,
+Pyrrole,c1c[nH]cc1C,False,Invalid bonding between aromatic and aliphatic carbon
+Furan,c1ccoc1,True,
+Furan,C1=COC=C1,True,
+Furan,c1c[c]oc1,True,
+Furan,c1ccoc1C,False,Invalid bonding between aromatic and aliphatic carbon
+Quinoline,c1ccc2ncccc2c1,True,
+Quinoline,C1=CC=C2N=CC=CC2=C1,True,
+Quinoline,c1cc[c]2ncccc2c1,True,
+Quinoline,c1ccc2ncccc2c1C,False,Invalid bonding between aromatic and aliphatic carbon
+Benzothiophene,c1ccc2sccc2c1,True,
+Benzothiophene,C1=CC=C2SC=CC2=C1,True,
+Benzothiophene,c1cc[c]2sccc2c1,True,
+Benzothiophene,c1ccc2sccc2c1C,False,Invalid bonding between aromatic and aliphatic carbon
+Indole,c1ccc2c(c1)[nH]cc2,True,
+Indole,C1=CC=C2C(=C1)[NH]CC2,True,
+Indole,c1cc[c]2c(c1)[nH]cc2,True,
+Indole,c1ccc2c(c1)[nH]cc2C,False,Invalid bonding between aromatic and aliphatic carbon
+Benzofuran,c1ccc2occc2c1,True,
+Benzofuran,C1=CC=C2OC=CC2=C1,True,
+Benzofuran,c1cc[c]2occc2c1,True,
+Benzofuran,c1ccc2occc2c1C,False,Invalid bonding between aromatic and aliphatic carbon
+Acridine,c1ccc2nc3ccccc3cc2c1,True,
+Acridine,C1=CC=C2C(=C1)C=CC3=CC=CC=C3N2,True,
+Acridine,c1cc[c]2nc3ccccc3cc2c1,True,
+Acridine,c1ccc2nc3ccccc3cc2c1C,False,Invalid bonding between aromatic and aliphatic carbon
+Dibenzothiophene,c1ccc2c(c1)sc3ccccc23,True,
+Dibenzothiophene,C1=CC=C2C(=C1)C=CC3=CC=CC=C3S2,True,
+Dibenzothiophene,c1cc[c]2c(c1)sc3ccccc23,True,
+Dibenzothiophene,c1ccc2c(c1)sc3ccccc23C,False,Invalid bonding between aromatic and aliphatic carbon
+Carbazole,c1ccc2c(c1)[nH]c3ccccc23,True,
+Carbazole,C1=CC=C2C(=C1)C=CC3=CC=CC=C3N2,True,
+Carbazole,c1cc[c]2c(c1)[nH]c3ccccc23,True,
+Carbazole,c1ccc2c(c1)[nH]c3ccccc23C,False,Invalid bonding between aromatic and aliphatic carbon
+Dibenzofuran,c1ccc2c(c1)oc3ccccc23,True,
+Dibenzofuran,C1=CC=C2C(=C1)C=CC3=CC=CC=C3O2,True,
+Dibenzofuran,c1cc[c]2c(c1)oc3ccccc23,True,
+Dibenzofuran,c1ccc2c(c1)oc3ccccc23C,False,Invalid bonding between aromatic and aliphatic carbon
+
