@@ -1,18 +1,54 @@
-from dataclasses import field
+import functools
+from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
 from smiles_checker.chem.atomic import Atom, BracketAtom
 from smiles_checker.chem.chemistry import chemistry as chem
-from smiles_checker.exceptions import ParserException
+
+
+def fill_none(func):
+    """
+    Decorator to fill None values in the function arguments
+    """
+
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        needed = func.__code__.co_argcount - 1  # minus self
+        padded = (list(args) + [None] * needed)[:needed]
+        return func(self, *padded, **kwargs)
+
+    return wrapper
+
+
+@dataclass
+class ParserException(Exception):
+    """
+    Exception for parser errors.
+
+    Args:
+        rule: The rule that caused the error.
+        parameter: The parameter that caused the error.
+        message: The error message.
+    """
+
+    rule: str
+    parameter: str
+    message: str
 
 
 class ParserManager:
-    def __init__(self):
-        self.current_open_rnum = []
-        self.current_closed_rnum = []
-        self.current_chain = []
-        self.last_atom = None
-        self.ring_atoms = {}
+    """
+    Parser manager to parse the SMILES strings.
+
+    Attributes:
+        current_open_rnum: The current open ring numbers.
+        current_closed_rnum: The current closed ring numbers.
+        current_chain: The current chain.
+    """
+
+    current_open_rnum = list()
+    current_closed_rnum = list()
+    current_chain: list[Atom] = list()
 
     def __enter__(self):
         """
@@ -28,99 +64,38 @@ class ParserManager:
         """
         Resets the parser manager to its initial state.
         """
-        self.current_open_rnum = []
-        self.current_closed_rnum = []
-        self.current_chain = []
-        self.last_atom = None
-        self.ring_atoms = {}
+        self.current_open_rnum = list()
+        self.current_closed_rnum = list()
+        self.current_chain = list()
 
-    def chain(self, bond=None, atom=None, rnum=None):
-        """
-        Handles the 'chain' rule in SMILES parsing, connecting atoms and managing ring closures.
+    def chain(self, bond=None, atom=None, rnum=None, dot_proxy=None):
 
-        Args:
-            bond (str, optional): The type of bond (e.g., "-", "=", "#"). Defaults to None.
-            atom (Atom, optional): The atom object. Defaults to None.
-            rnum (int, optional): The ring number. Defaults to None.
-        """
-        if atom is not None:
-            if self.last_atom:
-                # Default to single bond if not specified
-                actual_bond = bond if bond is not None else "-"
-                chem.mol_graph.add_edge(self.last_atom, atom, actual_bond)
-            self.last_atom = atom
-            return atom
-        elif rnum is not None:
-            if rnum in self.current_open_rnum:
-                ring_opening_atom = self.ring_atoms.pop(rnum)
-                if self.last_atom:
-                    # Determine bond type for ring closure
-                    bond_type = bond
-                    if bond is None:
-                        bond_type = ":" if self.last_atom.aromatic and ring_opening_atom.aromatic else "-"
-                    chem.mol_graph.add_edge(self.last_atom, ring_opening_atom, bond_type)
-                self.current_open_rnum.remove(rnum)
-                self.current_closed_rnum.append(rnum)
-            else:
-                if self.last_atom:
-                    self.ring_atoms[rnum] = self.last_atom
-                self.current_open_rnum.append(rnum)
-            return rnum
-        else:
-            raise ParserException(
-                rule="chain",
-                parameter=f"bond={bond}, atom={atom}, rnum={rnum}",
-                message="Invalid chain rule combination"
+        if bond is None:
+
+            if atom is not None:
+                return atom
+
+            if rnum is not None:
+                return rnum
+
+            return dot_proxy
+
+        if bond == ":" and atom and type(atom) == str and atom[0].isupper():
+            raise Exception(
+                f"Aromatic bond cannot be use with Uppercase and collon {atom}"
             )
 
-    def dot_proxy(self, atom: Atom):
-        """
-        Handles the '.' (dot) notation in SMILES, indicating disconnected structures.
+        # TODO: need to check if the atom is not bracketed too
 
-        Args:
-            atom (Atom): The atom following the dot, which starts a new disconnected chain.
-        """
-        self.last_atom = None  # Disconnect the current chain
-        self.current_chain.append(atom) # Add the new atom to the current chain
-        return atom
+        return [atom, chem.number_of_electrons_per_bond(bond)]
 
-    def inner_branch(self, bond_dot=None, line=None, inner_branch_content=None):
-        """
-        Handles the parsing of branches in SMILES strings.
-
-        Args:
-            bond_dot (str, optional): The bond or dot preceding the branch. Defaults to None.
-            line (list): The content of the branch (list of atoms/ring closures).
-            inner_branch_content (any, optional): Content of a nested inner branch. Defaults to None.
-        """
-        # Save the current state before processing the branch
-        original_last_atom = self.last_atom
-        original_current_chain = list(self.current_chain)
-
+    def inner_branch(self, bond_dot=None, line=None, inner_branch=None):
+        """ """
         if bond_dot == ".":
-            self.last_atom = None  # Disconnect chain for dot notation
+            self.validate_branch()
+            self._reset()
 
-        # Process the main line of the branch
-        if line:
-            # The 'line' is already processed by the 'chain' method in yacc.py
-            # and its effects on last_atom and mol_graph are already applied.
-            # We just need to ensure the connection from the original_last_atom
-            # to the first atom of the branch if a bond is specified.
-            if original_last_atom and line[0] and bond_dot and bond_dot != ".":
-                chem.mol_graph.add_edge(original_last_atom, line[0], bond_dot)
-
-        # Process nested inner branches if they exist
-        if inner_branch_content:
-            # This part assumes inner_branch_content is already processed recursively
-            # by the parser and its effects are handled. No explicit action needed here
-            # unless there's a specific connection logic for nested branches.
-            pass
-
-        # Restore the last_atom to connect the branch back to the main chain
-        self.last_atom = original_last_atom
-        self.current_chain = original_current_chain
-
-        return line # Return the processed branch content
+        pass
 
     def validate_branch(self) -> bool:
         """
@@ -134,23 +109,14 @@ class ParserManager:
                 message="Unclosed ring numbers",
             )
 
+        starting_aromacity = self.current_chain[0].aromatic
         if not self.current_chain:
             return True
 
-        # Validate the molecular graph structure
-        chem.mol_graph.validate_graph()
-
-        # Validate aromaticity
-        if not chem.validate_aromacity():
-            raise ParserException(
-                rule="validate_branch",
-                parameter="Aromaticity check failed",
-                message="Invalid aromaticity in molecule",
-            )
-
         return True
 
-    def internal_bracket(self, istope=None, symbol=None, chiral=None, hcount=None, charge=None, mol_map=None):
+    @fill_none
+    def internal_bracket(self, istope, symbol, chiral, hcount, charge, mol_map):
         """
         Parses the internal bracket and checks for valency.
         """
@@ -168,7 +134,8 @@ class ParserManager:
 
         return br_atom
 
-    def listify(self, base_element=None, recursion=None):
+    @fill_none
+    def listify(self, base_element, recursion):
         """
         Generic rule for dealing with rules in the following format:
 
@@ -181,7 +148,7 @@ class ParserManager:
             The parsed atom or chain branch.
         """
         if recursion is None:
-            return [base_element]
+            return base_element
 
         if type(recursion) == list:
             return [base_element] + recursion
@@ -197,19 +164,31 @@ class ParserManager:
             The atom
         """
 
+        # TODO maybe I'm missing to add to the chain here?
+
         if type(symbol_or_bracket) != str:
             return symbol_or_bracket
 
-        atom_obj = chem.Atom(symbol_or_bracket, aromatic=symbol_or_bracket.islower())
-        self.current_chain.append(atom_obj)
-        self.last_atom = atom_obj
-        return atom_obj
+        if len(symbol_or_bracket) == 1 or symbol_or_bracket in chem.organic_atoms:
+            atom_obj = chem.Atom(symbol_or_bracket, aromatic=symbol_or_bracket.islower())
+            self.current_chain.append(atom_obj)
+            return atom_obj
 
+        elem1, elem2 = symbol_or_bracket
+
+        if elem1 in chem.organic_atoms and elem2 in chem.organic_atoms:
+            return [elem1, elem2]
+
+        raise Exception(
+            f"Inorganic Atom Outside Bracket {symbol_or_bracket} not allowed"
+        )
+
+    @fill_none
     def ring_number(
         self,
-        ring_number_or_symbol: str = None,
-        ring_number1: Optional[str] = None,
-        ring_number2: Optional[str] = None,
+        ring_number_or_symbol: str,
+        ring_number1: Optional[str],
+        ring_number2: Optional[str],
     ) -> int:
         """
         Parses the ring numbers provided.
@@ -221,51 +200,47 @@ class ParserManager:
             The parsed ring number as an integer.
         """
         rnum = -1
+        raiser = lambda msg: ParserException(
+            rule="ring_number",
+            parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
+            message=msg,
+        )
 
         if ring_number_or_symbol == "%":
             if ring_number1 is None:
-                raise ParserException(
-                    rule="ring_number",
-                    parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
-                    message="Ring number cannot be just '%'"
-                )
+                raiser(msg="Ring number cannot be just '%'")
 
             digits = ring_number1 + (ring_number2 or "")
             if not digits.isdigit():
-                raise ParserException(
-                    rule="ring_number",
-                    parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
-                    message="Ring number must be a digit or '%'"
-                )
+                raiser(msg="Ring number must be a digit or '%'")
             rnum = int(digits)
         elif ring_number_or_symbol.isdigit():
             if ring_number2 is not None:
-                raise ParserException(
-                    rule="ring_number",
-                    parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
-                    message="Ring number cannot have more than one digit after the first"
+                raiser(
+                    msg="Ring number cannot have more than one digit after the first"
                 )
             digits = ring_number_or_symbol + (ring_number1 or "")
             if not digits.isdigit():
-                raise ParserException(
-                    rule="ring_number",
-                    parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
-                    message="Ring number must be a digit or a number with a leading digit"
+                raiser(
+                    msg="Ring number must be a digit or a number with a leading digit"
                 )
             rnum = int(digits)
         else:
-            raise ParserException(
-                rule="ring_number",
-                parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
-                message="Ring number must be a digit or a number with a leading digit"
-            )
+            raiser(msg="Ring number must be a digit or a number with a leading digit")
 
         if rnum < 1:
-            raise ParserException(
-                rule="ring_number",
-                parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
-                message="Ring number must be greater than 0"
+            raiser(msg="Ring number must be greater than 0")
+
+        if rnum in self.current_open_rnum:
+            self.current_open_rnum.remove(rnum)
+            self.current_closed_rnum.append(rnum)
+        elif rnum in self.current_closed_rnum:
+            raiser(
+                msg="Ring number already closed",
             )
+        else:
+            self.current_open_rnum.append(rnum)
+
         return rnum
 
     def int(self, digits: List[str]) -> int:
@@ -278,7 +253,8 @@ class ParserManager:
         """
         return int("".join(digits))
 
-    def hcount(self, _, digit: Optional[str] = None) -> int:
+    @fill_none
+    def hcount(self, _, digit: Optional[str]) -> int:
         """
         Parses the hydrogen count.
         Args:
@@ -286,17 +262,17 @@ class ParserManager:
         Returns:
             The parsed hydrogen count.
         """
-        if digit is None:
-            return 1
-        if not digit.isdigit():
+        if digit is None or not digit.isdigit():
             raise ParserException(
                 rule="hcount",
                 parameter=digit,
-                message="Invalid hydrogen count",
+                message="Hydrogen count must be a digit",
             )
-        return int(digit)
 
-    def charge(self, charge1: str = None, charge2: Union[str, None, int] = None) -> int:
+        return int(digit) if digit is not None else 1
+
+    @fill_none
+    def charge(self, charge1: str, charge2: Union[str, None, int]) -> int:
         """
         Parsers the charge string to an integer.
         Args:
@@ -326,7 +302,8 @@ class ParserManager:
 
         return charge2
 
-    def chiral(self, chiral1: str = None, chiral2: Optional[str] = None) -> str:
+    @fill_none
+    def chiral(self, chiral1: str, chiral2: Optional[str]) -> str:
         """
         Fixes the current chiral rotation
 
@@ -336,8 +313,9 @@ class ParserManager:
         Returns:
             The current chiral rotation.
         """
-        return "counterclockwise" if chiral1 == "@" and chiral2 == "@" else "clockwise"
+        return "counterclockwise" if chiral2 else "clockwise"
 
+    @fill_none
     def fifteen(self, digit1: str, digit2: Optional[str]) -> int:
         """
         Fixes fifteen as maximum value for valency
