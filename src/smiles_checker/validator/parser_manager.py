@@ -1,23 +1,11 @@
 import functools
 from dataclasses import dataclass, field
-from typing import List, Optional, Union
+from types import prepare_class
+from typing import Dict, List, Optional, Union
 
 from smiles_checker.chem.atomic import Atom, BracketAtom
 from smiles_checker.chem.chemistry import chemistry as chem
-
-
-def fill_none(func):
-    """
-    Decorator to fill None values in the function arguments
-    """
-
-    @functools.wraps(func)
-    def wrapper(self, *args, **kwargs):
-        needed = func.__code__.co_argcount - 1  # minus self
-        padded = (list(args) + [None] * needed)[:needed]
-        return func(self, *padded, **kwargs)
-
-    return wrapper
+from src.smiles_checker.chem import atomic
 
 
 @dataclass
@@ -46,297 +34,340 @@ class ParserManager:
         current_chain: The current chain.
     """
 
-    current_open_rnum = list()
-    current_closed_rnum = list()
-    current_chain: list[Atom] = list()
+    open_cycles: Dict[int, List[(Atom, str)]]
+    closed_cycles: set[int]
 
-    def __enter__(self):
+
+    def clear(self) -> None:
         """
-        Initializes the parser manager.
+        Clear the current open and closed cycles.
         """
-        self._reset()
-        return self
+        self.open_cycles = {}
+        self.closed_cycles = set()
 
-    def __exit__(self):
-        self._reset()
-
-    def _reset(self):
+    
+    def has_open_cycles(self) -> bool:
         """
-        Resets the parser manager to its initial state.
-        """
-        self.current_open_rnum = list()
-        self.current_closed_rnum = list()
-        self.current_chain = list()
+        Check if there are any open cycles.
 
-    def chain(self, bond=None, atom=None, rnum=None, dot_proxy=None):
-
-        if bond is None:
-
-            if atom is not None:
-                return atom
-
-            if rnum is not None:
-                return rnum
-
-            return dot_proxy
-
-        if bond == ":" and atom and type(atom) == str and atom[0].isupper():
-            raise Exception(
-                f"Aromatic bond cannot be use with Uppercase and collon {atom}"
-            )
-
-        # TODO: need to check if the atom is not bracketed too
-
-        return [atom, chem.number_of_electrons_per_bond(bond)]
-
-    def inner_branch(self, bond_dot=None, line=None, inner_branch=None):
-        """ """
-        if bond_dot == ".":
-            self.validate_branch()
-            self._reset()
-
-        pass
-
-    def validate_branch(self) -> bool:
-        """
-        Validates based on the current state of the parser manager
-        """
-
-        if len(self.current_open_rnum) != 0:
-            raise ParserException(
-                rule="validate_branch",
-                parameter=f"{self.current_open_rnum}",
-                message="Unclosed ring numbers",
-            )
-
-        starting_aromacity = self.current_chain[0].aromatic
-        if not self.current_chain:
-            return True
-
-        return True
-
-    @fill_none
-    def internal_bracket(self, istope, symbol, chiral, hcount, charge, mol_map):
-        """
-        Parses the internal bracket and checks for valency.
-        """
-
-        br_atom = chem.BracketAtom(
-            isotope=istope,
-            symbol=symbol,
-            chiral=chiral,
-            hidrogens=hcount,
-            charge=charge,
-            mol_map=mol_map,
-        )
-
-        self.current_chain.append(br_atom)
-
-        return br_atom
-
-    @fill_none
-    def listify(self, base_element, recursion):
-        """
-        Generic rule for dealing with rules in the following format:
-
-        x -> y x
-        x -> y
-        Args:
-            base_element: Base element.
-            recursion: The chain element.
         Returns:
-            The parsed atom or chain branch.
+            bool: True if there are open cycles, False otherwise.
         """
-        if recursion is None:
-            return base_element
+        return len(self.open_cycles) > 0
 
-        if type(recursion) == list:
-            return [base_element] + recursion
 
-        return [base_element, recursion]
-
-    def atom(self, symbol_or_bracket: str):
-        """
-        Parses the atom symbol or bracket and from this point on always returns the parser manager
-        Args:
-            symbol_or_bracket: The atom symbol or bracket atom.
-        Returns:
-            The atom
-        """
-
-        # TODO maybe I'm missing to add to the chain here?
-
-        if type(symbol_or_bracket) != str:
-            return symbol_or_bracket
-
-        if len(symbol_or_bracket) == 1 or symbol_or_bracket in chem.organic_atoms:
-            atom_obj = chem.Atom(symbol_or_bracket, aromatic=symbol_or_bracket.islower())
-            self.current_chain.append(atom_obj)
-            return atom_obj
-
-        elem1, elem2 = symbol_or_bracket
-
-        if elem1 in chem.organic_atoms and elem2 in chem.organic_atoms:
-            return [elem1, elem2]
-
-        raise Exception(
-            f"Inorganic Atom Outside Bracket {symbol_or_bracket} not allowed"
-        )
-
-    @fill_none
-    def ring_number(
-        self,
-        ring_number_or_symbol: str,
-        ring_number1: Optional[str],
-        ring_number2: Optional[str],
-    ) -> int:
-        """
-        Parses the ring numbers provided.
-        Args:
-            ring_number_or_symbol: A number or the % symbol.
-            ring_number1: The first digit, if any.
-            ring_number2: The second digit, if any.
-        Returns:
-            The parsed ring number as an integer.
-        """
-        rnum = -1
-        raiser = lambda msg: ParserException(
-            rule="ring_number",
-            parameter=f"{ring_number_or_symbol} {ring_number1} {ring_number2}",
-            message=msg,
-        )
-
-        if ring_number_or_symbol == "%":
-            if ring_number1 is None:
-                raiser(msg="Ring number cannot be just '%'")
-
-            digits = ring_number1 + (ring_number2 or "")
-            if not digits.isdigit():
-                raiser(msg="Ring number must be a digit or '%'")
-            rnum = int(digits)
-        elif ring_number_or_symbol.isdigit():
-            if ring_number2 is not None:
-                raiser(
-                    msg="Ring number cannot have more than one digit after the first"
-                )
-            digits = ring_number_or_symbol + (ring_number1 or "")
-            if not digits.isdigit():
-                raiser(
-                    msg="Ring number must be a digit or a number with a leading digit"
-                )
-            rnum = int(digits)
-        else:
-            raiser(msg="Ring number must be a digit or a number with a leading digit")
-
-        if rnum < 1:
-            raiser(msg="Ring number must be greater than 0")
-
-        if rnum in self.current_open_rnum:
-            self.current_open_rnum.remove(rnum)
-            self.current_closed_rnum.append(rnum)
-        elif rnum in self.current_closed_rnum:
-            raiser(
-                msg="Ring number already closed",
-            )
-        else:
-            self.current_open_rnum.append(rnum)
-
-        return rnum
-
-    def int(self, digits: List[str]) -> int:
-        """
-        Parses the provided digits to an integer.
-        Args:
-            digits: The digits to be parsed.
-        Returns:
-            The parsed integer.
-        """
-        return int("".join(digits))
-
-    @fill_none
-    def hcount(self, _, digit: Optional[str]) -> int:
-        """
-        Parses the hydrogen count.
-        Args:
-            digit: The digit to be parsed.
-        Returns:
-            The parsed hydrogen count.
-        """
-        if digit is None or not digit.isdigit():
-            raise ParserException(
-                rule="hcount",
-                parameter=digit,
-                message="Hydrogen count must be a digit",
-            )
-
-        return int(digit) if digit is not None else 1
-
-    @fill_none
-    def charge(self, charge1: str, charge2: Union[str, None, int]) -> int:
-        """
-        Parsers the charge string to an integer.
-        Args:
-            charge1: either "+" or "-".
-            charge2: either "+", "-", None or an integer.
-        Returns:
-            The parsed charge as an integer.
-        """
-        if charge2 is None:
-            return 1 if charge1 == "+" else -1
-
-        if type(charge2) == str and charge2 != charge1:
-            raise ParserException(
-                rule="charge",
-                parameter=f"{charge1} {charge2}",
-                message="Charge mismatch",
-            )
-
-        if charge2 == "-":
-            return -2
-
-        if charge2 == "+":
-            return 2
-
-        if charge1 == "-":
-            return charge2 * -1
-
-        return charge2
-
-    @fill_none
-    def chiral(self, chiral1: str, chiral2: Optional[str]) -> str:
-        """
-        Fixes the current chiral rotation
-
-        Args:
-            chiral1: The first chiral symbol.
-            chiral2: The second chiral symbol, if any.
-        Returns:
-            The current chiral rotation.
-        """
-        return "counterclockwise" if chiral2 else "clockwise"
-
-    @fill_none
-    def fifteen(self, digit1: str, digit2: Optional[str]) -> int:
-        """
-        Fixes fifteen as maximum value for valency
-        Args:
-            digit1: The first digit to be parsed.
-            digit2: The second digit to be parsed, if any.
-        Returns:
-            The parsed rules.
-        """
-        if digit2:
-            x = int(digit1 + digit2)
-
-            if x > 15:
+    def add_atom_to_cycles(self, atom: Atom) -> None:
+        for cycle in self.open_cycles.values():
+            if atom in cycle:
                 raise ParserException(
-                    rule="fifteen",
-                    parameter=f"{digit1} {digit2}",
-                    message="Cannot exceed 15",
+                    rule="add_atom_to_cycles",
+                    parameter=str(atom),
+                    message="Atom already in cycle",
                 )
-            return x
 
-        return int(digit1)
+            cycle.append(atom)
+
+
+    def digit_matching(self, digit_dict: dict, rule_name: str) -> int:
+        match digit_dict:
+            case {"digit": int(value)}:
+                return int(value)
+            case {"digit": [head, *tail]}:
+                return int("".join(str(v) for v in [head, *tail]))
+            case _:
+                raise ParserException(
+                    rule=rule_name,
+                    parameter=str(digit_dict),
+                    message="Invalid rule_name rule",
+                )
+
+    def fifteen(self, **kwargs) -> int:
+        """
+        Function to parse the 'fifteen' rule. (Must be at most fifteen)
+
+        fifteen -> digit | digit digit
+
+        """
+        return self.digit_matching(kwargs, "fifteen")
+
+    def chiral(self, rotation: str) -> Optional[bool]:
+        """
+        Function to parse the 'chiral' rule.
+
+        chiral -> "@" | "@@"
+
+        """
+        return rotation
+
+    def mol_map(self, **kwargs) -> int:
+        """
+        Function to parse the 'mol_map' rule.
+
+        mol_map -> ":" digit digit digit | ":" digit digit | ":" digit
+
+        """
+        return self.digit_matching(kwargs, "mol_map")
+
+    def charge(self, charge: int = 0) -> int:
+        """
+        Function to parse the 'charge' rule.
+
+        charge -> "-" fifteen | "+" fifteen | "-" | "+" | "-" "-" | "+" "+"
+
+        """
+        return charge
+
+    def hcount(self, hcount: int = 1) -> int:
+        """
+        Function to parse the 'hcount' rule.
+
+        hcount -> "H" | "H" digit
+
+        """
+        return hcount
+
+    def isotope(self, **kwargs) -> int:
+        """
+        Function to parse the 'isotope' rule.
+        isotope -> digit digit digit | digit digit | digit
+        """
+        return self.digit_matching(kwargs, "isotope")
+
+    def rnum(self, **kwargs) -> int:
+        """
+        Function to parse the 'rnum' rule.
+        rnum -> digit digit digit | digit digit | digit
+        """
+        cycle_num = self.digit_matching(kwargs, "rnum")
+        
+        if cycle_num in self.closed_cycles: 
+            raise ParserException(
+                rule="rnum",
+                parameter=str(cycle_num),
+                message=f"Cycle number {cycle_num} already closed.",
+            )
+
+        if cycle_num in self.open_cycles:
+           chemestry.mol_graph.add_cycle(
+                self.open_cycles[cycle_num]
+            )
+            del self.open_cycles[cycle_num] 
+            closed_cycles.add(cycle_num)
+
+    def atom(self, **kwargs) -> Union[Atom, BracketAtom]:
+        """
+        Function to parse the 'atom' rule.
+        atom -> symbol | bracket_atom
+        """
+        match kwargs:
+            case {"symbol": str(symbol)}:
+                return chem.atom(symbol=symbol)
+            case {"bracket_atom": BracketAtom(bracket_atom)}:
+                return chem.bracket_atom(bracket_atom=bracket_atom)
+            case _:
+                raise ParserException(
+                    rule="atom",
+                    parameter=str(kwargs),
+                    message="Invalid atom rule",
+                )
+
+    def semi_bond_rule(self, semi_bond: str) -> str:
+        """
+        Function to parse the 'semi_bond_rule' rule.
+        semi_bond_rule -> " - " | " = "
+        """
+        ## TODO check if not missing something
+        return semi_bond
+
+    def bond(self, semi_bond_rule:str) -> str:
+        """
+        Function to parse the 'bond' rule.
+        bond -> semi_bond_rule | "-"
+        """
+        return semi_bond_rule
+
+    def bond_dot(self, bond:str) -> str:
+        """
+        Function to parse the 'bond_dot' rule.
+        bond_dot -> bond | "."
+        """
+        return bond
+
+    def inner_branch(self, **kwargs)::
+        match kwargs:
+            case {"bond_dot": str(bond_dot), "line": line}:
+                raise NotImplementedError("Not implemented inner branch with bond dot")
+            case {"line": line}:
+                return line
+            case {"bond_dot": str(bond_dot), "line": line, "inner_branch": inner_branch}:
+                raise NotImplementedError("Not implemented inner branch with bond dot and inner branch")
+            case {"line": line, "inner_branch": inner_branch}:
+                raise NotImplementedError("Not implemented inner branch with line and inner branch")
+            case _:
+                raise ParserException(
+                    rule="inner_branch",
+                    parameter=str(kwargs),
+                    message="Invalid inner branch rule",
+                )n
+
+
+    def branch(self, inner_branch):
+        return inner_branch
+
+    def symbol(self, semi_symbol: str) -> str:
+        """
+        Function to parse the 'symbol' rule.
+        symbol -> semi_symbol | "H"
+        """
+        return semi_symbol
+
+    def dot_proxy(self, atom: str) -> str:
+        """
+        Function to parse the 'dot_proxy' rule.
+        dot_proxy -> "." atom
+        """
+        if self.has_open_cycles():
+            raise ParserException(
+                rule="dot_proxy",
+                parameter=str(atom),
+                message="Cannot use dot proxy with open cycles.",
+            )
+
+        chemistry.validate()
+        self.clear()
+        chemistry.clear()
+        return atom
+
+    def chain(self, **kwargs) -> str:
+        """
+        Function to parse the 'chain' rule.
+        chain -> dot_proxy | bond atom | bond rnum | atom | rnum
+        """
+        match kwargs:
+            case {"dot_proxy": str(dot_proxy)}:
+                return {"atom":self.dot_proxy(atom=dot_proxy)}
+            case {"bond": str(bond), "atom": atom}:
+                return {"bond": bond,"atom": atom}
+            case {"bond": str(bond), "rnum": int(rnum)}:
+                return {"bond": bond,"rnum": int(rnum)} 
+            case {"atom": atom}:
+                return {"atom": atom} 
+            case {"rnum": int(rnum)}:
+                return { "rnum": int(rnum) }
+            case _:
+                raise ParserException(
+                    rule="chain",
+                    parameter=str(kwargs),
+                    message="Invalid chain rule",
+                )
+
+    def chains(self, **kwargs) -> List[str]:
+        """
+        Function to parse the 'chains' rule.
+        chains -> chain | chain chains
+        """
+        if kwargs.get("chains") is None:
+            chain = kwargs["chain"]
+            if chain.get("rnum"): # starts with a cycle number
+                raise ParserException(
+                    rule="chains",
+                    parameter=str(chain),
+                    message="Cannot start with a cycle number.",
+                )
+                return
+            if chain.get("bond"): # starts with a bond
+                raise ParserException(
+                    rule="chains",
+                    parameter=str(chain),
+                    message="Cannot start with a bond.",
+                )
+                return 
+            return { "chains": kwargs.get("chain") }
+
+        match kwargs:
+            case {"chains": {"rnum": rnum}, "chain": {"rnum": rnum2}}:
+                # Double cycle numbers in sequence
+                raise ParserException(
+                    rule="chains",
+                    parameter=str(kwargs),
+                    message="Cannot have two cycle numbers in the same chain.",
+                )
+                return
+            case {"chains": {"bond": bond1}, "chain": {"bond": bond2}}:
+                # Double bonds in sequence
+                raise ParserException(
+                    rule="chains",
+                    parameter=str(kwargs),
+                    message="Cannot have two bonds in the same chain.",
+                )
+            case {"chains": {"bond": bond, "atom": atom1}, "chain": {"atom": atom2}}:
+                chemestry.mol_graph.add_edge(atom1, atom2, bond=bond) 
+            case {"chains": {"atom": atom1} , "chain": {"atom": atom2}}:
+                chemistry.mol_graph.add_edge(atom1, atom2)
+                return {"chains": {"atom": atom2}}
+            case _:
+                raise ParserException(
+                    rule="chains",
+                    parameter=str(kwargs),
+                    message="Invalid chains rule",
+                )
+                return
+    
+    def internal_bracket(self, **kwargs) -> BracketAtom:
+        """
+        Function to parse the 'internal_bracket' rule.
+        internal_bracket -> isotope? symbol chiral? hcount? charge? mol_map?
+        """
+        return chem.bracket_atom(**kwargs)
+
+    def bracket_atom(self, internal_bracket) -> BracketAtom:
+        return self.internal_bracket(internal_bracket)
+
+    def chain_branch(self, **kwargs) -> Union[str, List[str]]:
+        """
+        Function to parse the 'chain_branch' rule.
+        chain_branch -> chains | branch | chains chain_branch | branch chain_branch
+        """
+        if kwargs.get("chain_branch") is None:
+            if "chains" in kwargs:
+                return kwargs
+
+            return {"branches_opened": [kwargs["branch"]]}
+
+        match kwargs:
+               pass 
+                
+                
+            case _:
+                raise ParserException(
+                    rule="chain_branch",
+                    parameter=str(kwargs),
+                    message="Invalid chain branch rule",
+                )
+    
+    def line(self, **kwargs) -> Union[str, List[str]]:
+        """
+        Function to parse the 'line' rule.
+        line -> atom | atom chain_branch | chains
+        """
+        if kwargs.get("chain_branch") is None:
+            return kwargs["atom"]
+        
+        match kwargs:
+            case {"atom": atom, "chain_branch": {"chains": { "atom" : atom2}}}:
+                chemestry.mol_graph.add_edge(atom, atom2)
+                return {}
+
+            
+
+
+
+            case _:
+                raise ParserException(
+                    rule="line",
+                    parameter=str(kwargs),
+                    message="Invalid line rule",
+                )
 
 
 parser_manager = ParserManager()

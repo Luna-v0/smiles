@@ -4,7 +4,7 @@ from sly import Parser
 
 from smiles_checker.chem.chemistry import chemistry as chem
 from smiles_checker.validator.lex import SmilesLex
-from smiles_checker.validator.parser_manager import parser_manager
+from smiles_checker.validator.parser_manager import parser_manager as pm
 
 
 def generate_combinations(rule: str) -> list[str]:
@@ -84,97 +84,194 @@ class SmilesParser(Parser):
     def error(self, t):
         raise Exception(f"Error on {str(t)}")
 
-    @_("atom", "atom chain_branch")  # type: ignore
+    @_("atom")  # type: ignore
     def line(self, rules):
-        return parser_manager.listify(*rules)
+        return pm.line(atom=rules.atom)
 
-    @_("chains", "branch", "chains chain_branch", "branch chain_branch")  # type: ignore
+    @_("chain_branch atom")  # type: ignore
+    def line(self, rules):
+        return pm.line(atom=rules.atom, chain_branch=rules.chain_branch)
+
+    @_("chains")  # type: ignore
     def chain_branch(self, rules):
-        return parser_manager.listify(*rules)
+        return pm.chain_branch(chains=rules.chains)
 
-    @_("chain", "chain chains")  # type: ignore
+    @_("branch")  # type: ignore
+    def chain_branch(self, rules):
+        return pm.chain_branch(branch=rules.branch)
+
+    @_("chain_branch chains")  # type: ignore
+    def chain_branch(self, rules):
+        return pm.chain_branch(chains=rules.chains, chain_branch=rules.chain_branch)
+
+    @_("chain_branch branch")  # type: ignore
+    def chain_branch(self, rules):
+        return pm.chain_branch(branch=rules.branch, chain_branch=rules.chain_branch)
+
+    @_("chain")  # type: ignore
     def chains(self, rules):
-        return parser_manager.listify(*rules)
+        return pm.chains(chain=rules.chain)
+
+    @_("chains chain")  # type: ignore
+    def chains(self, rules):
+        return pm.chains(chain=rules.chain, chains=rules.chains)
 
     @_('"[" internal_bracket "]"')  # type: ignore
     def bracket_atom(self, rules):
-        return rules.internal_bracket
+        return pm.bracket_atom(internal_bracket=rules.internal_bracket)
 
     @_(*generate_combinations("isotope? symbol chiral? hcount? charge? mol_map?"))  # type: ignore
     def internal_bracket(self, rules):
-        return parser_manager.internal_bracket(
-            *getAttributes(
-                rules, ["isotope", "symbol", "chiral", "hcount", "charge", "mol_map"]
-            )
-        )
+        attrs = getAttributes(rules, ["isotope", "symbol", "chiral", "hcount", "charge", "mol_map"])
+        return pm.internal_bracket(attrs)
 
-    @_("dot_proxy", "bond atom", "bond rnum", "atom", "rnum")  # type: ignore
+    @_("dot_proxy")  # type: ignore
     def chain(self, rules):
-        return parser_manager.chain(
-            *getAttributes(rules, ["bond", "atom", "rnum", "dot_proxy"])
-        )
+        return pm.chain(dot_proxy=rules.dot_proxy)
+
+    @_("bond atom")  # type: ignore
+    def chain(self, rules):
+        return pm.chain(bond=rules.bond, atom=rules.atom)
+
+    @_("bond rnum")  # type: ignore
+    def chain(self, rules):
+        return pm.chain(bond=rules.bond, rnum=rules.rnum)
+
+    @_("atom")  # type: ignore
+    def chain(self, rules):
+        return pm.chain(atom=rules.atom)
+
+    @_("rnum")  # type: ignore
+    def chain(self, rules):
+        return pm.chain(rnum=rules.rnum)
 
     @_('"." atom')  # type: ignore
     def dot_proxy(self, rules):
-        return parser_manager.dot_proxy(rules.atom)
+        return pm.dot_proxy(atom=rules.atom)
 
     @_("semi_symbol", '"H"')  # type: ignore
     def symbol(self, rules):
-        return rules[0]
+        return pm.symbol(semi_symbol=rules[0])
 
     @_('"(" inner_branch ")"')  # type: ignore
     def branch(self, rules):
-        return rules.inner_branch
+        return pm.branch(inner_branch=rules.inner_branch)
 
-    @_("bond_dot line", "line", "bond_dot line inner_branch", "line inner_branch")  # type: ignore
+    @_("bond_dot line")  # type: ignore
     def inner_branch(self, rules):
-        return parser_manager.inner_branch(
-            *getAttributes(rules, ["bond_dot", "line", "inner_branch"])
-        )
+        return pm.inner_branch(bond_dot=rules.bond_dot, line=rules.line)
 
-    @_("bond", '"."')  # type: ignore
+    @_("line")  # type: ignore
+    def inner_branch(self, rules):
+        return pm.inner_branch(line=rules.line)
+
+    @_("bond_dot line inner_branch")  # type: ignore
+    def inner_branch(self, rules):
+        return pm.inner_branch(bond_dot=rules.bond_dot, line=rules.line, inner_branch=rules.inner_branch)
+
+    @_("line inner_branch")  # type: ignore
+    def inner_branch(self, rules):
+        return pm.inner_branch(line=rules.line, inner_branch=rules.inner_branch)
+
+    @_("bond",'"."')  # type: ignore
     def bond_dot(self, rules):
-        return rules[0]
+        return pm.bond_dot(bond=rules[0])
 
     @_("semi_bond_rule", '"-"')  # type: ignore
     def bond(self, rules):
-        return rules[0]
+        return pm.bond(semi_bond_rule=rules[0])
 
     @_("semi_bond")  # type: ignore
     def semi_bond_rule(self, rules):
-        return rules[0]
+        return pm.semi_bond_rule(semi_bond=rules.semi_bond)
 
-    @_("symbol", "bracket_atom")  # type: ignore
+    @_("symbol")  # type: ignore
     def atom(self, rules):
-        return parser_manager.atom(rules[0])
+        return pm.atom(symbol=rules.symbol)
 
-    @_("digit", '"%" digit digit ')  # type: ignore
+    @_("bracket_atom")  # type: ignore
+    def atom(self, rules):
+        return pm.atom(bracket_atom=rules.bracket_atom)
+
+    @_("digit")  # type: ignore
     def rnum(self, rules):
-        return parser_manager.ring_number(*rules)
+        return pm.rnum(digit=rules.digit)
 
-    @_("digit digit digit", "digit digit", "digit")  # type: ignore
+    @_('"%" digit digit ')  # type: ignore
+    def rnum(self, rules):
+        return pm.rnum(digit=(rules[1], rules[2]))
+
+    @_("digit digit digit")  # type: ignore
     def isotope(self, rules):
-        return parser_manager.int(*rules)
+        return pm.isotope(digit=(rules[0], rules[1], rules[2]))
 
-    @_('"H" digit', '"H"')  # type: ignore
+    @_("digit digit")  # type: ignore
+    def isotope(self, rules):
+        return pm.isotope(digit=(rules[0], rules[1]))
+
+    @_("digit")  # type: ignore
+    def isotope(self, rules):
+        return pm.isotope(digit=rules.digit)
+
+    @_('"H" digit')  # type: ignore
     def hcount(self, rules):
-        return parser_manager.hcount(*rules)
+        return pm.hcount(digit=rules.digit)
 
-    @_('"+"', '"+" "+"', '"-"', '"-" "-"', '"-" fifteen', '"+" fifteen')  # type: ignore
+    @_('"H"')  # type: ignore
+    def hcount(self, rules):
+        return pm.hcount()
+
+    @_('"+"')  # type: ignore
     def charge(self, rules):
-        return parser_manager.charge(*rules)
+        return pm.charge(charge=1)
 
-    @_('":" digit digit digit', '":" digit digit', '":" digit')  # type: ignore
+    @_('"+" "+"')  # type: ignore
+    def charge(self, rules):
+        return pm.charge(charge=2)
+
+    @_('"-"')  # type: ignore
+    def charge(self, rules):
+        return pm.charge(charge=-1)
+
+    @_('"-" "-"')  # type: ignore
+    def charge(self, rules):
+        return pm.charge(charge=-2)
+
+    @_('"-" fifteen')  # type: ignore
+    def charge(self, rules):
+        return pm.charge(charge=-rules.fifteen)
+
+    @_('"+" fifteen')  # type: ignore
+    def charge(self, rules):
+        return pm.charge(rules)
+
+    @_('":" digit digit digit')  # type: ignore
     def mol_map(self, rules):
-        return parser_manager.int(*rules[1:])
+        return pm.mol_map(digit=(rules[1], rules[2], rules[3]))
 
-    @_('"@"', '"@" "@"')  # type: ignore
+    @_('":" digit digit')  # type: ignore
+    def mol_map(self, rules):
+        return pm.mol_map(digit=(rules[1], rules[2]))
+
+    @_('":" digit')  # type: ignore
+    def mol_map(self, rules):
+        return pm.mol_map(digit=rules.digit)
+
+    @_('"@"')  # type: ignore
     def chiral(self, rules):
-        return parser_manager.chiral(*rules)
+        return pm.chiral(chiral="clockwise")
 
-    @_("digit digit", "digit")  # type: ignore
+    @_('"@" "@"')  # type: ignore
+    def chiral(self, rules):
+        return pm.chiral(chiral="counterclockwise")
+
+    @_("digit digit")  # type: ignore
     def fifteen(self, rules):
-        return parser_manager.fifteen(*rules)
+        return pm.fifteen(digit=(rules[0], rules[1]))
+
+    @_("digit")  # type: ignore
+    def fifteen(self, rules):
+        return pm.fifteen(digit=rules.digit)<Up>
 
 
 parser = SmilesParser()
@@ -194,8 +291,8 @@ def validate_smiles(mol: str) -> tuple[bool, Exception | None]:
     """
     try:
         parser.parse(lexer.tokenize(mol))
-        parser_manager.validate_branch()
-        parser_manager._reset()
+        pm.validate_branch()
+        pm._reset()
         return True, None
     except Exception as e:
         raise e

@@ -24,6 +24,13 @@ class Graph:
     adjacency_list: dict[Atom, List[tuple[Atom, str]]] = field(default_factory=dict)
     cycles: List[List[Atom]] = field(default_factory=list)
 
+    def clear(self):
+        """
+        Clears the graph.
+        """
+        self.adjacency_list.clear()
+        self.cycles.clear()
+
     def add_cycle(self, cycle: List[Atom]):
         """
         Adds a cycle (a list of connected atoms forming a ring) to the graph's cycle list.

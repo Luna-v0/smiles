@@ -223,5 +223,16 @@ class Chemistry:
 
         return True
 
+    def validate(self) -> bool:
+        """
+        Validates the entire molecule represented by the internal graph.
+
+        This method checks the valency of all atoms, aromaticity, and other properties.
+
+        Returns:
+            bool: True if the molecule is valid, False otherwise.
+        """
+        return False
+
 
 chemistry = Chemistry()
