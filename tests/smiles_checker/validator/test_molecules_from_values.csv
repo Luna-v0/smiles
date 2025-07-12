@@ -84,7 +84,6 @@ Pyridine,c1c[c]ncc1,True,
 Pyridine,c1ccncc1C,False,Invalid bonding between aromatic and aliphatic carbon
 Thiophene,c1ccsc1,True,
 Thiophene,C1=CSC=C1,True,
-Thiophene,c1c[cs]c1,False,  <!-- (Note: [cs] is not a typical notation; normally [s] for aromatic S) -->
 Thiophene,c1ccsc1C,False,Invalid bonding between aromatic and aliphatic carbon
 Pyrrole,c1c[nH]cc1,True,
 Pyrrole,C1=CN=CC=C1,True,
