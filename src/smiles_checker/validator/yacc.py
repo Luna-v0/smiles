@@ -85,35 +85,23 @@ class SmilesParser(Parser):
     def error(self, t):
         raise Exception(f"Error on {str(t)}")
 
-    @_("chain")  # type: ignore
-    def line(self, rules):
-        return pm.line(chain=rules.chain)
-
-    @_("chain_branch chain")  # type: ignore
+    @_("atom opt_chain_branch")  # type: ignore
     def line(self, rules):
         return pm.line(chain_branch=rules.chain_branch, chain=rules.chain)
 
-    @_("chains")  # type: ignore
-    def chain_branch(self, rules):
-        return pm.chain_branch(chains=rules.chains)
-
-    @_("branch")  # type: ignore
-    def chain_branch(self, rules):
-        return pm.chain_branch(branch=rules.branch)
-
-    @_("chains chain_branch")  # type: ignore
+    @_("chain_branch chain_branch_item")  # type: ignore
     def chain_branch(self, rules):
         return pm.chain_branch(chains=rules.chains, chain_branch=rules.chain_branch)
 
-    @_("branch chain_branch")  # type: ignore
+    @_("chain_branch_item")  # type: ignore
     def chain_branch(self, rules):
-        return pm.chain_branch(branch=rules.branch, chain_branch=rules.chain_branch)
+        return pm.chain_branch(chain_branch=rules.chain_branch_item)
 
     @_("chain")  # type: ignore
     def chains(self, rules):
         return pm.chains(chain=rules.chain)
 
-    @_("chain chains")  # type: ignore
+    @_("chains chain")  # type: ignore
     def chains(self, rules):
         return pm.chains(chain=rules.chain, chains=rules.chains)
 
@@ -286,6 +274,14 @@ class SmilesParser(Parser):
     @_("digit")  # type: ignore
     def fifteen(self, rules):
         return pm.fifteen(digit=rules.digit)
+
+    @_("chains", "branch")
+    def chain_branch_item(self, rules):
+        return rules[0]
+
+    @_("chain_branch", "")
+    def opt_chain_branch(self, rules):
+        return None if len(rules) == 0 else pm.chain_branch(rules)
 
 
 parser = SmilesParser()
