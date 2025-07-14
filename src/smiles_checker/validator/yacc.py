@@ -4,7 +4,8 @@ from sly import Parser
 
 from smiles_checker.chem.chemistry import chemistry as chem
 from smiles_checker.validator.lex import SmilesLex
-from smiles_checker.validator.parser_manager import parser_manager as pm
+
+from .parser_manager import parser_manager as pm
 
 
 def generate_combinations(rule: str) -> list[str]:
@@ -84,13 +85,13 @@ class SmilesParser(Parser):
     def error(self, t):
         raise Exception(f"Error on {str(t)}")
 
-    @_("atom")  # type: ignore
+    @_("chain")  # type: ignore
     def line(self, rules):
-        return pm.line(atom=rules.atom)
+        return pm.line(chain=rules.chain)
 
-    @_("chain_branch atom")  # type: ignore
+    @_("chain_branch chain")  # type: ignore
     def line(self, rules):
-        return pm.line(atom=rules.atom, chain_branch=rules.chain_branch)
+        return pm.line(chain_branch=rules.chain_branch, chain=rules.chain)
 
     @_("chains")  # type: ignore
     def chain_branch(self, rules):
@@ -100,11 +101,11 @@ class SmilesParser(Parser):
     def chain_branch(self, rules):
         return pm.chain_branch(branch=rules.branch)
 
-    @_("chain_branch chains")  # type: ignore
+    @_("chains chain_branch")  # type: ignore
     def chain_branch(self, rules):
         return pm.chain_branch(chains=rules.chains, chain_branch=rules.chain_branch)
 
-    @_("chain_branch branch")  # type: ignore
+    @_("branch chain_branch")  # type: ignore
     def chain_branch(self, rules):
         return pm.chain_branch(branch=rules.branch, chain_branch=rules.chain_branch)
 
@@ -112,7 +113,7 @@ class SmilesParser(Parser):
     def chains(self, rules):
         return pm.chains(chain=rules.chain)
 
-    @_("chains chain")  # type: ignore
+    @_("chain chains")  # type: ignore
     def chains(self, rules):
         return pm.chains(chain=rules.chain, chains=rules.chains)
 
@@ -122,8 +123,19 @@ class SmilesParser(Parser):
 
     @_(*generate_combinations("isotope? symbol chiral? hcount? charge? mol_map?"))  # type: ignore
     def internal_bracket(self, rules):
-        attrs = getAttributes(rules, ["isotope", "symbol", "chiral", "hcount", "charge", "mol_map"])
-        return pm.internal_bracket(attrs)
+        attrs = getAttributes(
+            rules, ["isotope", "symbol", "chiral", "hcount", "charge", "mol_map"]
+        )
+        kwargs = {
+            "isotope": attrs[0],
+            "symbol": attrs[1],
+            "chiral": attrs[2],
+            "hidrogens": attrs[3],
+            "charge": attrs[4],
+            "mol_map": attrs[5],
+        }
+        # Create a dictionary from the list of attributes and their corresponding keys
+        return pm.internal_bracket(**kwargs)
 
     @_("dot_proxy")  # type: ignore
     def chain(self, rules):
@@ -167,13 +179,15 @@ class SmilesParser(Parser):
 
     @_("bond_dot line inner_branch")  # type: ignore
     def inner_branch(self, rules):
-        return pm.inner_branch(bond_dot=rules.bond_dot, line=rules.line, inner_branch=rules.inner_branch)
+        return pm.inner_branch(
+            bond_dot=rules.bond_dot, line=rules.line, inner_branch=rules.inner_branch
+        )
 
     @_("line inner_branch")  # type: ignore
     def inner_branch(self, rules):
         return pm.inner_branch(line=rules.line, inner_branch=rules.inner_branch)
 
-    @_("bond",'"."')  # type: ignore
+    @_("bond", '"."')  # type: ignore
     def bond_dot(self, rules):
         return pm.bond_dot(bond=rules[0])
 
@@ -271,7 +285,7 @@ class SmilesParser(Parser):
 
     @_("digit")  # type: ignore
     def fifteen(self, rules):
-        return pm.fifteen(digit=rules.digit)<Up>
+        return pm.fifteen(digit=rules.digit)
 
 
 parser = SmilesParser()
@@ -291,7 +305,6 @@ def validate_smiles(mol: str) -> tuple[bool, Exception | None]:
     """
     try:
         parser.parse(lexer.tokenize(mol))
-        pm.validate_branch()
         pm._reset()
         return True, None
     except Exception as e:

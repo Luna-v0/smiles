@@ -1,0 +1,82 @@
+Rule 0     S' -> line
+Rule 1     line -> atom chain_branch
+Rule 2     line -> atom
+Rule 3     chain_branch -> branch chain_branch
+Rule 4     chain_branch -> chains chain_branch
+Rule 5     chain_branch -> branch
+Rule 6     chain_branch -> chains
+Rule 7     chains -> chain chains
+Rule 8     chains -> chain
+Rule 9     bracket_atom -> [ internal_bracket ]
+Rule 10    internal_bracket -> isotope symbol chiral hcount charge mol_map
+Rule 11    internal_bracket -> symbol chiral hcount charge mol_map
+Rule 12    internal_bracket -> isotope symbol hcount charge mol_map
+Rule 13    internal_bracket -> isotope symbol chiral charge mol_map
+Rule 14    internal_bracket -> isotope symbol chiral hcount mol_map
+Rule 15    internal_bracket -> isotope symbol chiral hcount charge
+Rule 16    internal_bracket -> symbol hcount charge mol_map
+Rule 17    internal_bracket -> symbol chiral charge mol_map
+Rule 18    internal_bracket -> symbol chiral hcount mol_map
+Rule 19    internal_bracket -> symbol chiral hcount charge
+Rule 20    internal_bracket -> isotope symbol charge mol_map
+Rule 21    internal_bracket -> isotope symbol hcount mol_map
+Rule 22    internal_bracket -> isotope symbol hcount charge
+Rule 23    internal_bracket -> isotope symbol chiral mol_map
+Rule 24    internal_bracket -> isotope symbol chiral charge
+Rule 25    internal_bracket -> isotope symbol chiral hcount
+Rule 26    internal_bracket -> symbol charge mol_map
+Rule 27    internal_bracket -> symbol hcount mol_map
+Rule 28    internal_bracket -> symbol hcount charge
+Rule 29    internal_bracket -> symbol chiral mol_map
+Rule 30    internal_bracket -> symbol chiral charge
+Rule 31    internal_bracket -> symbol chiral hcount
+Rule 32    internal_bracket -> isotope symbol mol_map
+Rule 33    internal_bracket -> isotope symbol charge
+Rule 34    internal_bracket -> isotope symbol hcount
+Rule 35    internal_bracket -> isotope symbol chiral
+Rule 36    internal_bracket -> symbol mol_map
+Rule 37    internal_bracket -> symbol charge
+Rule 38    internal_bracket -> symbol hcount
+Rule 39    internal_bracket -> symbol chiral
+Rule 40    internal_bracket -> isotope symbol
+Rule 41    internal_bracket -> symbol
+Rule 42    chain -> rnum
+Rule 43    chain -> atom
+Rule 44    chain -> bond rnum
+Rule 45    chain -> bond atom
+Rule 46    chain -> dot_proxy
+Rule 47    dot_proxy -> . atom
+Rule 48    symbol -> H
+Rule 49    symbol -> semi_symbol
+Rule 50    branch -> ( inner_branch )
+Rule 51    inner_branch -> line inner_branch
+Rule 52    inner_branch -> bond_dot line inner_branch
+Rule 53    inner_branch -> line
+Rule 54    inner_branch -> bond_dot line
+Rule 55    bond_dot -> .
+Rule 56    bond_dot -> bond
+Rule 57    bond -> -
+Rule 58    bond -> semi_bond_rule
+Rule 59    semi_bond_rule -> semi_bond
+Rule 60    atom -> bracket_atom
+Rule 61    atom -> symbol
+Rule 62    rnum -> % digit digit
+Rule 63    rnum -> digit
+Rule 64    isotope -> digit
+Rule 65    isotope -> digit digit
+Rule 66    isotope -> digit digit digit
+Rule 67    hcount -> H
+Rule 68    hcount -> H digit
+Rule 69    charge -> + fifteen
+Rule 70    charge -> - fifteen
+Rule 71    charge -> - -
+Rule 72    charge -> -
+Rule 73    charge -> + +
+Rule 74    charge -> +
+Rule 75    mol_map -> : digit
+Rule 76    mol_map -> : digit digit
+Rule 77    mol_map -> : digit digit digit
+Rule 78    chiral -> @ @
+Rule 79    chiral -> @
+Rule 80    fifteen -> digit
+Rule 81    fifteen -> digit digit

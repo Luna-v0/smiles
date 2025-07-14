@@ -5,7 +5,6 @@ from typing import Dict, List, Optional, Union
 
 from smiles_checker.chem.atomic import Atom, BracketAtom
 from smiles_checker.chem.chemistry import chemistry as chem
-from src.smiles_checker.chem import atomic
 
 
 @dataclass
@@ -34,9 +33,9 @@ class ParserManager:
         current_chain: The current chain.
     """
 
-    open_cycles: Dict[int, List[(Atom, str)]]
-    closed_cycles: set[int]
-
+    def __init__(self):
+        self.open_cycles: Dict[int, List[(Atom, str)]] = {}
+        self.closed_cycles: set[int] = set()
 
     def clear(self) -> None:
         """
@@ -45,7 +44,6 @@ class ParserManager:
         self.open_cycles = {}
         self.closed_cycles = set()
 
-    
     def has_open_cycles(self) -> bool:
         """
         Check if there are any open cycles.
@@ -54,7 +52,6 @@ class ParserManager:
             bool: True if there are open cycles, False otherwise.
         """
         return len(self.open_cycles) > 0
-
 
     def add_atom_to_cycles(self, atom: Atom) -> None:
         for cycle in self.open_cycles.values():
@@ -66,7 +63,6 @@ class ParserManager:
                 )
 
             cycle.append(atom)
-
 
     def digit_matching(self, digit_dict: dict, rule_name: str) -> int:
         match digit_dict:
@@ -139,8 +135,8 @@ class ParserManager:
         rnum -> digit digit digit | digit digit | digit
         """
         cycle_num = self.digit_matching(kwargs, "rnum")
-        
-        if cycle_num in self.closed_cycles: 
+
+        if cycle_num in self.closed_cycles:
             raise ParserException(
                 rule="rnum",
                 parameter=str(cycle_num),
@@ -148,11 +144,9 @@ class ParserManager:
             )
 
         if cycle_num in self.open_cycles:
-           chemestry.mol_graph.add_cycle(
-                self.open_cycles[cycle_num]
-            )
-            del self.open_cycles[cycle_num] 
-            closed_cycles.add(cycle_num)
+            chem.mol_graph.add_cycle(self.open_cycles[cycle_num])
+            del self.open_cycles[cycle_num]
+            self.closed_cycles.add(cycle_num)
 
     def atom(self, **kwargs) -> Union[Atom, BracketAtom]:
         """
@@ -161,9 +155,9 @@ class ParserManager:
         """
         match kwargs:
             case {"symbol": str(symbol)}:
-                return chem.atom(symbol=symbol)
-            case {"bracket_atom": BracketAtom(bracket_atom)}:
-                return chem.bracket_atom(bracket_atom=bracket_atom)
+                return chem.Atom(symbol=symbol)
+            case {"bracket_atom": bracket_atom}:
+                return bracket_atom
             case _:
                 raise ParserException(
                     rule="atom",
@@ -179,37 +173,44 @@ class ParserManager:
         ## TODO check if not missing something
         return semi_bond
 
-    def bond(self, semi_bond_rule:str) -> str:
+    def bond(self, semi_bond_rule: str) -> str:
         """
         Function to parse the 'bond' rule.
         bond -> semi_bond_rule | "-"
         """
         return semi_bond_rule
 
-    def bond_dot(self, bond:str) -> str:
+    def bond_dot(self, bond: str) -> str:
         """
         Function to parse the 'bond_dot' rule.
         bond_dot -> bond | "."
         """
         return bond
 
-    def inner_branch(self, **kwargs)::
+    def inner_branch(self, **kwargs):
         match kwargs:
             case {"bond_dot": str(bond_dot), "line": line}:
                 raise NotImplementedError("Not implemented inner branch with bond dot")
             case {"line": line}:
                 return line
-            case {"bond_dot": str(bond_dot), "line": line, "inner_branch": inner_branch}:
-                raise NotImplementedError("Not implemented inner branch with bond dot and inner branch")
+            case {
+                "bond_dot": str(bond_dot),
+                "line": line,
+                "inner_branch": inner_branch,
+            }:
+                raise NotImplementedError(
+                    "Not implemented inner branch with bond dot and inner branch"
+                )
             case {"line": line, "inner_branch": inner_branch}:
-                raise NotImplementedError("Not implemented inner branch with line and inner branch")
+                raise NotImplementedError(
+                    "Not implemented inner branch with line and inner branch"
+                )
             case _:
                 raise ParserException(
                     rule="inner_branch",
                     parameter=str(kwargs),
                     message="Invalid inner branch rule",
-                )n
-
+                )
 
     def branch(self, inner_branch):
         return inner_branch
@@ -233,9 +234,9 @@ class ParserManager:
                 message="Cannot use dot proxy with open cycles.",
             )
 
-        chemistry.validate()
+        chem.validate()
         self.clear()
-        chemistry.clear()
+        chem.clear()
         return atom
 
     def chain(self, **kwargs) -> str:
@@ -245,15 +246,15 @@ class ParserManager:
         """
         match kwargs:
             case {"dot_proxy": str(dot_proxy)}:
-                return {"atom":self.dot_proxy(atom=dot_proxy)}
+                return {"atom": self.dot_proxy(atom=dot_proxy)}
             case {"bond": str(bond), "atom": atom}:
-                return {"bond": bond,"atom": atom}
+                return {"bond": bond, "atom": atom}
             case {"bond": str(bond), "rnum": int(rnum)}:
-                return {"bond": bond,"rnum": int(rnum)} 
+                return {"bond": bond, "rnum": int(rnum)}
             case {"atom": atom}:
-                return {"atom": atom} 
+                return {"atom": atom}
             case {"rnum": int(rnum)}:
-                return { "rnum": int(rnum) }
+                return {"rnum": int(rnum)}
             case _:
                 raise ParserException(
                     rule="chain",
@@ -268,21 +269,21 @@ class ParserManager:
         """
         if kwargs.get("chains") is None:
             chain = kwargs["chain"]
-            if chain.get("rnum"): # starts with a cycle number
+            if chain.get("rnum"):  # starts with a cycle number
                 raise ParserException(
                     rule="chains",
                     parameter=str(chain),
                     message="Cannot start with a cycle number.",
                 )
                 return
-            if chain.get("bond"): # starts with a bond
+            if chain.get("bond"):  # starts with a bond
                 raise ParserException(
                     rule="chains",
                     parameter=str(chain),
                     message="Cannot start with a bond.",
                 )
-                return 
-            return { "chains": kwargs.get("chain") }
+                return
+            return {"chains": kwargs.get("chain")}
 
         match kwargs:
             case {"chains": {"rnum": rnum}, "chain": {"rnum": rnum2}}:
@@ -301,9 +302,9 @@ class ParserManager:
                     message="Cannot have two bonds in the same chain.",
                 )
             case {"chains": {"bond": bond, "atom": atom1}, "chain": {"atom": atom2}}:
-                chemestry.mol_graph.add_edge(atom1, atom2, bond=bond) 
-            case {"chains": {"atom": atom1} , "chain": {"atom": atom2}}:
-                chemistry.mol_graph.add_edge(atom1, atom2)
+                chem.mol_graph.add_edge(atom1, atom2, bond=bond)
+            case {"chains": {"atom": atom1}, "chain": {"atom": atom2}}:
+                chem.mol_graph.add_edge(atom1, atom2)
                 return {"chains": {"atom": atom2}}
             case _:
                 raise ParserException(
@@ -312,16 +313,16 @@ class ParserManager:
                     message="Invalid chains rule",
                 )
                 return
-    
+
     def internal_bracket(self, **kwargs) -> BracketAtom:
         """
         Function to parse the 'internal_bracket' rule.
         internal_bracket -> isotope? symbol chiral? hcount? charge? mol_map?
         """
-        return chem.bracket_atom(**kwargs)
+        return chem.BracketAtom(**kwargs)
 
     def bracket_atom(self, internal_bracket) -> BracketAtom:
-        return self.internal_bracket(internal_bracket)
+        return internal_bracket
 
     def chain_branch(self, **kwargs) -> Union[str, List[str]]:
         """
@@ -335,16 +336,13 @@ class ParserManager:
             return {"branches_opened": [kwargs["branch"]]}
 
         match kwargs:
-               pass 
-                
-                
             case _:
                 raise ParserException(
                     rule="chain_branch",
                     parameter=str(kwargs),
                     message="Invalid chain branch rule",
                 )
-    
+
     def line(self, **kwargs) -> Union[str, List[str]]:
         """
         Function to parse the 'line' rule.
@@ -352,15 +350,11 @@ class ParserManager:
         """
         if kwargs.get("chain_branch") is None:
             return kwargs["atom"]
-        
+
         match kwargs:
-            case {"atom": atom, "chain_branch": {"chains": { "atom" : atom2}}}:
-                chemestry.mol_graph.add_edge(atom, atom2)
+            case {"atom": atom, "chain_branch": {"chains": {"atom": atom2}}}:
+                chem.mol_graph.add_edge(atom, atom2)
                 return {}
-
-            
-
-
 
             case _:
                 raise ParserException(
