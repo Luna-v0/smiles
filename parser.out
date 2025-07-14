@@ -4,7 +4,7 @@ Rule 0     S' -> line
 Rule 1     line -> atom chain_branch
 Rule 2     line -> atom
 Rule 3     chain_branch -> chain_branch_item
-Rule 4     chain_branch -> chain_branch chain_branch_item  [precedence=right, level=1]
+Rule 4     chain_branch -> chain_branch chain_branch_item  [precedence=right, level=5]
 Rule 5     chains -> chains chain
 Rule 6     chains -> chain
 Rule 7     bracket_atom -> [ internal_bracket ]
@@ -44,41 +44,41 @@ Rule 40    chain -> rnum
 Rule 41    chain -> bond rnum
 Rule 42    chain -> bond atom
 Rule 43    chain -> dot_proxy
-Rule 44    dot_proxy -> . atom  [precedence=right, level=5]
-Rule 45    symbol -> H  [precedence=right, level=3]
-Rule 46    symbol -> semi_symbol  [precedence=right, level=2]
+Rule 44    dot_proxy -> . atom  [precedence=right, level=1]
+Rule 45    symbol -> H
+Rule 46    symbol -> semi_symbol
 Rule 47    branch -> ( inner_branch )
 Rule 48    inner_branch -> line inner_branch
 Rule 49    inner_branch -> bond_dot line inner_branch
 Rule 50    inner_branch -> line
 Rule 51    inner_branch -> bond_dot line
-Rule 52    bond_dot -> .  [precedence=right, level=5]
+Rule 52    bond_dot -> .  [precedence=right, level=1]
 Rule 53    bond_dot -> bond
-Rule 54    bond -> -  [precedence=right, level=6]
+Rule 54    bond -> -  [precedence=right, level=2]
 Rule 55    bond -> semi_bond_rule
-Rule 56    semi_bond_rule -> semi_bond  [precedence=right, level=1]
+Rule 56    semi_bond_rule -> semi_bond  [precedence=right, level=5]
 Rule 57    atom -> bracket_atom
 Rule 58    atom -> symbol
-Rule 59    rnum -> % digit digit  [precedence=right, level=7]
-Rule 60    rnum -> digit  [precedence=right, level=7]
-Rule 61    isotope -> digit  [precedence=right, level=7]
-Rule 62    isotope -> digit digit  [precedence=right, level=7]
-Rule 63    isotope -> digit digit digit  [precedence=right, level=7]
-Rule 64    hcount -> H  [precedence=right, level=3]
-Rule 65    hcount -> H digit  [precedence=right, level=7]
+Rule 59    rnum -> % digit digit  [precedence=right, level=4]
+Rule 60    rnum -> digit  [precedence=right, level=4]
+Rule 61    isotope -> digit  [precedence=right, level=4]
+Rule 62    isotope -> digit digit  [precedence=right, level=4]
+Rule 63    isotope -> digit digit digit  [precedence=right, level=4]
+Rule 64    hcount -> H
+Rule 65    hcount -> H digit  [precedence=right, level=4]
 Rule 66    charge -> + fifteen
-Rule 67    charge -> - fifteen  [precedence=right, level=6]
-Rule 68    charge -> - -  [precedence=right, level=6]
-Rule 69    charge -> -  [precedence=right, level=6]
+Rule 67    charge -> - fifteen  [precedence=right, level=2]
+Rule 68    charge -> - -  [precedence=right, level=2]
+Rule 69    charge -> -  [precedence=right, level=2]
 Rule 70    charge -> + +
 Rule 71    charge -> +
-Rule 72    mol_map -> : digit  [precedence=right, level=7]
-Rule 73    mol_map -> : digit digit  [precedence=right, level=7]
-Rule 74    mol_map -> : digit digit digit  [precedence=right, level=7]
+Rule 72    mol_map -> : digit  [precedence=right, level=4]
+Rule 73    mol_map -> : digit digit  [precedence=right, level=4]
+Rule 74    mol_map -> : digit digit digit  [precedence=right, level=4]
 Rule 75    chiral -> @ @
 Rule 76    chiral -> @
-Rule 77    fifteen -> digit  [precedence=right, level=7]
-Rule 78    fifteen -> digit digit  [precedence=right, level=7]
+Rule 77    fifteen -> digit  [precedence=right, level=4]
+Rule 78    fifteen -> digit digit  [precedence=right, level=4]
 Rule 79    chain_branch_item -> branch
 Rule 80    chain_branch_item -> chains
 

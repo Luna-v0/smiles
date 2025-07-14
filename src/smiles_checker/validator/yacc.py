@@ -3,6 +3,7 @@ from itertools import combinations
 from sly import Parser
 
 from smiles_checker.chem.chemistry import chemistry as chem
+from smiles_checker.exceptions import ParserException
 from smiles_checker.validator.lex import SmilesLex
 
 from .parser_manager import parser_manager as pm
@@ -60,19 +61,6 @@ def getAttributes(rules, properties):
     return values
 
 
-def dictify(obj):
-    result = {}
-    if hasattr(obj, "_namemap") and hasattr(obj, "_slice"):
-        print(obj._namemap)
-        for name, getter in obj._namemap.items():
-            try:
-                value = getter(obj._slice)
-            except Exception as e:
-                value = f"<error: {e}>"
-            result[name] = value
-    return result
-
-
 class SmilesParser(Parser):
     """
     Parser using the SLY library to parse SMILES strings.
@@ -83,14 +71,11 @@ class SmilesParser(Parser):
     use_only_grammar = False
 
     precedence = (
-        ('right', 'semi_bond'),
-        ('right', 'semi_symbol'),
-        ('right', 'H'),
-        ('right', '['),
-        ('right', '.'),
-        ('right', '-'),
-        ('right', 'digit'),
-        ('right', '%'),
+        ("right", "."),
+        ("right", "-"),
+        ("right", "%"),
+        ("right", "digit"),
+        ("right", "semi_bond"),
     )
 
     def error(self, t):
@@ -289,11 +274,6 @@ class SmilesParser(Parser):
     @_("chains", "branch")
     def chain_branch_item(self, rules):
         return rules[0]
-
-    
-
-
-
 
 
 parser = SmilesParser()
