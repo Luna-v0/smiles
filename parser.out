@@ -1,88 +1,86 @@
 Grammar:
 
 Rule 0     S' -> line
-Rule 1     line -> atom opt_chain_branch
-Rule 2     chain_branch -> chain_branch_item
-Rule 3     chain_branch -> chain_branch chain_branch_item
-Rule 4     chains -> chains chain
-Rule 5     chains -> chain
-Rule 6     bracket_atom -> [ internal_bracket ]
-Rule 7     internal_bracket -> isotope symbol chiral hcount charge mol_map
-Rule 8     internal_bracket -> symbol chiral hcount charge mol_map
-Rule 9     internal_bracket -> isotope symbol hcount charge mol_map
-Rule 10    internal_bracket -> isotope symbol chiral charge mol_map
-Rule 11    internal_bracket -> isotope symbol chiral hcount mol_map
-Rule 12    internal_bracket -> isotope symbol chiral hcount charge
-Rule 13    internal_bracket -> symbol hcount charge mol_map
-Rule 14    internal_bracket -> symbol chiral charge mol_map
-Rule 15    internal_bracket -> symbol chiral hcount mol_map
-Rule 16    internal_bracket -> symbol chiral hcount charge
-Rule 17    internal_bracket -> isotope symbol charge mol_map
-Rule 18    internal_bracket -> isotope symbol hcount mol_map
-Rule 19    internal_bracket -> isotope symbol hcount charge
-Rule 20    internal_bracket -> isotope symbol chiral mol_map
-Rule 21    internal_bracket -> isotope symbol chiral charge
-Rule 22    internal_bracket -> isotope symbol chiral hcount
-Rule 23    internal_bracket -> symbol charge mol_map
-Rule 24    internal_bracket -> symbol hcount mol_map
-Rule 25    internal_bracket -> symbol hcount charge
-Rule 26    internal_bracket -> symbol chiral mol_map
-Rule 27    internal_bracket -> symbol chiral charge
-Rule 28    internal_bracket -> symbol chiral hcount
-Rule 29    internal_bracket -> isotope symbol mol_map
-Rule 30    internal_bracket -> isotope symbol charge
-Rule 31    internal_bracket -> isotope symbol hcount
-Rule 32    internal_bracket -> isotope symbol chiral
-Rule 33    internal_bracket -> symbol mol_map
-Rule 34    internal_bracket -> symbol charge
-Rule 35    internal_bracket -> symbol hcount
-Rule 36    internal_bracket -> symbol chiral
-Rule 37    internal_bracket -> isotope symbol
-Rule 38    internal_bracket -> symbol
-Rule 39    chain -> rnum
-Rule 40    chain -> atom
+Rule 1     line -> atom chain_branch
+Rule 2     line -> atom
+Rule 3     chain_branch -> chain_branch_item
+Rule 4     chain_branch -> chain_branch chain_branch_item  [precedence=right, level=1]
+Rule 5     chains -> chains chain
+Rule 6     chains -> chain
+Rule 7     bracket_atom -> [ internal_bracket ]
+Rule 8     internal_bracket -> isotope symbol chiral hcount charge mol_map
+Rule 9     internal_bracket -> symbol chiral hcount charge mol_map
+Rule 10    internal_bracket -> isotope symbol hcount charge mol_map
+Rule 11    internal_bracket -> isotope symbol chiral charge mol_map
+Rule 12    internal_bracket -> isotope symbol chiral hcount mol_map
+Rule 13    internal_bracket -> isotope symbol chiral hcount charge
+Rule 14    internal_bracket -> symbol hcount charge mol_map
+Rule 15    internal_bracket -> symbol chiral charge mol_map
+Rule 16    internal_bracket -> symbol chiral hcount mol_map
+Rule 17    internal_bracket -> symbol chiral hcount charge
+Rule 18    internal_bracket -> isotope symbol charge mol_map
+Rule 19    internal_bracket -> isotope symbol hcount mol_map
+Rule 20    internal_bracket -> isotope symbol hcount charge
+Rule 21    internal_bracket -> isotope symbol chiral mol_map
+Rule 22    internal_bracket -> isotope symbol chiral charge
+Rule 23    internal_bracket -> isotope symbol chiral hcount
+Rule 24    internal_bracket -> symbol charge mol_map
+Rule 25    internal_bracket -> symbol hcount mol_map
+Rule 26    internal_bracket -> symbol hcount charge
+Rule 27    internal_bracket -> symbol chiral mol_map
+Rule 28    internal_bracket -> symbol chiral charge
+Rule 29    internal_bracket -> symbol chiral hcount
+Rule 30    internal_bracket -> isotope symbol mol_map
+Rule 31    internal_bracket -> isotope symbol charge
+Rule 32    internal_bracket -> isotope symbol hcount
+Rule 33    internal_bracket -> isotope symbol chiral
+Rule 34    internal_bracket -> symbol mol_map
+Rule 35    internal_bracket -> symbol charge
+Rule 36    internal_bracket -> symbol hcount
+Rule 37    internal_bracket -> symbol chiral
+Rule 38    internal_bracket -> isotope symbol
+Rule 39    internal_bracket -> symbol
+Rule 40    chain -> rnum
 Rule 41    chain -> bond rnum
 Rule 42    chain -> bond atom
 Rule 43    chain -> dot_proxy
-Rule 44    dot_proxy -> . atom
-Rule 45    symbol -> H
-Rule 46    symbol -> semi_symbol
+Rule 44    dot_proxy -> . atom  [precedence=right, level=5]
+Rule 45    symbol -> H  [precedence=right, level=3]
+Rule 46    symbol -> semi_symbol  [precedence=right, level=2]
 Rule 47    branch -> ( inner_branch )
 Rule 48    inner_branch -> line inner_branch
 Rule 49    inner_branch -> bond_dot line inner_branch
 Rule 50    inner_branch -> line
 Rule 51    inner_branch -> bond_dot line
-Rule 52    bond_dot -> .
+Rule 52    bond_dot -> .  [precedence=right, level=5]
 Rule 53    bond_dot -> bond
-Rule 54    bond -> -
+Rule 54    bond -> -  [precedence=right, level=6]
 Rule 55    bond -> semi_bond_rule
-Rule 56    semi_bond_rule -> semi_bond
+Rule 56    semi_bond_rule -> semi_bond  [precedence=right, level=1]
 Rule 57    atom -> bracket_atom
 Rule 58    atom -> symbol
-Rule 59    rnum -> % digit digit
-Rule 60    rnum -> digit
-Rule 61    isotope -> digit
-Rule 62    isotope -> digit digit
-Rule 63    isotope -> digit digit digit
-Rule 64    hcount -> H
-Rule 65    hcount -> H digit
+Rule 59    rnum -> % digit digit  [precedence=right, level=7]
+Rule 60    rnum -> digit  [precedence=right, level=7]
+Rule 61    isotope -> digit  [precedence=right, level=7]
+Rule 62    isotope -> digit digit  [precedence=right, level=7]
+Rule 63    isotope -> digit digit digit  [precedence=right, level=7]
+Rule 64    hcount -> H  [precedence=right, level=3]
+Rule 65    hcount -> H digit  [precedence=right, level=7]
 Rule 66    charge -> + fifteen
-Rule 67    charge -> - fifteen
-Rule 68    charge -> - -
-Rule 69    charge -> -
+Rule 67    charge -> - fifteen  [precedence=right, level=6]
+Rule 68    charge -> - -  [precedence=right, level=6]
+Rule 69    charge -> -  [precedence=right, level=6]
 Rule 70    charge -> + +
 Rule 71    charge -> +
-Rule 72    mol_map -> : digit
-Rule 73    mol_map -> : digit digit
-Rule 74    mol_map -> : digit digit digit
+Rule 72    mol_map -> : digit  [precedence=right, level=7]
+Rule 73    mol_map -> : digit digit  [precedence=right, level=7]
+Rule 74    mol_map -> : digit digit digit  [precedence=right, level=7]
 Rule 75    chiral -> @ @
 Rule 76    chiral -> @
-Rule 77    fifteen -> digit
-Rule 78    fifteen -> digit digit
+Rule 77    fifteen -> digit  [precedence=right, level=7]
+Rule 78    fifteen -> digit digit  [precedence=right, level=7]
 Rule 79    chain_branch_item -> branch
 Rule 80    chain_branch_item -> chains
-Rule 81    opt_chain_branch -> <empty>
-Rule 82    opt_chain_branch -> chain_branch
 
 Terminals, with rules where they appear:
 
@@ -95,8 +93,8 @@ Terminals, with rules where they appear:
 :                    : 72 73 74
 @                    : 75 75 76
 H                    : 45 64 65
-[                    : 6
-]                    : 6
+[                    : 7
+]                    : 7
 digit                : 59 59 60 61 62 62 63 63 63 65 72 73 73 74 74 74 77 78 78
 error                : 
 semi_bond            : 56
@@ -104,38 +102,38 @@ semi_symbol          : 46
 
 Nonterminals, with rules where they appear:
 
-atom                 : 1 40 42 44
+atom                 : 1 2 42 44
 bond                 : 41 42 53
 bond_dot             : 49 51
 bracket_atom         : 57
 branch               : 79
-chain                : 4 5
-chain_branch         : 3 82
-chain_branch_item    : 2 3
-chains               : 4 80
-charge               : 7 8 9 10 12 13 14 16 17 19 21 23 25 27 30 34
-chiral               : 7 8 10 11 12 14 15 16 20 21 22 26 27 28 32 36
+chain                : 5 6
+chain_branch         : 1 4
+chain_branch_item    : 3 4
+chains               : 5 80
+charge               : 8 9 10 11 13 14 15 17 18 20 22 24 26 28 31 35
+chiral               : 8 9 11 12 13 15 16 17 21 22 23 27 28 29 33 37
 dot_proxy            : 43
 fifteen              : 66 67
-hcount               : 7 8 9 11 12 13 15 16 18 19 22 24 25 28 31 35
+hcount               : 8 9 10 12 13 14 16 17 19 20 23 25 26 29 32 36
 inner_branch         : 47 48 49
-internal_bracket     : 6
-isotope              : 7 9 10 11 12 17 18 19 20 21 22 29 30 31 32 37
+internal_bracket     : 7
+isotope              : 8 10 11 12 13 18 19 20 21 22 23 30 31 32 33 38
 line                 : 48 49 50 51 0
-mol_map              : 7 8 9 10 11 13 14 15 17 18 20 23 24 26 29 33
-opt_chain_branch     : 1
-rnum                 : 39 41
+mol_map              : 8 9 10 11 12 14 15 16 18 19 21 24 25 27 30 34
+rnum                 : 40 41
 semi_bond_rule       : 55
-symbol               : 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 58
+symbol               : 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 58
 
 
 state 0
 
     (0) S' -> . line
-    (1) line -> . atom opt_chain_branch
+    (1) line -> . atom chain_branch
+    (2) line -> . atom
     (57) atom -> . bracket_atom
     (58) atom -> . symbol
-    (6) bracket_atom -> . [ internal_bracket ]
+    (7) bracket_atom -> . [ internal_bracket ]
     (45) symbol -> . H
     (46) symbol -> . semi_symbol
     [               shift and go to state 5
@@ -154,63 +152,49 @@ state 1
 
 state 2
 
-    (1) line -> atom . opt_chain_branch
-    (81) opt_chain_branch -> .
-    (82) opt_chain_branch -> . chain_branch
-    (2) chain_branch -> . chain_branch_item
-    (3) chain_branch -> . chain_branch chain_branch_item
+    (1) line -> atom . chain_branch
+    (2) line -> atom .
+    (3) chain_branch -> . chain_branch_item
+    (4) chain_branch -> . chain_branch chain_branch_item
     (79) chain_branch_item -> . branch
     (80) chain_branch_item -> . chains
     (47) branch -> . ( inner_branch )
-    (4) chains -> . chains chain
-    (5) chains -> . chain
-    (39) chain -> . rnum
-    (40) chain -> . atom
+    (5) chains -> . chains chain
+    (6) chains -> . chain
+    (40) chain -> . rnum
     (41) chain -> . bond rnum
     (42) chain -> . bond atom
     (43) chain -> . dot_proxy
     (59) rnum -> . % digit digit
     (60) rnum -> . digit
-    (57) atom -> . bracket_atom
-    (58) atom -> . symbol
     (54) bond -> . -
     (55) bond -> . semi_bond_rule
     (44) dot_proxy -> . . atom
-    (6) bracket_atom -> . [ internal_bracket ]
-    (45) symbol -> . H
-    (46) symbol -> . semi_symbol
     (56) semi_bond_rule -> . semi_bond
   ! shift/reduce conflict for - resolved as shift
   ! shift/reduce conflict for . resolved as shift
-  ! shift/reduce conflict for [ resolved as shift
-  ! shift/reduce conflict for H resolved as shift
-  ! shift/reduce conflict for semi_symbol resolved as shift
   ! shift/reduce conflict for semi_bond resolved as shift
-    $end            reduce using rule 81 (opt_chain_branch -> .)
-    )               reduce using rule 81 (opt_chain_branch -> .)
-    (               shift and go to state 14
-    %               shift and go to state 19
-    digit           shift and go to state 20
-    -               shift and go to state 21
-    .               shift and go to state 23
-    [               shift and go to state 5
-    H               shift and go to state 6
-    semi_symbol     shift and go to state 7
-    semi_bond       shift and go to state 24
+    $end            reduce using rule 2 (line -> atom .)
+    [               reduce using rule 2 (line -> atom .)
+    H               reduce using rule 2 (line -> atom .)
+    semi_symbol     reduce using rule 2 (line -> atom .)
+    )               reduce using rule 2 (line -> atom .)
+    (               shift and go to state 12
+    %               shift and go to state 17
+    digit           shift and go to state 18
+    -               shift and go to state 19
+    .               shift and go to state 21
+    semi_bond       shift and go to state 22
 
-    atom                           shift and go to state 8
-    opt_chain_branch               shift and go to state 9
-    chain_branch                   shift and go to state 10
-    chain_branch_item              shift and go to state 11
-    branch                         shift and go to state 12
-    chains                         shift and go to state 13
-    chain                          shift and go to state 15
-    rnum                           shift and go to state 16
-    bond                           shift and go to state 17
-    dot_proxy                      shift and go to state 18
-    bracket_atom                   shift and go to state 3
-    symbol                         shift and go to state 4
-    semi_bond_rule                 shift and go to state 22
+    chain_branch                   shift and go to state 8
+    chain_branch_item              shift and go to state 9
+    branch                         shift and go to state 10
+    chains                         shift and go to state 11
+    chain                          shift and go to state 13
+    rnum                           shift and go to state 14
+    bond                           shift and go to state 15
+    dot_proxy                      shift and go to state 16
+    semi_bond_rule                 shift and go to state 20
 
 state 3
 
@@ -220,11 +204,11 @@ state 3
     digit           reduce using rule 57 (atom -> bracket_atom .)
     -               reduce using rule 57 (atom -> bracket_atom .)
     .               reduce using rule 57 (atom -> bracket_atom .)
+    semi_bond       reduce using rule 57 (atom -> bracket_atom .)
+    $end            reduce using rule 57 (atom -> bracket_atom .)
     [               reduce using rule 57 (atom -> bracket_atom .)
     H               reduce using rule 57 (atom -> bracket_atom .)
     semi_symbol     reduce using rule 57 (atom -> bracket_atom .)
-    semi_bond       reduce using rule 57 (atom -> bracket_atom .)
-    $end            reduce using rule 57 (atom -> bracket_atom .)
     )               reduce using rule 57 (atom -> bracket_atom .)
 
 
@@ -236,61 +220,61 @@ state 4
     digit           reduce using rule 58 (atom -> symbol .)
     -               reduce using rule 58 (atom -> symbol .)
     .               reduce using rule 58 (atom -> symbol .)
+    semi_bond       reduce using rule 58 (atom -> symbol .)
+    $end            reduce using rule 58 (atom -> symbol .)
     [               reduce using rule 58 (atom -> symbol .)
     H               reduce using rule 58 (atom -> symbol .)
     semi_symbol     reduce using rule 58 (atom -> symbol .)
-    semi_bond       reduce using rule 58 (atom -> symbol .)
-    $end            reduce using rule 58 (atom -> symbol .)
     )               reduce using rule 58 (atom -> symbol .)
 
 
 state 5
 
-    (6) bracket_atom -> [ . internal_bracket ]
-    (7) internal_bracket -> . isotope symbol chiral hcount charge mol_map
-    (8) internal_bracket -> . symbol chiral hcount charge mol_map
-    (9) internal_bracket -> . isotope symbol hcount charge mol_map
-    (10) internal_bracket -> . isotope symbol chiral charge mol_map
-    (11) internal_bracket -> . isotope symbol chiral hcount mol_map
-    (12) internal_bracket -> . isotope symbol chiral hcount charge
-    (13) internal_bracket -> . symbol hcount charge mol_map
-    (14) internal_bracket -> . symbol chiral charge mol_map
-    (15) internal_bracket -> . symbol chiral hcount mol_map
-    (16) internal_bracket -> . symbol chiral hcount charge
-    (17) internal_bracket -> . isotope symbol charge mol_map
-    (18) internal_bracket -> . isotope symbol hcount mol_map
-    (19) internal_bracket -> . isotope symbol hcount charge
-    (20) internal_bracket -> . isotope symbol chiral mol_map
-    (21) internal_bracket -> . isotope symbol chiral charge
-    (22) internal_bracket -> . isotope symbol chiral hcount
-    (23) internal_bracket -> . symbol charge mol_map
-    (24) internal_bracket -> . symbol hcount mol_map
-    (25) internal_bracket -> . symbol hcount charge
-    (26) internal_bracket -> . symbol chiral mol_map
-    (27) internal_bracket -> . symbol chiral charge
-    (28) internal_bracket -> . symbol chiral hcount
-    (29) internal_bracket -> . isotope symbol mol_map
-    (30) internal_bracket -> . isotope symbol charge
-    (31) internal_bracket -> . isotope symbol hcount
-    (32) internal_bracket -> . isotope symbol chiral
-    (33) internal_bracket -> . symbol mol_map
-    (34) internal_bracket -> . symbol charge
-    (35) internal_bracket -> . symbol hcount
-    (36) internal_bracket -> . symbol chiral
-    (37) internal_bracket -> . isotope symbol
-    (38) internal_bracket -> . symbol
+    (7) bracket_atom -> [ . internal_bracket ]
+    (8) internal_bracket -> . isotope symbol chiral hcount charge mol_map
+    (9) internal_bracket -> . symbol chiral hcount charge mol_map
+    (10) internal_bracket -> . isotope symbol hcount charge mol_map
+    (11) internal_bracket -> . isotope symbol chiral charge mol_map
+    (12) internal_bracket -> . isotope symbol chiral hcount mol_map
+    (13) internal_bracket -> . isotope symbol chiral hcount charge
+    (14) internal_bracket -> . symbol hcount charge mol_map
+    (15) internal_bracket -> . symbol chiral charge mol_map
+    (16) internal_bracket -> . symbol chiral hcount mol_map
+    (17) internal_bracket -> . symbol chiral hcount charge
+    (18) internal_bracket -> . isotope symbol charge mol_map
+    (19) internal_bracket -> . isotope symbol hcount mol_map
+    (20) internal_bracket -> . isotope symbol hcount charge
+    (21) internal_bracket -> . isotope symbol chiral mol_map
+    (22) internal_bracket -> . isotope symbol chiral charge
+    (23) internal_bracket -> . isotope symbol chiral hcount
+    (24) internal_bracket -> . symbol charge mol_map
+    (25) internal_bracket -> . symbol hcount mol_map
+    (26) internal_bracket -> . symbol hcount charge
+    (27) internal_bracket -> . symbol chiral mol_map
+    (28) internal_bracket -> . symbol chiral charge
+    (29) internal_bracket -> . symbol chiral hcount
+    (30) internal_bracket -> . isotope symbol mol_map
+    (31) internal_bracket -> . isotope symbol charge
+    (32) internal_bracket -> . isotope symbol hcount
+    (33) internal_bracket -> . isotope symbol chiral
+    (34) internal_bracket -> . symbol mol_map
+    (35) internal_bracket -> . symbol charge
+    (36) internal_bracket -> . symbol hcount
+    (37) internal_bracket -> . symbol chiral
+    (38) internal_bracket -> . isotope symbol
+    (39) internal_bracket -> . symbol
     (61) isotope -> . digit
     (62) isotope -> . digit digit
     (63) isotope -> . digit digit digit
     (45) symbol -> . H
     (46) symbol -> . semi_symbol
-    digit           shift and go to state 28
+    digit           shift and go to state 26
     H               shift and go to state 6
     semi_symbol     shift and go to state 7
 
-    internal_bracket               shift and go to state 25
-    isotope                        shift and go to state 26
-    symbol                         shift and go to state 27
+    internal_bracket               shift and go to state 23
+    isotope                        shift and go to state 24
+    symbol                         shift and go to state 25
 
 state 6
 
@@ -300,16 +284,16 @@ state 6
     digit           reduce using rule 45 (symbol -> H .)
     -               reduce using rule 45 (symbol -> H .)
     .               reduce using rule 45 (symbol -> H .)
-    [               reduce using rule 45 (symbol -> H .)
-    H               reduce using rule 45 (symbol -> H .)
-    semi_symbol     reduce using rule 45 (symbol -> H .)
     semi_bond       reduce using rule 45 (symbol -> H .)
     $end            reduce using rule 45 (symbol -> H .)
-    )               reduce using rule 45 (symbol -> H .)
     @               reduce using rule 45 (symbol -> H .)
+    H               reduce using rule 45 (symbol -> H .)
     +               reduce using rule 45 (symbol -> H .)
     :               reduce using rule 45 (symbol -> H .)
     ]               reduce using rule 45 (symbol -> H .)
+    [               reduce using rule 45 (symbol -> H .)
+    semi_symbol     reduce using rule 45 (symbol -> H .)
+    )               reduce using rule 45 (symbol -> H .)
 
 
 state 7
@@ -320,119 +304,78 @@ state 7
     digit           reduce using rule 46 (symbol -> semi_symbol .)
     -               reduce using rule 46 (symbol -> semi_symbol .)
     .               reduce using rule 46 (symbol -> semi_symbol .)
-    [               reduce using rule 46 (symbol -> semi_symbol .)
-    H               reduce using rule 46 (symbol -> semi_symbol .)
-    semi_symbol     reduce using rule 46 (symbol -> semi_symbol .)
     semi_bond       reduce using rule 46 (symbol -> semi_symbol .)
     $end            reduce using rule 46 (symbol -> semi_symbol .)
-    )               reduce using rule 46 (symbol -> semi_symbol .)
     @               reduce using rule 46 (symbol -> semi_symbol .)
+    H               reduce using rule 46 (symbol -> semi_symbol .)
     +               reduce using rule 46 (symbol -> semi_symbol .)
     :               reduce using rule 46 (symbol -> semi_symbol .)
     ]               reduce using rule 46 (symbol -> semi_symbol .)
+    [               reduce using rule 46 (symbol -> semi_symbol .)
+    semi_symbol     reduce using rule 46 (symbol -> semi_symbol .)
+    )               reduce using rule 46 (symbol -> semi_symbol .)
 
 
 state 8
 
-    (40) chain -> atom .
-    %               reduce using rule 40 (chain -> atom .)
-    digit           reduce using rule 40 (chain -> atom .)
-    -               reduce using rule 40 (chain -> atom .)
-    .               reduce using rule 40 (chain -> atom .)
-    [               reduce using rule 40 (chain -> atom .)
-    H               reduce using rule 40 (chain -> atom .)
-    semi_symbol     reduce using rule 40 (chain -> atom .)
-    semi_bond       reduce using rule 40 (chain -> atom .)
-    (               reduce using rule 40 (chain -> atom .)
-    $end            reduce using rule 40 (chain -> atom .)
-    )               reduce using rule 40 (chain -> atom .)
-
-
-state 9
-
-    (1) line -> atom opt_chain_branch .
-    $end            reduce using rule 1 (line -> atom opt_chain_branch .)
-    .               reduce using rule 1 (line -> atom opt_chain_branch .)
-    -               reduce using rule 1 (line -> atom opt_chain_branch .)
-    [               reduce using rule 1 (line -> atom opt_chain_branch .)
-    H               reduce using rule 1 (line -> atom opt_chain_branch .)
-    semi_symbol     reduce using rule 1 (line -> atom opt_chain_branch .)
-    semi_bond       reduce using rule 1 (line -> atom opt_chain_branch .)
-    )               reduce using rule 1 (line -> atom opt_chain_branch .)
-
-
-state 10
-
-    (82) opt_chain_branch -> chain_branch .
-    (3) chain_branch -> chain_branch . chain_branch_item
+    (1) line -> atom chain_branch .
+    (4) chain_branch -> chain_branch . chain_branch_item
     (79) chain_branch_item -> . branch
     (80) chain_branch_item -> . chains
     (47) branch -> . ( inner_branch )
-    (4) chains -> . chains chain
-    (5) chains -> . chain
-    (39) chain -> . rnum
-    (40) chain -> . atom
+    (5) chains -> . chains chain
+    (6) chains -> . chain
+    (40) chain -> . rnum
     (41) chain -> . bond rnum
     (42) chain -> . bond atom
     (43) chain -> . dot_proxy
     (59) rnum -> . % digit digit
     (60) rnum -> . digit
-    (57) atom -> . bracket_atom
-    (58) atom -> . symbol
     (54) bond -> . -
     (55) bond -> . semi_bond_rule
     (44) dot_proxy -> . . atom
-    (6) bracket_atom -> . [ internal_bracket ]
-    (45) symbol -> . H
-    (46) symbol -> . semi_symbol
     (56) semi_bond_rule -> . semi_bond
   ! shift/reduce conflict for - resolved as shift
   ! shift/reduce conflict for . resolved as shift
-  ! shift/reduce conflict for [ resolved as shift
-  ! shift/reduce conflict for H resolved as shift
-  ! shift/reduce conflict for semi_symbol resolved as shift
   ! shift/reduce conflict for semi_bond resolved as shift
-    $end            reduce using rule 82 (opt_chain_branch -> chain_branch .)
-    )               reduce using rule 82 (opt_chain_branch -> chain_branch .)
-    (               shift and go to state 14
-    %               shift and go to state 19
-    digit           shift and go to state 20
-    -               shift and go to state 21
-    .               shift and go to state 23
-    [               shift and go to state 5
-    H               shift and go to state 6
-    semi_symbol     shift and go to state 7
-    semi_bond       shift and go to state 24
+    $end            reduce using rule 1 (line -> atom chain_branch .)
+    [               reduce using rule 1 (line -> atom chain_branch .)
+    H               reduce using rule 1 (line -> atom chain_branch .)
+    semi_symbol     reduce using rule 1 (line -> atom chain_branch .)
+    )               reduce using rule 1 (line -> atom chain_branch .)
+    (               shift and go to state 12
+    %               shift and go to state 17
+    digit           shift and go to state 18
+    -               shift and go to state 19
+    .               shift and go to state 21
+    semi_bond       shift and go to state 22
 
-    chain_branch_item              shift and go to state 29
-    branch                         shift and go to state 12
-    chains                         shift and go to state 13
-    chain                          shift and go to state 15
-    rnum                           shift and go to state 16
-    atom                           shift and go to state 8
-    bond                           shift and go to state 17
-    dot_proxy                      shift and go to state 18
-    bracket_atom                   shift and go to state 3
-    symbol                         shift and go to state 4
-    semi_bond_rule                 shift and go to state 22
+    chain_branch_item              shift and go to state 27
+    branch                         shift and go to state 10
+    chains                         shift and go to state 11
+    chain                          shift and go to state 13
+    rnum                           shift and go to state 14
+    bond                           shift and go to state 15
+    dot_proxy                      shift and go to state 16
+    semi_bond_rule                 shift and go to state 20
 
-state 11
+state 9
 
-    (2) chain_branch -> chain_branch_item .
-    (               reduce using rule 2 (chain_branch -> chain_branch_item .)
-    %               reduce using rule 2 (chain_branch -> chain_branch_item .)
-    digit           reduce using rule 2 (chain_branch -> chain_branch_item .)
-    -               reduce using rule 2 (chain_branch -> chain_branch_item .)
-    .               reduce using rule 2 (chain_branch -> chain_branch_item .)
-    [               reduce using rule 2 (chain_branch -> chain_branch_item .)
-    H               reduce using rule 2 (chain_branch -> chain_branch_item .)
-    semi_symbol     reduce using rule 2 (chain_branch -> chain_branch_item .)
-    semi_bond       reduce using rule 2 (chain_branch -> chain_branch_item .)
-    $end            reduce using rule 2 (chain_branch -> chain_branch_item .)
-    )               reduce using rule 2 (chain_branch -> chain_branch_item .)
+    (3) chain_branch -> chain_branch_item .
+    (               reduce using rule 3 (chain_branch -> chain_branch_item .)
+    %               reduce using rule 3 (chain_branch -> chain_branch_item .)
+    digit           reduce using rule 3 (chain_branch -> chain_branch_item .)
+    -               reduce using rule 3 (chain_branch -> chain_branch_item .)
+    .               reduce using rule 3 (chain_branch -> chain_branch_item .)
+    semi_bond       reduce using rule 3 (chain_branch -> chain_branch_item .)
+    $end            reduce using rule 3 (chain_branch -> chain_branch_item .)
+    [               reduce using rule 3 (chain_branch -> chain_branch_item .)
+    H               reduce using rule 3 (chain_branch -> chain_branch_item .)
+    semi_symbol     reduce using rule 3 (chain_branch -> chain_branch_item .)
+    )               reduce using rule 3 (chain_branch -> chain_branch_item .)
 
 
-state 12
+state 10
 
     (79) chain_branch_item -> branch .
     (               reduce using rule 79 (chain_branch_item -> branch .)
@@ -440,130 +383,119 @@ state 12
     digit           reduce using rule 79 (chain_branch_item -> branch .)
     -               reduce using rule 79 (chain_branch_item -> branch .)
     .               reduce using rule 79 (chain_branch_item -> branch .)
+    semi_bond       reduce using rule 79 (chain_branch_item -> branch .)
+    $end            reduce using rule 79 (chain_branch_item -> branch .)
     [               reduce using rule 79 (chain_branch_item -> branch .)
     H               reduce using rule 79 (chain_branch_item -> branch .)
     semi_symbol     reduce using rule 79 (chain_branch_item -> branch .)
-    semi_bond       reduce using rule 79 (chain_branch_item -> branch .)
-    $end            reduce using rule 79 (chain_branch_item -> branch .)
     )               reduce using rule 79 (chain_branch_item -> branch .)
 
 
-state 13
+state 11
 
     (80) chain_branch_item -> chains .
-    (4) chains -> chains . chain
-    (39) chain -> . rnum
-    (40) chain -> . atom
+    (5) chains -> chains . chain
+    (40) chain -> . rnum
     (41) chain -> . bond rnum
     (42) chain -> . bond atom
     (43) chain -> . dot_proxy
     (59) rnum -> . % digit digit
     (60) rnum -> . digit
-    (57) atom -> . bracket_atom
-    (58) atom -> . symbol
     (54) bond -> . -
     (55) bond -> . semi_bond_rule
     (44) dot_proxy -> . . atom
-    (6) bracket_atom -> . [ internal_bracket ]
-    (45) symbol -> . H
-    (46) symbol -> . semi_symbol
     (56) semi_bond_rule -> . semi_bond
   ! shift/reduce conflict for % resolved as shift
   ! shift/reduce conflict for digit resolved as shift
   ! shift/reduce conflict for - resolved as shift
   ! shift/reduce conflict for . resolved as shift
-  ! shift/reduce conflict for [ resolved as shift
-  ! shift/reduce conflict for H resolved as shift
-  ! shift/reduce conflict for semi_symbol resolved as shift
   ! shift/reduce conflict for semi_bond resolved as shift
     (               reduce using rule 80 (chain_branch_item -> chains .)
     $end            reduce using rule 80 (chain_branch_item -> chains .)
+    [               reduce using rule 80 (chain_branch_item -> chains .)
+    H               reduce using rule 80 (chain_branch_item -> chains .)
+    semi_symbol     reduce using rule 80 (chain_branch_item -> chains .)
     )               reduce using rule 80 (chain_branch_item -> chains .)
-    %               shift and go to state 19
-    digit           shift and go to state 20
-    -               shift and go to state 21
-    .               shift and go to state 23
-    [               shift and go to state 5
-    H               shift and go to state 6
-    semi_symbol     shift and go to state 7
-    semi_bond       shift and go to state 24
+    %               shift and go to state 17
+    digit           shift and go to state 18
+    -               shift and go to state 19
+    .               shift and go to state 21
+    semi_bond       shift and go to state 22
 
-    chain                          shift and go to state 30
-    rnum                           shift and go to state 16
-    atom                           shift and go to state 8
-    bond                           shift and go to state 17
-    dot_proxy                      shift and go to state 18
-    bracket_atom                   shift and go to state 3
-    symbol                         shift and go to state 4
-    semi_bond_rule                 shift and go to state 22
+    chain                          shift and go to state 28
+    rnum                           shift and go to state 14
+    bond                           shift and go to state 15
+    dot_proxy                      shift and go to state 16
+    semi_bond_rule                 shift and go to state 20
 
-state 14
+state 12
 
     (47) branch -> ( . inner_branch )
     (48) inner_branch -> . line inner_branch
     (49) inner_branch -> . bond_dot line inner_branch
     (50) inner_branch -> . line
     (51) inner_branch -> . bond_dot line
-    (1) line -> . atom opt_chain_branch
+    (1) line -> . atom chain_branch
+    (2) line -> . atom
     (52) bond_dot -> . .
     (53) bond_dot -> . bond
     (57) atom -> . bracket_atom
     (58) atom -> . symbol
     (54) bond -> . -
     (55) bond -> . semi_bond_rule
-    (6) bracket_atom -> . [ internal_bracket ]
+    (7) bracket_atom -> . [ internal_bracket ]
     (45) symbol -> . H
     (46) symbol -> . semi_symbol
     (56) semi_bond_rule -> . semi_bond
-    .               shift and go to state 34
-    -               shift and go to state 21
+    .               shift and go to state 32
+    -               shift and go to state 19
     [               shift and go to state 5
     H               shift and go to state 6
     semi_symbol     shift and go to state 7
-    semi_bond       shift and go to state 24
+    semi_bond       shift and go to state 22
 
-    inner_branch                   shift and go to state 31
-    line                           shift and go to state 32
-    bond_dot                       shift and go to state 33
+    inner_branch                   shift and go to state 29
+    line                           shift and go to state 30
+    bond_dot                       shift and go to state 31
     atom                           shift and go to state 2
-    bond                           shift and go to state 35
+    bond                           shift and go to state 33
     bracket_atom                   shift and go to state 3
     symbol                         shift and go to state 4
-    semi_bond_rule                 shift and go to state 22
+    semi_bond_rule                 shift and go to state 20
+
+state 13
+
+    (6) chains -> chain .
+    %               reduce using rule 6 (chains -> chain .)
+    digit           reduce using rule 6 (chains -> chain .)
+    -               reduce using rule 6 (chains -> chain .)
+    .               reduce using rule 6 (chains -> chain .)
+    semi_bond       reduce using rule 6 (chains -> chain .)
+    (               reduce using rule 6 (chains -> chain .)
+    $end            reduce using rule 6 (chains -> chain .)
+    [               reduce using rule 6 (chains -> chain .)
+    H               reduce using rule 6 (chains -> chain .)
+    semi_symbol     reduce using rule 6 (chains -> chain .)
+    )               reduce using rule 6 (chains -> chain .)
+
+
+state 14
+
+    (40) chain -> rnum .
+    %               reduce using rule 40 (chain -> rnum .)
+    digit           reduce using rule 40 (chain -> rnum .)
+    -               reduce using rule 40 (chain -> rnum .)
+    .               reduce using rule 40 (chain -> rnum .)
+    semi_bond       reduce using rule 40 (chain -> rnum .)
+    (               reduce using rule 40 (chain -> rnum .)
+    $end            reduce using rule 40 (chain -> rnum .)
+    [               reduce using rule 40 (chain -> rnum .)
+    H               reduce using rule 40 (chain -> rnum .)
+    semi_symbol     reduce using rule 40 (chain -> rnum .)
+    )               reduce using rule 40 (chain -> rnum .)
+
 
 state 15
-
-    (5) chains -> chain .
-    %               reduce using rule 5 (chains -> chain .)
-    digit           reduce using rule 5 (chains -> chain .)
-    -               reduce using rule 5 (chains -> chain .)
-    .               reduce using rule 5 (chains -> chain .)
-    [               reduce using rule 5 (chains -> chain .)
-    H               reduce using rule 5 (chains -> chain .)
-    semi_symbol     reduce using rule 5 (chains -> chain .)
-    semi_bond       reduce using rule 5 (chains -> chain .)
-    (               reduce using rule 5 (chains -> chain .)
-    $end            reduce using rule 5 (chains -> chain .)
-    )               reduce using rule 5 (chains -> chain .)
-
-
-state 16
-
-    (39) chain -> rnum .
-    %               reduce using rule 39 (chain -> rnum .)
-    digit           reduce using rule 39 (chain -> rnum .)
-    -               reduce using rule 39 (chain -> rnum .)
-    .               reduce using rule 39 (chain -> rnum .)
-    [               reduce using rule 39 (chain -> rnum .)
-    H               reduce using rule 39 (chain -> rnum .)
-    semi_symbol     reduce using rule 39 (chain -> rnum .)
-    semi_bond       reduce using rule 39 (chain -> rnum .)
-    (               reduce using rule 39 (chain -> rnum .)
-    $end            reduce using rule 39 (chain -> rnum .)
-    )               reduce using rule 39 (chain -> rnum .)
-
-
-state 17
 
     (41) chain -> bond . rnum
     (42) chain -> bond . atom
@@ -571,59 +503,59 @@ state 17
     (60) rnum -> . digit
     (57) atom -> . bracket_atom
     (58) atom -> . symbol
-    (6) bracket_atom -> . [ internal_bracket ]
+    (7) bracket_atom -> . [ internal_bracket ]
     (45) symbol -> . H
     (46) symbol -> . semi_symbol
-    %               shift and go to state 19
-    digit           shift and go to state 20
+    %               shift and go to state 17
+    digit           shift and go to state 18
     [               shift and go to state 5
     H               shift and go to state 6
     semi_symbol     shift and go to state 7
 
-    rnum                           shift and go to state 36
-    atom                           shift and go to state 37
+    rnum                           shift and go to state 34
+    atom                           shift and go to state 35
     bracket_atom                   shift and go to state 3
     symbol                         shift and go to state 4
 
-state 18
+state 16
 
     (43) chain -> dot_proxy .
     %               reduce using rule 43 (chain -> dot_proxy .)
     digit           reduce using rule 43 (chain -> dot_proxy .)
     -               reduce using rule 43 (chain -> dot_proxy .)
     .               reduce using rule 43 (chain -> dot_proxy .)
-    [               reduce using rule 43 (chain -> dot_proxy .)
-    H               reduce using rule 43 (chain -> dot_proxy .)
-    semi_symbol     reduce using rule 43 (chain -> dot_proxy .)
     semi_bond       reduce using rule 43 (chain -> dot_proxy .)
     (               reduce using rule 43 (chain -> dot_proxy .)
     $end            reduce using rule 43 (chain -> dot_proxy .)
+    [               reduce using rule 43 (chain -> dot_proxy .)
+    H               reduce using rule 43 (chain -> dot_proxy .)
+    semi_symbol     reduce using rule 43 (chain -> dot_proxy .)
     )               reduce using rule 43 (chain -> dot_proxy .)
 
 
-state 19
+state 17
 
     (59) rnum -> % . digit digit
-    digit           shift and go to state 38
+    digit           shift and go to state 36
 
 
-state 20
+state 18
 
     (60) rnum -> digit .
     %               reduce using rule 60 (rnum -> digit .)
     digit           reduce using rule 60 (rnum -> digit .)
     -               reduce using rule 60 (rnum -> digit .)
     .               reduce using rule 60 (rnum -> digit .)
-    [               reduce using rule 60 (rnum -> digit .)
-    H               reduce using rule 60 (rnum -> digit .)
-    semi_symbol     reduce using rule 60 (rnum -> digit .)
     semi_bond       reduce using rule 60 (rnum -> digit .)
     (               reduce using rule 60 (rnum -> digit .)
     $end            reduce using rule 60 (rnum -> digit .)
+    [               reduce using rule 60 (rnum -> digit .)
+    H               reduce using rule 60 (rnum -> digit .)
+    semi_symbol     reduce using rule 60 (rnum -> digit .)
     )               reduce using rule 60 (rnum -> digit .)
 
 
-state 21
+state 19
 
     (54) bond -> - .
     %               reduce using rule 54 (bond -> - .)
@@ -633,7 +565,7 @@ state 21
     semi_symbol     reduce using rule 54 (bond -> - .)
 
 
-state 22
+state 20
 
     (55) bond -> semi_bond_rule .
     %               reduce using rule 55 (bond -> semi_bond_rule .)
@@ -643,23 +575,23 @@ state 22
     semi_symbol     reduce using rule 55 (bond -> semi_bond_rule .)
 
 
-state 23
+state 21
 
     (44) dot_proxy -> . . atom
     (57) atom -> . bracket_atom
     (58) atom -> . symbol
-    (6) bracket_atom -> . [ internal_bracket ]
+    (7) bracket_atom -> . [ internal_bracket ]
     (45) symbol -> . H
     (46) symbol -> . semi_symbol
     [               shift and go to state 5
     H               shift and go to state 6
     semi_symbol     shift and go to state 7
 
-    atom                           shift and go to state 39
+    atom                           shift and go to state 37
     bracket_atom                   shift and go to state 3
     symbol                         shift and go to state 4
 
-state 24
+state 22
 
     (56) semi_bond_rule -> semi_bond .
     %               reduce using rule 56 (semi_bond_rule -> semi_bond .)
@@ -669,55 +601,55 @@ state 24
     semi_symbol     reduce using rule 56 (semi_bond_rule -> semi_bond .)
 
 
-state 25
+state 23
 
-    (6) bracket_atom -> [ internal_bracket . ]
-    ]               shift and go to state 40
+    (7) bracket_atom -> [ internal_bracket . ]
+    ]               shift and go to state 38
 
 
-state 26
+state 24
 
-    (7) internal_bracket -> isotope . symbol chiral hcount charge mol_map
-    (9) internal_bracket -> isotope . symbol hcount charge mol_map
-    (10) internal_bracket -> isotope . symbol chiral charge mol_map
-    (11) internal_bracket -> isotope . symbol chiral hcount mol_map
-    (12) internal_bracket -> isotope . symbol chiral hcount charge
-    (17) internal_bracket -> isotope . symbol charge mol_map
-    (18) internal_bracket -> isotope . symbol hcount mol_map
-    (19) internal_bracket -> isotope . symbol hcount charge
-    (20) internal_bracket -> isotope . symbol chiral mol_map
-    (21) internal_bracket -> isotope . symbol chiral charge
-    (22) internal_bracket -> isotope . symbol chiral hcount
-    (29) internal_bracket -> isotope . symbol mol_map
-    (30) internal_bracket -> isotope . symbol charge
-    (31) internal_bracket -> isotope . symbol hcount
-    (32) internal_bracket -> isotope . symbol chiral
-    (37) internal_bracket -> isotope . symbol
+    (8) internal_bracket -> isotope . symbol chiral hcount charge mol_map
+    (10) internal_bracket -> isotope . symbol hcount charge mol_map
+    (11) internal_bracket -> isotope . symbol chiral charge mol_map
+    (12) internal_bracket -> isotope . symbol chiral hcount mol_map
+    (13) internal_bracket -> isotope . symbol chiral hcount charge
+    (18) internal_bracket -> isotope . symbol charge mol_map
+    (19) internal_bracket -> isotope . symbol hcount mol_map
+    (20) internal_bracket -> isotope . symbol hcount charge
+    (21) internal_bracket -> isotope . symbol chiral mol_map
+    (22) internal_bracket -> isotope . symbol chiral charge
+    (23) internal_bracket -> isotope . symbol chiral hcount
+    (30) internal_bracket -> isotope . symbol mol_map
+    (31) internal_bracket -> isotope . symbol charge
+    (32) internal_bracket -> isotope . symbol hcount
+    (33) internal_bracket -> isotope . symbol chiral
+    (38) internal_bracket -> isotope . symbol
     (45) symbol -> . H
     (46) symbol -> . semi_symbol
     H               shift and go to state 6
     semi_symbol     shift and go to state 7
 
-    symbol                         shift and go to state 41
+    symbol                         shift and go to state 39
 
-state 27
+state 25
 
-    (8) internal_bracket -> symbol . chiral hcount charge mol_map
-    (13) internal_bracket -> symbol . hcount charge mol_map
-    (14) internal_bracket -> symbol . chiral charge mol_map
-    (15) internal_bracket -> symbol . chiral hcount mol_map
-    (16) internal_bracket -> symbol . chiral hcount charge
-    (23) internal_bracket -> symbol . charge mol_map
-    (24) internal_bracket -> symbol . hcount mol_map
-    (25) internal_bracket -> symbol . hcount charge
-    (26) internal_bracket -> symbol . chiral mol_map
-    (27) internal_bracket -> symbol . chiral charge
-    (28) internal_bracket -> symbol . chiral hcount
-    (33) internal_bracket -> symbol . mol_map
-    (34) internal_bracket -> symbol . charge
-    (35) internal_bracket -> symbol . hcount
-    (36) internal_bracket -> symbol . chiral
-    (38) internal_bracket -> symbol .
+    (9) internal_bracket -> symbol . chiral hcount charge mol_map
+    (14) internal_bracket -> symbol . hcount charge mol_map
+    (15) internal_bracket -> symbol . chiral charge mol_map
+    (16) internal_bracket -> symbol . chiral hcount mol_map
+    (17) internal_bracket -> symbol . chiral hcount charge
+    (24) internal_bracket -> symbol . charge mol_map
+    (25) internal_bracket -> symbol . hcount mol_map
+    (26) internal_bracket -> symbol . hcount charge
+    (27) internal_bracket -> symbol . chiral mol_map
+    (28) internal_bracket -> symbol . chiral charge
+    (29) internal_bracket -> symbol . chiral hcount
+    (34) internal_bracket -> symbol . mol_map
+    (35) internal_bracket -> symbol . charge
+    (36) internal_bracket -> symbol . hcount
+    (37) internal_bracket -> symbol . chiral
+    (39) internal_bracket -> symbol .
     (75) chiral -> . @ @
     (76) chiral -> . @
     (64) hcount -> . H
@@ -731,67 +663,67 @@ state 27
     (72) mol_map -> . : digit
     (73) mol_map -> . : digit digit
     (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 38 (internal_bracket -> symbol .)
-    @               shift and go to state 46
-    H               shift and go to state 47
-    +               shift and go to state 48
-    -               shift and go to state 49
-    :               shift and go to state 50
+    ]               reduce using rule 39 (internal_bracket -> symbol .)
+    @               shift and go to state 44
+    H               shift and go to state 45
+    +               shift and go to state 46
+    -               shift and go to state 47
+    :               shift and go to state 48
 
-    chiral                         shift and go to state 42
-    hcount                         shift and go to state 43
-    charge                         shift and go to state 44
-    mol_map                        shift and go to state 45
+    chiral                         shift and go to state 40
+    hcount                         shift and go to state 41
+    charge                         shift and go to state 42
+    mol_map                        shift and go to state 43
 
-state 28
+state 26
 
     (61) isotope -> digit .
     (62) isotope -> digit . digit
     (63) isotope -> digit . digit digit
     H               reduce using rule 61 (isotope -> digit .)
     semi_symbol     reduce using rule 61 (isotope -> digit .)
-    digit           shift and go to state 51
+    digit           shift and go to state 49
+
+
+state 27
+
+    (4) chain_branch -> chain_branch chain_branch_item .
+    (               reduce using rule 4 (chain_branch -> chain_branch chain_branch_item .)
+    %               reduce using rule 4 (chain_branch -> chain_branch chain_branch_item .)
+    digit           reduce using rule 4 (chain_branch -> chain_branch chain_branch_item .)
+    -               reduce using rule 4 (chain_branch -> chain_branch chain_branch_item .)
+    .               reduce using rule 4 (chain_branch -> chain_branch chain_branch_item .)
+    semi_bond       reduce using rule 4 (chain_branch -> chain_branch chain_branch_item .)
+    $end            reduce using rule 4 (chain_branch -> chain_branch chain_branch_item .)
+    [               reduce using rule 4 (chain_branch -> chain_branch chain_branch_item .)
+    H               reduce using rule 4 (chain_branch -> chain_branch chain_branch_item .)
+    semi_symbol     reduce using rule 4 (chain_branch -> chain_branch chain_branch_item .)
+    )               reduce using rule 4 (chain_branch -> chain_branch chain_branch_item .)
+
+
+state 28
+
+    (5) chains -> chains chain .
+    %               reduce using rule 5 (chains -> chains chain .)
+    digit           reduce using rule 5 (chains -> chains chain .)
+    -               reduce using rule 5 (chains -> chains chain .)
+    .               reduce using rule 5 (chains -> chains chain .)
+    semi_bond       reduce using rule 5 (chains -> chains chain .)
+    (               reduce using rule 5 (chains -> chains chain .)
+    $end            reduce using rule 5 (chains -> chains chain .)
+    [               reduce using rule 5 (chains -> chains chain .)
+    H               reduce using rule 5 (chains -> chains chain .)
+    semi_symbol     reduce using rule 5 (chains -> chains chain .)
+    )               reduce using rule 5 (chains -> chains chain .)
 
 
 state 29
 
-    (3) chain_branch -> chain_branch chain_branch_item .
-    (               reduce using rule 3 (chain_branch -> chain_branch chain_branch_item .)
-    %               reduce using rule 3 (chain_branch -> chain_branch chain_branch_item .)
-    digit           reduce using rule 3 (chain_branch -> chain_branch chain_branch_item .)
-    -               reduce using rule 3 (chain_branch -> chain_branch chain_branch_item .)
-    .               reduce using rule 3 (chain_branch -> chain_branch chain_branch_item .)
-    [               reduce using rule 3 (chain_branch -> chain_branch chain_branch_item .)
-    H               reduce using rule 3 (chain_branch -> chain_branch chain_branch_item .)
-    semi_symbol     reduce using rule 3 (chain_branch -> chain_branch chain_branch_item .)
-    semi_bond       reduce using rule 3 (chain_branch -> chain_branch chain_branch_item .)
-    $end            reduce using rule 3 (chain_branch -> chain_branch chain_branch_item .)
-    )               reduce using rule 3 (chain_branch -> chain_branch chain_branch_item .)
+    (47) branch -> ( inner_branch . )
+    )               shift and go to state 50
 
 
 state 30
-
-    (4) chains -> chains chain .
-    %               reduce using rule 4 (chains -> chains chain .)
-    digit           reduce using rule 4 (chains -> chains chain .)
-    -               reduce using rule 4 (chains -> chains chain .)
-    .               reduce using rule 4 (chains -> chains chain .)
-    [               reduce using rule 4 (chains -> chains chain .)
-    H               reduce using rule 4 (chains -> chains chain .)
-    semi_symbol     reduce using rule 4 (chains -> chains chain .)
-    semi_bond       reduce using rule 4 (chains -> chains chain .)
-    (               reduce using rule 4 (chains -> chains chain .)
-    $end            reduce using rule 4 (chains -> chains chain .)
-    )               reduce using rule 4 (chains -> chains chain .)
-
-
-state 31
-
-    (47) branch -> ( inner_branch . )
-    )               shift and go to state 52
-
-
-state 32
 
     (48) inner_branch -> line . inner_branch
     (50) inner_branch -> line .
@@ -799,54 +731,56 @@ state 32
     (49) inner_branch -> . bond_dot line inner_branch
     (50) inner_branch -> . line
     (51) inner_branch -> . bond_dot line
-    (1) line -> . atom opt_chain_branch
+    (1) line -> . atom chain_branch
+    (2) line -> . atom
     (52) bond_dot -> . .
     (53) bond_dot -> . bond
     (57) atom -> . bracket_atom
     (58) atom -> . symbol
     (54) bond -> . -
     (55) bond -> . semi_bond_rule
-    (6) bracket_atom -> . [ internal_bracket ]
+    (7) bracket_atom -> . [ internal_bracket ]
     (45) symbol -> . H
     (46) symbol -> . semi_symbol
     (56) semi_bond_rule -> . semi_bond
     )               reduce using rule 50 (inner_branch -> line .)
-    .               shift and go to state 34
-    -               shift and go to state 21
+    .               shift and go to state 32
+    -               shift and go to state 19
     [               shift and go to state 5
     H               shift and go to state 6
     semi_symbol     shift and go to state 7
-    semi_bond       shift and go to state 24
+    semi_bond       shift and go to state 22
 
-    line                           shift and go to state 32
-    inner_branch                   shift and go to state 53
-    bond_dot                       shift and go to state 33
+    line                           shift and go to state 30
+    inner_branch                   shift and go to state 51
+    bond_dot                       shift and go to state 31
     atom                           shift and go to state 2
-    bond                           shift and go to state 35
+    bond                           shift and go to state 33
     bracket_atom                   shift and go to state 3
     symbol                         shift and go to state 4
-    semi_bond_rule                 shift and go to state 22
+    semi_bond_rule                 shift and go to state 20
 
-state 33
+state 31
 
     (49) inner_branch -> bond_dot . line inner_branch
     (51) inner_branch -> bond_dot . line
-    (1) line -> . atom opt_chain_branch
+    (1) line -> . atom chain_branch
+    (2) line -> . atom
     (57) atom -> . bracket_atom
     (58) atom -> . symbol
-    (6) bracket_atom -> . [ internal_bracket ]
+    (7) bracket_atom -> . [ internal_bracket ]
     (45) symbol -> . H
     (46) symbol -> . semi_symbol
     [               shift and go to state 5
     H               shift and go to state 6
     semi_symbol     shift and go to state 7
 
-    line                           shift and go to state 54
+    line                           shift and go to state 52
     atom                           shift and go to state 2
     bracket_atom                   shift and go to state 3
     symbol                         shift and go to state 4
 
-state 34
+state 32
 
     (52) bond_dot -> . .
     [               reduce using rule 52 (bond_dot -> . .)
@@ -854,7 +788,7 @@ state 34
     semi_symbol     reduce using rule 52 (bond_dot -> . .)
 
 
-state 35
+state 33
 
     (53) bond_dot -> bond .
     [               reduce using rule 53 (bond_dot -> bond .)
@@ -862,94 +796,94 @@ state 35
     semi_symbol     reduce using rule 53 (bond_dot -> bond .)
 
 
-state 36
+state 34
 
     (41) chain -> bond rnum .
     %               reduce using rule 41 (chain -> bond rnum .)
     digit           reduce using rule 41 (chain -> bond rnum .)
     -               reduce using rule 41 (chain -> bond rnum .)
     .               reduce using rule 41 (chain -> bond rnum .)
-    [               reduce using rule 41 (chain -> bond rnum .)
-    H               reduce using rule 41 (chain -> bond rnum .)
-    semi_symbol     reduce using rule 41 (chain -> bond rnum .)
     semi_bond       reduce using rule 41 (chain -> bond rnum .)
     (               reduce using rule 41 (chain -> bond rnum .)
     $end            reduce using rule 41 (chain -> bond rnum .)
+    [               reduce using rule 41 (chain -> bond rnum .)
+    H               reduce using rule 41 (chain -> bond rnum .)
+    semi_symbol     reduce using rule 41 (chain -> bond rnum .)
     )               reduce using rule 41 (chain -> bond rnum .)
 
 
-state 37
+state 35
 
     (42) chain -> bond atom .
     %               reduce using rule 42 (chain -> bond atom .)
     digit           reduce using rule 42 (chain -> bond atom .)
     -               reduce using rule 42 (chain -> bond atom .)
     .               reduce using rule 42 (chain -> bond atom .)
-    [               reduce using rule 42 (chain -> bond atom .)
-    H               reduce using rule 42 (chain -> bond atom .)
-    semi_symbol     reduce using rule 42 (chain -> bond atom .)
     semi_bond       reduce using rule 42 (chain -> bond atom .)
     (               reduce using rule 42 (chain -> bond atom .)
     $end            reduce using rule 42 (chain -> bond atom .)
+    [               reduce using rule 42 (chain -> bond atom .)
+    H               reduce using rule 42 (chain -> bond atom .)
+    semi_symbol     reduce using rule 42 (chain -> bond atom .)
     )               reduce using rule 42 (chain -> bond atom .)
 
 
-state 38
+state 36
 
     (59) rnum -> % digit . digit
-    digit           shift and go to state 55
+    digit           shift and go to state 53
 
 
-state 39
+state 37
 
     (44) dot_proxy -> . atom .
     %               reduce using rule 44 (dot_proxy -> . atom .)
     digit           reduce using rule 44 (dot_proxy -> . atom .)
     -               reduce using rule 44 (dot_proxy -> . atom .)
     .               reduce using rule 44 (dot_proxy -> . atom .)
-    [               reduce using rule 44 (dot_proxy -> . atom .)
-    H               reduce using rule 44 (dot_proxy -> . atom .)
-    semi_symbol     reduce using rule 44 (dot_proxy -> . atom .)
     semi_bond       reduce using rule 44 (dot_proxy -> . atom .)
     (               reduce using rule 44 (dot_proxy -> . atom .)
     $end            reduce using rule 44 (dot_proxy -> . atom .)
+    [               reduce using rule 44 (dot_proxy -> . atom .)
+    H               reduce using rule 44 (dot_proxy -> . atom .)
+    semi_symbol     reduce using rule 44 (dot_proxy -> . atom .)
     )               reduce using rule 44 (dot_proxy -> . atom .)
 
 
-state 40
+state 38
 
-    (6) bracket_atom -> [ internal_bracket ] .
-    (               reduce using rule 6 (bracket_atom -> [ internal_bracket ] .)
-    %               reduce using rule 6 (bracket_atom -> [ internal_bracket ] .)
-    digit           reduce using rule 6 (bracket_atom -> [ internal_bracket ] .)
-    -               reduce using rule 6 (bracket_atom -> [ internal_bracket ] .)
-    .               reduce using rule 6 (bracket_atom -> [ internal_bracket ] .)
-    [               reduce using rule 6 (bracket_atom -> [ internal_bracket ] .)
-    H               reduce using rule 6 (bracket_atom -> [ internal_bracket ] .)
-    semi_symbol     reduce using rule 6 (bracket_atom -> [ internal_bracket ] .)
-    semi_bond       reduce using rule 6 (bracket_atom -> [ internal_bracket ] .)
-    $end            reduce using rule 6 (bracket_atom -> [ internal_bracket ] .)
-    )               reduce using rule 6 (bracket_atom -> [ internal_bracket ] .)
+    (7) bracket_atom -> [ internal_bracket ] .
+    (               reduce using rule 7 (bracket_atom -> [ internal_bracket ] .)
+    %               reduce using rule 7 (bracket_atom -> [ internal_bracket ] .)
+    digit           reduce using rule 7 (bracket_atom -> [ internal_bracket ] .)
+    -               reduce using rule 7 (bracket_atom -> [ internal_bracket ] .)
+    .               reduce using rule 7 (bracket_atom -> [ internal_bracket ] .)
+    semi_bond       reduce using rule 7 (bracket_atom -> [ internal_bracket ] .)
+    $end            reduce using rule 7 (bracket_atom -> [ internal_bracket ] .)
+    [               reduce using rule 7 (bracket_atom -> [ internal_bracket ] .)
+    H               reduce using rule 7 (bracket_atom -> [ internal_bracket ] .)
+    semi_symbol     reduce using rule 7 (bracket_atom -> [ internal_bracket ] .)
+    )               reduce using rule 7 (bracket_atom -> [ internal_bracket ] .)
 
 
-state 41
+state 39
 
-    (7) internal_bracket -> isotope symbol . chiral hcount charge mol_map
-    (9) internal_bracket -> isotope symbol . hcount charge mol_map
-    (10) internal_bracket -> isotope symbol . chiral charge mol_map
-    (11) internal_bracket -> isotope symbol . chiral hcount mol_map
-    (12) internal_bracket -> isotope symbol . chiral hcount charge
-    (17) internal_bracket -> isotope symbol . charge mol_map
-    (18) internal_bracket -> isotope symbol . hcount mol_map
-    (19) internal_bracket -> isotope symbol . hcount charge
-    (20) internal_bracket -> isotope symbol . chiral mol_map
-    (21) internal_bracket -> isotope symbol . chiral charge
-    (22) internal_bracket -> isotope symbol . chiral hcount
-    (29) internal_bracket -> isotope symbol . mol_map
-    (30) internal_bracket -> isotope symbol . charge
-    (31) internal_bracket -> isotope symbol . hcount
-    (32) internal_bracket -> isotope symbol . chiral
-    (37) internal_bracket -> isotope symbol .
+    (8) internal_bracket -> isotope symbol . chiral hcount charge mol_map
+    (10) internal_bracket -> isotope symbol . hcount charge mol_map
+    (11) internal_bracket -> isotope symbol . chiral charge mol_map
+    (12) internal_bracket -> isotope symbol . chiral hcount mol_map
+    (13) internal_bracket -> isotope symbol . chiral hcount charge
+    (18) internal_bracket -> isotope symbol . charge mol_map
+    (19) internal_bracket -> isotope symbol . hcount mol_map
+    (20) internal_bracket -> isotope symbol . hcount charge
+    (21) internal_bracket -> isotope symbol . chiral mol_map
+    (22) internal_bracket -> isotope symbol . chiral charge
+    (23) internal_bracket -> isotope symbol . chiral hcount
+    (30) internal_bracket -> isotope symbol . mol_map
+    (31) internal_bracket -> isotope symbol . charge
+    (32) internal_bracket -> isotope symbol . hcount
+    (33) internal_bracket -> isotope symbol . chiral
+    (38) internal_bracket -> isotope symbol .
     (75) chiral -> . @ @
     (76) chiral -> . @
     (64) hcount -> . H
@@ -963,28 +897,28 @@ state 41
     (72) mol_map -> . : digit
     (73) mol_map -> . : digit digit
     (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 37 (internal_bracket -> isotope symbol .)
-    @               shift and go to state 46
-    H               shift and go to state 47
-    +               shift and go to state 48
-    -               shift and go to state 49
-    :               shift and go to state 50
+    ]               reduce using rule 38 (internal_bracket -> isotope symbol .)
+    @               shift and go to state 44
+    H               shift and go to state 45
+    +               shift and go to state 46
+    -               shift and go to state 47
+    :               shift and go to state 48
 
-    chiral                         shift and go to state 56
-    hcount                         shift and go to state 57
-    charge                         shift and go to state 58
-    mol_map                        shift and go to state 59
+    chiral                         shift and go to state 54
+    hcount                         shift and go to state 55
+    charge                         shift and go to state 56
+    mol_map                        shift and go to state 57
 
-state 42
+state 40
 
-    (8) internal_bracket -> symbol chiral . hcount charge mol_map
-    (14) internal_bracket -> symbol chiral . charge mol_map
-    (15) internal_bracket -> symbol chiral . hcount mol_map
-    (16) internal_bracket -> symbol chiral . hcount charge
-    (26) internal_bracket -> symbol chiral . mol_map
-    (27) internal_bracket -> symbol chiral . charge
-    (28) internal_bracket -> symbol chiral . hcount
-    (36) internal_bracket -> symbol chiral .
+    (9) internal_bracket -> symbol chiral . hcount charge mol_map
+    (15) internal_bracket -> symbol chiral . charge mol_map
+    (16) internal_bracket -> symbol chiral . hcount mol_map
+    (17) internal_bracket -> symbol chiral . hcount charge
+    (27) internal_bracket -> symbol chiral . mol_map
+    (28) internal_bracket -> symbol chiral . charge
+    (29) internal_bracket -> symbol chiral . hcount
+    (37) internal_bracket -> symbol chiral .
     (64) hcount -> . H
     (65) hcount -> . H digit
     (66) charge -> . + fifteen
@@ -996,22 +930,22 @@ state 42
     (72) mol_map -> . : digit
     (73) mol_map -> . : digit digit
     (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 36 (internal_bracket -> symbol chiral .)
-    H               shift and go to state 47
-    +               shift and go to state 48
-    -               shift and go to state 49
-    :               shift and go to state 50
+    ]               reduce using rule 37 (internal_bracket -> symbol chiral .)
+    H               shift and go to state 45
+    +               shift and go to state 46
+    -               shift and go to state 47
+    :               shift and go to state 48
 
-    hcount                         shift and go to state 60
-    charge                         shift and go to state 61
-    mol_map                        shift and go to state 62
+    hcount                         shift and go to state 58
+    charge                         shift and go to state 59
+    mol_map                        shift and go to state 60
 
-state 43
+state 41
 
-    (13) internal_bracket -> symbol hcount . charge mol_map
-    (24) internal_bracket -> symbol hcount . mol_map
-    (25) internal_bracket -> symbol hcount . charge
-    (35) internal_bracket -> symbol hcount .
+    (14) internal_bracket -> symbol hcount . charge mol_map
+    (25) internal_bracket -> symbol hcount . mol_map
+    (26) internal_bracket -> symbol hcount . charge
+    (36) internal_bracket -> symbol hcount .
     (66) charge -> . + fifteen
     (67) charge -> . - fifteen
     (68) charge -> . - -
@@ -1021,37 +955,37 @@ state 43
     (72) mol_map -> . : digit
     (73) mol_map -> . : digit digit
     (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 35 (internal_bracket -> symbol hcount .)
-    +               shift and go to state 48
-    -               shift and go to state 49
-    :               shift and go to state 50
+    ]               reduce using rule 36 (internal_bracket -> symbol hcount .)
+    +               shift and go to state 46
+    -               shift and go to state 47
+    :               shift and go to state 48
 
-    charge                         shift and go to state 63
-    mol_map                        shift and go to state 64
+    charge                         shift and go to state 61
+    mol_map                        shift and go to state 62
 
-state 44
+state 42
 
-    (23) internal_bracket -> symbol charge . mol_map
-    (34) internal_bracket -> symbol charge .
+    (24) internal_bracket -> symbol charge . mol_map
+    (35) internal_bracket -> symbol charge .
     (72) mol_map -> . : digit
     (73) mol_map -> . : digit digit
     (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 34 (internal_bracket -> symbol charge .)
-    :               shift and go to state 50
+    ]               reduce using rule 35 (internal_bracket -> symbol charge .)
+    :               shift and go to state 48
 
-    mol_map                        shift and go to state 65
+    mol_map                        shift and go to state 63
 
-state 45
+state 43
 
-    (33) internal_bracket -> symbol mol_map .
-    ]               reduce using rule 33 (internal_bracket -> symbol mol_map .)
+    (34) internal_bracket -> symbol mol_map .
+    ]               reduce using rule 34 (internal_bracket -> symbol mol_map .)
 
 
-state 46
+state 44
 
     (75) chiral -> @ . @
     (76) chiral -> @ .
-    @               shift and go to state 66
+    @               shift and go to state 64
     H               reduce using rule 76 (chiral -> @ .)
     +               reduce using rule 76 (chiral -> @ .)
     -               reduce using rule 76 (chiral -> @ .)
@@ -1059,7 +993,7 @@ state 46
     ]               reduce using rule 76 (chiral -> @ .)
 
 
-state 47
+state 45
 
     (64) hcount -> H .
     (65) hcount -> H . digit
@@ -1067,55 +1001,55 @@ state 47
     -               reduce using rule 64 (hcount -> H .)
     :               reduce using rule 64 (hcount -> H .)
     ]               reduce using rule 64 (hcount -> H .)
-    digit           shift and go to state 67
+    digit           shift and go to state 65
 
 
-state 48
+state 46
 
     (66) charge -> + . fifteen
     (70) charge -> + . +
     (71) charge -> + .
     (77) fifteen -> . digit
     (78) fifteen -> . digit digit
-    +               shift and go to state 68
+    +               shift and go to state 66
     :               reduce using rule 71 (charge -> + .)
     ]               reduce using rule 71 (charge -> + .)
-    digit           shift and go to state 70
+    digit           shift and go to state 68
 
-    fifteen                        shift and go to state 69
+    fifteen                        shift and go to state 67
 
-state 49
+state 47
 
     (67) charge -> - . fifteen
     (68) charge -> - . -
     (69) charge -> - .
     (77) fifteen -> . digit
     (78) fifteen -> . digit digit
-    -               shift and go to state 71
+    -               shift and go to state 69
     :               reduce using rule 69 (charge -> - .)
     ]               reduce using rule 69 (charge -> - .)
-    digit           shift and go to state 70
+    digit           shift and go to state 68
 
-    fifteen                        shift and go to state 72
+    fifteen                        shift and go to state 70
 
-state 50
+state 48
 
     (72) mol_map -> : . digit
     (73) mol_map -> : . digit digit
     (74) mol_map -> : . digit digit digit
-    digit           shift and go to state 73
+    digit           shift and go to state 71
 
 
-state 51
+state 49
 
     (62) isotope -> digit digit .
     (63) isotope -> digit digit . digit
     H               reduce using rule 62 (isotope -> digit digit .)
     semi_symbol     reduce using rule 62 (isotope -> digit digit .)
-    digit           shift and go to state 74
+    digit           shift and go to state 72
 
 
-state 52
+state 50
 
     (47) branch -> ( inner_branch ) .
     (               reduce using rule 47 (branch -> ( inner_branch ) .)
@@ -1123,21 +1057,21 @@ state 52
     digit           reduce using rule 47 (branch -> ( inner_branch ) .)
     -               reduce using rule 47 (branch -> ( inner_branch ) .)
     .               reduce using rule 47 (branch -> ( inner_branch ) .)
+    semi_bond       reduce using rule 47 (branch -> ( inner_branch ) .)
+    $end            reduce using rule 47 (branch -> ( inner_branch ) .)
     [               reduce using rule 47 (branch -> ( inner_branch ) .)
     H               reduce using rule 47 (branch -> ( inner_branch ) .)
     semi_symbol     reduce using rule 47 (branch -> ( inner_branch ) .)
-    semi_bond       reduce using rule 47 (branch -> ( inner_branch ) .)
-    $end            reduce using rule 47 (branch -> ( inner_branch ) .)
     )               reduce using rule 47 (branch -> ( inner_branch ) .)
 
 
-state 53
+state 51
 
     (48) inner_branch -> line inner_branch .
     )               reduce using rule 48 (inner_branch -> line inner_branch .)
 
 
-state 54
+state 52
 
     (49) inner_branch -> bond_dot line . inner_branch
     (51) inner_branch -> bond_dot line .
@@ -1145,60 +1079,61 @@ state 54
     (49) inner_branch -> . bond_dot line inner_branch
     (50) inner_branch -> . line
     (51) inner_branch -> . bond_dot line
-    (1) line -> . atom opt_chain_branch
+    (1) line -> . atom chain_branch
+    (2) line -> . atom
     (52) bond_dot -> . .
     (53) bond_dot -> . bond
     (57) atom -> . bracket_atom
     (58) atom -> . symbol
     (54) bond -> . -
     (55) bond -> . semi_bond_rule
-    (6) bracket_atom -> . [ internal_bracket ]
+    (7) bracket_atom -> . [ internal_bracket ]
     (45) symbol -> . H
     (46) symbol -> . semi_symbol
     (56) semi_bond_rule -> . semi_bond
     )               reduce using rule 51 (inner_branch -> bond_dot line .)
-    .               shift and go to state 34
-    -               shift and go to state 21
+    .               shift and go to state 32
+    -               shift and go to state 19
     [               shift and go to state 5
     H               shift and go to state 6
     semi_symbol     shift and go to state 7
-    semi_bond       shift and go to state 24
+    semi_bond       shift and go to state 22
 
-    bond_dot                       shift and go to state 33
-    line                           shift and go to state 32
-    inner_branch                   shift and go to state 75
+    bond_dot                       shift and go to state 31
+    line                           shift and go to state 30
+    inner_branch                   shift and go to state 73
     atom                           shift and go to state 2
-    bond                           shift and go to state 35
+    bond                           shift and go to state 33
     bracket_atom                   shift and go to state 3
     symbol                         shift and go to state 4
-    semi_bond_rule                 shift and go to state 22
+    semi_bond_rule                 shift and go to state 20
 
-state 55
+state 53
 
     (59) rnum -> % digit digit .
     %               reduce using rule 59 (rnum -> % digit digit .)
     digit           reduce using rule 59 (rnum -> % digit digit .)
     -               reduce using rule 59 (rnum -> % digit digit .)
     .               reduce using rule 59 (rnum -> % digit digit .)
-    [               reduce using rule 59 (rnum -> % digit digit .)
-    H               reduce using rule 59 (rnum -> % digit digit .)
-    semi_symbol     reduce using rule 59 (rnum -> % digit digit .)
     semi_bond       reduce using rule 59 (rnum -> % digit digit .)
     (               reduce using rule 59 (rnum -> % digit digit .)
     $end            reduce using rule 59 (rnum -> % digit digit .)
+    [               reduce using rule 59 (rnum -> % digit digit .)
+    H               reduce using rule 59 (rnum -> % digit digit .)
+    semi_symbol     reduce using rule 59 (rnum -> % digit digit .)
     )               reduce using rule 59 (rnum -> % digit digit .)
 
 
-state 56
+state 54
 
-    (7) internal_bracket -> isotope symbol chiral . hcount charge mol_map
-    (10) internal_bracket -> isotope symbol chiral . charge mol_map
-    (11) internal_bracket -> isotope symbol chiral . hcount mol_map
-    (12) internal_bracket -> isotope symbol chiral . hcount charge
-    (20) internal_bracket -> isotope symbol chiral . mol_map
-    (21) internal_bracket -> isotope symbol chiral . charge
-    (22) internal_bracket -> isotope symbol chiral . hcount
-    (32) internal_bracket -> isotope symbol chiral .
+    (8) internal_bracket -> isotope symbol chiral . hcount charge mol_map
+    (11) internal_bracket -> isotope symbol chiral . charge mol_map
+    (12) internal_bracket -> isotope symbol chiral . hcount mol_map
+    (13) internal_bracket -> isotope symbol chiral . hcount charge
+    (21) internal_bracket -> isotope symbol chiral . mol_map
+    (22) internal_bracket -> isotope symbol chiral . charge
+    (23) internal_bracket -> isotope symbol chiral . hcount
+    (33) internal_bracket -> isotope symbol chiral .
     (64) hcount -> . H
     (65) hcount -> . H digit
     (66) charge -> . + fifteen
@@ -1210,22 +1145,22 @@ state 56
     (72) mol_map -> . : digit
     (73) mol_map -> . : digit digit
     (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 32 (internal_bracket -> isotope symbol chiral .)
-    H               shift and go to state 47
-    +               shift and go to state 48
-    -               shift and go to state 49
-    :               shift and go to state 50
+    ]               reduce using rule 33 (internal_bracket -> isotope symbol chiral .)
+    H               shift and go to state 45
+    +               shift and go to state 46
+    -               shift and go to state 47
+    :               shift and go to state 48
 
-    hcount                         shift and go to state 76
-    charge                         shift and go to state 77
-    mol_map                        shift and go to state 78
+    hcount                         shift and go to state 74
+    charge                         shift and go to state 75
+    mol_map                        shift and go to state 76
 
-state 57
+state 55
 
-    (9) internal_bracket -> isotope symbol hcount . charge mol_map
-    (18) internal_bracket -> isotope symbol hcount . mol_map
-    (19) internal_bracket -> isotope symbol hcount . charge
-    (31) internal_bracket -> isotope symbol hcount .
+    (10) internal_bracket -> isotope symbol hcount . charge mol_map
+    (19) internal_bracket -> isotope symbol hcount . mol_map
+    (20) internal_bracket -> isotope symbol hcount . charge
+    (32) internal_bracket -> isotope symbol hcount .
     (66) charge -> . + fifteen
     (67) charge -> . - fifteen
     (68) charge -> . - -
@@ -1235,98 +1170,98 @@ state 57
     (72) mol_map -> . : digit
     (73) mol_map -> . : digit digit
     (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 31 (internal_bracket -> isotope symbol hcount .)
-    +               shift and go to state 48
-    -               shift and go to state 49
-    :               shift and go to state 50
+    ]               reduce using rule 32 (internal_bracket -> isotope symbol hcount .)
+    +               shift and go to state 46
+    -               shift and go to state 47
+    :               shift and go to state 48
 
-    charge                         shift and go to state 79
-    mol_map                        shift and go to state 80
+    charge                         shift and go to state 77
+    mol_map                        shift and go to state 78
 
-state 58
+state 56
 
-    (17) internal_bracket -> isotope symbol charge . mol_map
-    (30) internal_bracket -> isotope symbol charge .
+    (18) internal_bracket -> isotope symbol charge . mol_map
+    (31) internal_bracket -> isotope symbol charge .
     (72) mol_map -> . : digit
     (73) mol_map -> . : digit digit
     (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 30 (internal_bracket -> isotope symbol charge .)
-    :               shift and go to state 50
+    ]               reduce using rule 31 (internal_bracket -> isotope symbol charge .)
+    :               shift and go to state 48
 
+    mol_map                        shift and go to state 79
+
+state 57
+
+    (30) internal_bracket -> isotope symbol mol_map .
+    ]               reduce using rule 30 (internal_bracket -> isotope symbol mol_map .)
+
+
+state 58
+
+    (9) internal_bracket -> symbol chiral hcount . charge mol_map
+    (16) internal_bracket -> symbol chiral hcount . mol_map
+    (17) internal_bracket -> symbol chiral hcount . charge
+    (29) internal_bracket -> symbol chiral hcount .
+    (66) charge -> . + fifteen
+    (67) charge -> . - fifteen
+    (68) charge -> . - -
+    (69) charge -> . -
+    (70) charge -> . + +
+    (71) charge -> . +
+    (72) mol_map -> . : digit
+    (73) mol_map -> . : digit digit
+    (74) mol_map -> . : digit digit digit
+    ]               reduce using rule 29 (internal_bracket -> symbol chiral hcount .)
+    +               shift and go to state 46
+    -               shift and go to state 47
+    :               shift and go to state 48
+
+    charge                         shift and go to state 80
     mol_map                        shift and go to state 81
 
 state 59
 
-    (29) internal_bracket -> isotope symbol mol_map .
-    ]               reduce using rule 29 (internal_bracket -> isotope symbol mol_map .)
+    (15) internal_bracket -> symbol chiral charge . mol_map
+    (28) internal_bracket -> symbol chiral charge .
+    (72) mol_map -> . : digit
+    (73) mol_map -> . : digit digit
+    (74) mol_map -> . : digit digit digit
+    ]               reduce using rule 28 (internal_bracket -> symbol chiral charge .)
+    :               shift and go to state 48
 
+    mol_map                        shift and go to state 82
 
 state 60
 
-    (8) internal_bracket -> symbol chiral hcount . charge mol_map
-    (15) internal_bracket -> symbol chiral hcount . mol_map
-    (16) internal_bracket -> symbol chiral hcount . charge
-    (28) internal_bracket -> symbol chiral hcount .
-    (66) charge -> . + fifteen
-    (67) charge -> . - fifteen
-    (68) charge -> . - -
-    (69) charge -> . -
-    (70) charge -> . + +
-    (71) charge -> . +
-    (72) mol_map -> . : digit
-    (73) mol_map -> . : digit digit
-    (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 28 (internal_bracket -> symbol chiral hcount .)
-    +               shift and go to state 48
-    -               shift and go to state 49
-    :               shift and go to state 50
+    (27) internal_bracket -> symbol chiral mol_map .
+    ]               reduce using rule 27 (internal_bracket -> symbol chiral mol_map .)
 
-    charge                         shift and go to state 82
-    mol_map                        shift and go to state 83
 
 state 61
 
-    (14) internal_bracket -> symbol chiral charge . mol_map
-    (27) internal_bracket -> symbol chiral charge .
+    (14) internal_bracket -> symbol hcount charge . mol_map
+    (26) internal_bracket -> symbol hcount charge .
     (72) mol_map -> . : digit
     (73) mol_map -> . : digit digit
     (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 27 (internal_bracket -> symbol chiral charge .)
-    :               shift and go to state 50
+    ]               reduce using rule 26 (internal_bracket -> symbol hcount charge .)
+    :               shift and go to state 48
 
-    mol_map                        shift and go to state 84
+    mol_map                        shift and go to state 83
 
 state 62
 
-    (26) internal_bracket -> symbol chiral mol_map .
-    ]               reduce using rule 26 (internal_bracket -> symbol chiral mol_map .)
+    (25) internal_bracket -> symbol hcount mol_map .
+    ]               reduce using rule 25 (internal_bracket -> symbol hcount mol_map .)
 
 
 state 63
 
-    (13) internal_bracket -> symbol hcount charge . mol_map
-    (25) internal_bracket -> symbol hcount charge .
-    (72) mol_map -> . : digit
-    (73) mol_map -> . : digit digit
-    (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 25 (internal_bracket -> symbol hcount charge .)
-    :               shift and go to state 50
+    (24) internal_bracket -> symbol charge mol_map .
+    ]               reduce using rule 24 (internal_bracket -> symbol charge mol_map .)
 
-    mol_map                        shift and go to state 85
 
 state 64
-
-    (24) internal_bracket -> symbol hcount mol_map .
-    ]               reduce using rule 24 (internal_bracket -> symbol hcount mol_map .)
-
-
-state 65
-
-    (23) internal_bracket -> symbol charge mol_map .
-    ]               reduce using rule 23 (internal_bracket -> symbol charge mol_map .)
-
-
-state 66
 
     (75) chiral -> @ @ .
     H               reduce using rule 75 (chiral -> @ @ .)
@@ -1336,7 +1271,7 @@ state 66
     ]               reduce using rule 75 (chiral -> @ @ .)
 
 
-state 67
+state 65
 
     (65) hcount -> H digit .
     +               reduce using rule 65 (hcount -> H digit .)
@@ -1345,71 +1280,71 @@ state 67
     ]               reduce using rule 65 (hcount -> H digit .)
 
 
-state 68
+state 66
 
     (70) charge -> + + .
     :               reduce using rule 70 (charge -> + + .)
     ]               reduce using rule 70 (charge -> + + .)
 
 
-state 69
+state 67
 
     (66) charge -> + fifteen .
     :               reduce using rule 66 (charge -> + fifteen .)
     ]               reduce using rule 66 (charge -> + fifteen .)
 
 
-state 70
+state 68
 
     (77) fifteen -> digit .
     (78) fifteen -> digit . digit
     :               reduce using rule 77 (fifteen -> digit .)
     ]               reduce using rule 77 (fifteen -> digit .)
-    digit           shift and go to state 86
+    digit           shift and go to state 84
 
 
-state 71
+state 69
 
     (68) charge -> - - .
     :               reduce using rule 68 (charge -> - - .)
     ]               reduce using rule 68 (charge -> - - .)
 
 
-state 72
+state 70
 
     (67) charge -> - fifteen .
     :               reduce using rule 67 (charge -> - fifteen .)
     ]               reduce using rule 67 (charge -> - fifteen .)
 
 
-state 73
+state 71
 
     (72) mol_map -> : digit .
     (73) mol_map -> : digit . digit
     (74) mol_map -> : digit . digit digit
     ]               reduce using rule 72 (mol_map -> : digit .)
-    digit           shift and go to state 87
+    digit           shift and go to state 85
 
 
-state 74
+state 72
 
     (63) isotope -> digit digit digit .
     H               reduce using rule 63 (isotope -> digit digit digit .)
     semi_symbol     reduce using rule 63 (isotope -> digit digit digit .)
 
 
-state 75
+state 73
 
     (49) inner_branch -> bond_dot line inner_branch .
     )               reduce using rule 49 (inner_branch -> bond_dot line inner_branch .)
 
 
-state 76
+state 74
 
-    (7) internal_bracket -> isotope symbol chiral hcount . charge mol_map
-    (11) internal_bracket -> isotope symbol chiral hcount . mol_map
-    (12) internal_bracket -> isotope symbol chiral hcount . charge
-    (22) internal_bracket -> isotope symbol chiral hcount .
+    (8) internal_bracket -> isotope symbol chiral hcount . charge mol_map
+    (12) internal_bracket -> isotope symbol chiral hcount . mol_map
+    (13) internal_bracket -> isotope symbol chiral hcount . charge
+    (23) internal_bracket -> isotope symbol chiral hcount .
     (66) charge -> . + fifteen
     (67) charge -> . - fifteen
     (68) charge -> . - -
@@ -1419,168 +1354,159 @@ state 76
     (72) mol_map -> . : digit
     (73) mol_map -> . : digit digit
     (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 22 (internal_bracket -> isotope symbol chiral hcount .)
-    +               shift and go to state 48
-    -               shift and go to state 49
-    :               shift and go to state 50
+    ]               reduce using rule 23 (internal_bracket -> isotope symbol chiral hcount .)
+    +               shift and go to state 46
+    -               shift and go to state 47
+    :               shift and go to state 48
 
-    charge                         shift and go to state 88
-    mol_map                        shift and go to state 89
+    charge                         shift and go to state 86
+    mol_map                        shift and go to state 87
 
-state 77
+state 75
 
-    (10) internal_bracket -> isotope symbol chiral charge . mol_map
-    (21) internal_bracket -> isotope symbol chiral charge .
+    (11) internal_bracket -> isotope symbol chiral charge . mol_map
+    (22) internal_bracket -> isotope symbol chiral charge .
     (72) mol_map -> . : digit
     (73) mol_map -> . : digit digit
     (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 21 (internal_bracket -> isotope symbol chiral charge .)
-    :               shift and go to state 50
+    ]               reduce using rule 22 (internal_bracket -> isotope symbol chiral charge .)
+    :               shift and go to state 48
 
-    mol_map                        shift and go to state 90
+    mol_map                        shift and go to state 88
+
+state 76
+
+    (21) internal_bracket -> isotope symbol chiral mol_map .
+    ]               reduce using rule 21 (internal_bracket -> isotope symbol chiral mol_map .)
+
+
+state 77
+
+    (10) internal_bracket -> isotope symbol hcount charge . mol_map
+    (20) internal_bracket -> isotope symbol hcount charge .
+    (72) mol_map -> . : digit
+    (73) mol_map -> . : digit digit
+    (74) mol_map -> . : digit digit digit
+    ]               reduce using rule 20 (internal_bracket -> isotope symbol hcount charge .)
+    :               shift and go to state 48
+
+    mol_map                        shift and go to state 89
 
 state 78
 
-    (20) internal_bracket -> isotope symbol chiral mol_map .
-    ]               reduce using rule 20 (internal_bracket -> isotope symbol chiral mol_map .)
+    (19) internal_bracket -> isotope symbol hcount mol_map .
+    ]               reduce using rule 19 (internal_bracket -> isotope symbol hcount mol_map .)
 
 
 state 79
 
-    (9) internal_bracket -> isotope symbol hcount charge . mol_map
-    (19) internal_bracket -> isotope symbol hcount charge .
-    (72) mol_map -> . : digit
-    (73) mol_map -> . : digit digit
-    (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 19 (internal_bracket -> isotope symbol hcount charge .)
-    :               shift and go to state 50
+    (18) internal_bracket -> isotope symbol charge mol_map .
+    ]               reduce using rule 18 (internal_bracket -> isotope symbol charge mol_map .)
 
-    mol_map                        shift and go to state 91
 
 state 80
 
-    (18) internal_bracket -> isotope symbol hcount mol_map .
-    ]               reduce using rule 18 (internal_bracket -> isotope symbol hcount mol_map .)
+    (9) internal_bracket -> symbol chiral hcount charge . mol_map
+    (17) internal_bracket -> symbol chiral hcount charge .
+    (72) mol_map -> . : digit
+    (73) mol_map -> . : digit digit
+    (74) mol_map -> . : digit digit digit
+    ]               reduce using rule 17 (internal_bracket -> symbol chiral hcount charge .)
+    :               shift and go to state 48
 
+    mol_map                        shift and go to state 90
 
 state 81
 
-    (17) internal_bracket -> isotope symbol charge mol_map .
-    ]               reduce using rule 17 (internal_bracket -> isotope symbol charge mol_map .)
+    (16) internal_bracket -> symbol chiral hcount mol_map .
+    ]               reduce using rule 16 (internal_bracket -> symbol chiral hcount mol_map .)
 
 
 state 82
 
-    (8) internal_bracket -> symbol chiral hcount charge . mol_map
-    (16) internal_bracket -> symbol chiral hcount charge .
-    (72) mol_map -> . : digit
-    (73) mol_map -> . : digit digit
-    (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 16 (internal_bracket -> symbol chiral hcount charge .)
-    :               shift and go to state 50
+    (15) internal_bracket -> symbol chiral charge mol_map .
+    ]               reduce using rule 15 (internal_bracket -> symbol chiral charge mol_map .)
 
-    mol_map                        shift and go to state 92
 
 state 83
 
-    (15) internal_bracket -> symbol chiral hcount mol_map .
-    ]               reduce using rule 15 (internal_bracket -> symbol chiral hcount mol_map .)
+    (14) internal_bracket -> symbol hcount charge mol_map .
+    ]               reduce using rule 14 (internal_bracket -> symbol hcount charge mol_map .)
 
 
 state 84
-
-    (14) internal_bracket -> symbol chiral charge mol_map .
-    ]               reduce using rule 14 (internal_bracket -> symbol chiral charge mol_map .)
-
-
-state 85
-
-    (13) internal_bracket -> symbol hcount charge mol_map .
-    ]               reduce using rule 13 (internal_bracket -> symbol hcount charge mol_map .)
-
-
-state 86
 
     (78) fifteen -> digit digit .
     :               reduce using rule 78 (fifteen -> digit digit .)
     ]               reduce using rule 78 (fifteen -> digit digit .)
 
 
-state 87
+state 85
 
     (73) mol_map -> : digit digit .
     (74) mol_map -> : digit digit . digit
     ]               reduce using rule 73 (mol_map -> : digit digit .)
-    digit           shift and go to state 93
+    digit           shift and go to state 91
+
+
+state 86
+
+    (8) internal_bracket -> isotope symbol chiral hcount charge . mol_map
+    (13) internal_bracket -> isotope symbol chiral hcount charge .
+    (72) mol_map -> . : digit
+    (73) mol_map -> . : digit digit
+    (74) mol_map -> . : digit digit digit
+    ]               reduce using rule 13 (internal_bracket -> isotope symbol chiral hcount charge .)
+    :               shift and go to state 48
+
+    mol_map                        shift and go to state 92
+
+state 87
+
+    (12) internal_bracket -> isotope symbol chiral hcount mol_map .
+    ]               reduce using rule 12 (internal_bracket -> isotope symbol chiral hcount mol_map .)
 
 
 state 88
 
-    (7) internal_bracket -> isotope symbol chiral hcount charge . mol_map
-    (12) internal_bracket -> isotope symbol chiral hcount charge .
-    (72) mol_map -> . : digit
-    (73) mol_map -> . : digit digit
-    (74) mol_map -> . : digit digit digit
-    ]               reduce using rule 12 (internal_bracket -> isotope symbol chiral hcount charge .)
-    :               shift and go to state 50
+    (11) internal_bracket -> isotope symbol chiral charge mol_map .
+    ]               reduce using rule 11 (internal_bracket -> isotope symbol chiral charge mol_map .)
 
-    mol_map                        shift and go to state 94
 
 state 89
 
-    (11) internal_bracket -> isotope symbol chiral hcount mol_map .
-    ]               reduce using rule 11 (internal_bracket -> isotope symbol chiral hcount mol_map .)
+    (10) internal_bracket -> isotope symbol hcount charge mol_map .
+    ]               reduce using rule 10 (internal_bracket -> isotope symbol hcount charge mol_map .)
 
 
 state 90
 
-    (10) internal_bracket -> isotope symbol chiral charge mol_map .
-    ]               reduce using rule 10 (internal_bracket -> isotope symbol chiral charge mol_map .)
+    (9) internal_bracket -> symbol chiral hcount charge mol_map .
+    ]               reduce using rule 9 (internal_bracket -> symbol chiral hcount charge mol_map .)
 
 
 state 91
-
-    (9) internal_bracket -> isotope symbol hcount charge mol_map .
-    ]               reduce using rule 9 (internal_bracket -> isotope symbol hcount charge mol_map .)
-
-
-state 92
-
-    (8) internal_bracket -> symbol chiral hcount charge mol_map .
-    ]               reduce using rule 8 (internal_bracket -> symbol chiral hcount charge mol_map .)
-
-
-state 93
 
     (74) mol_map -> : digit digit digit .
     ]               reduce using rule 74 (mol_map -> : digit digit digit .)
 
 
-state 94
+state 92
 
-    (7) internal_bracket -> isotope symbol chiral hcount charge mol_map .
-    ]               reduce using rule 7 (internal_bracket -> isotope symbol chiral hcount charge mol_map .)
+    (8) internal_bracket -> isotope symbol chiral hcount charge mol_map .
+    ]               reduce using rule 8 (internal_bracket -> isotope symbol chiral hcount charge mol_map .)
 
 
 Conflicts:
 
 shift/reduce conflict for - in state 2 resolved as shift
 shift/reduce conflict for . in state 2 resolved as shift
-shift/reduce conflict for [ in state 2 resolved as shift
-shift/reduce conflict for H in state 2 resolved as shift
-shift/reduce conflict for semi_symbol in state 2 resolved as shift
 shift/reduce conflict for semi_bond in state 2 resolved as shift
-shift/reduce conflict for - in state 10 resolved as shift
-shift/reduce conflict for . in state 10 resolved as shift
-shift/reduce conflict for [ in state 10 resolved as shift
-shift/reduce conflict for H in state 10 resolved as shift
-shift/reduce conflict for semi_symbol in state 10 resolved as shift
-shift/reduce conflict for semi_bond in state 10 resolved as shift
-shift/reduce conflict for % in state 13 resolved as shift
-shift/reduce conflict for digit in state 13 resolved as shift
-shift/reduce conflict for - in state 13 resolved as shift
-shift/reduce conflict for . in state 13 resolved as shift
-shift/reduce conflict for [ in state 13 resolved as shift
-shift/reduce conflict for H in state 13 resolved as shift
-shift/reduce conflict for semi_symbol in state 13 resolved as shift
-shift/reduce conflict for semi_bond in state 13 resolved as shift
+shift/reduce conflict for - in state 8 resolved as shift
+shift/reduce conflict for . in state 8 resolved as shift
+shift/reduce conflict for semi_bond in state 8 resolved as shift
+shift/reduce conflict for % in state 11 resolved as shift
+shift/reduce conflict for digit in state 11 resolved as shift
+shift/reduce conflict for - in state 11 resolved as shift
+shift/reduce conflict for . in state 11 resolved as shift
+shift/reduce conflict for semi_bond in state 11 resolved as shift

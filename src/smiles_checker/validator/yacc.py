@@ -82,14 +82,29 @@ class SmilesParser(Parser):
     tokens = SmilesLex.tokens
     use_only_grammar = False
 
+    precedence = (
+        ('right', 'semi_bond'),
+        ('right', 'semi_symbol'),
+        ('right', 'H'),
+        ('right', '['),
+        ('right', '.'),
+        ('right', '-'),
+        ('right', 'digit'),
+        ('right', '%'),
+    )
+
     def error(self, t):
         raise Exception(f"Error on {str(t)}")
 
-    @_("atom opt_chain_branch")  # type: ignore
+    @_("atom")  # type: ignore
     def line(self, rules):
-        return pm.line(chain_branch=rules.chain_branch, chain=rules.chain)
+        return pm.line(atom=rules.atom)
 
-    @_("chain_branch chain_branch_item")  # type: ignore
+    @_("atom chain_branch")  # type: ignore
+    def line(self, rules):
+        return pm.line(atom=rules.atom, chain_branch=rules.chain_branch)
+
+    @_("chain_branch chain_branch_item %prec semi_bond")  # type: ignore
     def chain_branch(self, rules):
         return pm.chain_branch(chains=rules.chains, chain_branch=rules.chain_branch)
 
@@ -136,10 +151,6 @@ class SmilesParser(Parser):
     @_("bond rnum")  # type: ignore
     def chain(self, rules):
         return pm.chain(bond=rules.bond, rnum=rules.rnum)
-
-    @_("atom")  # type: ignore
-    def chain(self, rules):
-        return pm.chain(atom=rules.atom)
 
     @_("rnum")  # type: ignore
     def chain(self, rules):
@@ -279,9 +290,10 @@ class SmilesParser(Parser):
     def chain_branch_item(self, rules):
         return rules[0]
 
-    @_("chain_branch", "")
-    def opt_chain_branch(self, rules):
-        return None if len(rules) == 0 else pm.chain_branch(rules)
+    
+
+
+
 
 
 parser = SmilesParser()
