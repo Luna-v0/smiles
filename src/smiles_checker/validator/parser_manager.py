@@ -64,27 +64,20 @@ class ParserManager:
 
             cycle.append(atom)
 
-    def digit_matching(self, digit_dict: dict, rule_name: str) -> int:
-        match digit_dict:
-            case {"digit": int(value)}:
-                return int(value)
-            case {"digit": [head, *tail]}:
-                return int("".join(str(v) for v in [head, *tail]))
-            case _:
-                raise ParserException(
-                    rule=rule_name,
-                    parameter=str(digit_dict),
-                    message="Invalid rule_name rule",
-                )
-
-    def fifteen(self, **kwargs) -> int:
+    def fifteen(self, value=-1) -> int:
         """
         Function to parse the 'fifteen' rule. (Must be at most fifteen)
 
         fifteen -> digit | digit digit
 
         """
-        return self.digit_matching(kwargs, "fifteen")
+        if value >= 15:
+            raise ParserException(
+                rule="fifteen",
+                parameter=str(value),
+                message="Value must be at most fifteen.",
+            )
+        return value
 
     def chiral(self, rotation: str) -> Optional[bool]:
         """
@@ -95,14 +88,14 @@ class ParserManager:
         """
         return rotation
 
-    def mol_map(self, **kwargs) -> int:
+    def mol_map(self, value=-1) -> int:
         """
         Function to parse the 'mol_map' rule.
 
         mol_map -> ":" digit digit digit | ":" digit digit | ":" digit
 
         """
-        return self.digit_matching(kwargs, "mol_map")
+        return value
 
     def charge(self, charge: int = 0) -> int:
         """
@@ -314,12 +307,12 @@ class ParserManager:
                 )
                 return
 
-    def internal_bracket(self, **kwargs) -> BracketAtom:
+    def internal_bracket(self, internal_bracket) -> BracketAtom:
         """
         Function to parse the 'internal_bracket' rule.
         internal_bracket -> isotope? symbol chiral? hcount? charge? mol_map?
         """
-        return chem.BracketAtom(**kwargs)
+        return chem.BracketAtom(**internal_bracket)
 
     def bracket_atom(self, internal_bracket) -> BracketAtom:
         return internal_bracket
