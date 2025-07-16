@@ -79,7 +79,7 @@ class ParserManager:
             )
         return value
 
-    def chiral(self, rotation: str) -> Optional[bool]:
+    def chiral(self, rotation: str = "") -> Optional[bool]:
         """
         Function to parse the 'chiral' rule.
 
@@ -115,19 +115,19 @@ class ParserManager:
         """
         return hcount
 
-    def isotope(self, **kwargs) -> int:
+    def isotope(self, value=-1) -> int:
         """
         Function to parse the 'isotope' rule.
         isotope -> digit digit digit | digit digit | digit
         """
-        return self.digit_matching(kwargs, "isotope")
+        return value
 
-    def rnum(self, **kwargs) -> int:
+    def rnum(self, ring_number=-1) -> int:
         """
         Function to parse the 'rnum' rule.
         rnum -> digit digit digit | digit digit | digit
         """
-        cycle_num = self.digit_matching(kwargs, "rnum")
+        cycle_num = ring_number
 
         if cycle_num in self.closed_cycles:
             raise ParserException(

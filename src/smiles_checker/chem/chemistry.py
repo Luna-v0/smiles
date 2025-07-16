@@ -105,11 +105,15 @@ class Chemistry:
         Raises:
             Exception: If the provided symbol is not a valid periodic table element.
         """
+        ## TODO check if the symbol is in the organic atoms set
+        ## TODO if symbol not title case, set aromatic to True
+
         processed_symbol = symbol.title()
         if processed_symbol not in self.pt_symbols:
             raise ParserException(
                 rule="Atom", parameter=symbol, message=f"Invalid Atom Symbol: {symbol}"
             )
+
         base_atom = self.look_up_table[processed_symbol]
         return Atom(
             processed_symbol,
