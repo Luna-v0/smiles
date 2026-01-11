@@ -122,11 +122,13 @@ class SmilesParser(Parser):
 
     @_(*generate_combinations("isotope? symbol chiral? hcount? charge? mol_map?"))  # type: ignore
     def internal_bracket(self, rules):
-        return pm.internal_bracket(
-            *getAttributes(
-                rules, ["isotope", "symbol", "chiral", "hcount", "charge", "mol_map"]
-            )
-        )
+        # Convert attributes to a dictionary, filtering out None values
+        attrs = getAttributes(rules, ["isotope", "symbol", "chiral", "hcount", "charge", "mol_map"])
+        attr_names = ["isotope", "symbol", "chiral", "hcount", "charge", "mol_map"]
+        internal_bracket_dict = {
+            name: value for name, value in zip(attr_names, attrs) if value is not None
+        }
+        return pm.internal_bracket(internal_bracket_dict)
 
     @_("dot_proxy")
     def chain(self, rules):
@@ -296,9 +298,8 @@ def validate_smiles(mol: str) -> tuple[bool, Exception | None]:
     """
     try:
         parser.parse(lexer.tokenize(mol))
-        pm.validate_branch()
-        pm._reset()
+        pm.clear()
         return True, None
     except Exception as e:
-        raise e
+        pm.clear()  # Clear parser state on error as well
         return False, e

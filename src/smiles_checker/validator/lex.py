@@ -4,6 +4,10 @@ from sly import Lexer
 
 from smiles_checker.chem.chemistry import chemistry
 
+# Aromatic symbols as defined in the SMILES grammar
+AROMATIC_SYMBOLS = ['b', 'c', 'n', 'o', 'p', 's', 'se', 'as']
+
+# Get periodic table symbols from JSON (loaded via chemistry module)
 pt = chemistry.pt_symbols
 
 
@@ -16,32 +20,30 @@ def generate_regex_from_list(elem_list: list[str]) -> str:
     Returns:
         A regex string that matches any of the elements in the list.
     """
-    re_elem = []
-    for elem in elem_list:
-        re_elem.append(re.escape(elem))
-
-    return "|".join(re_elem)
+    return "|".join(re.escape(e) for e in elem_list)
 
 
-def generate_lower(elem_list: list[str]) -> list[str]:
+def generate_all_symbols(elem_list: list[str]) -> list[str]:
     """
-    Generate a list of lower case elements from a list of elements and return both the lower and upper case elements.
-
+    Generate all symbol variants (both upper and lower case) from a list of elements.
+    Symbols are sorted by length (longest first) to ensure proper regex matching.
+    
     Args:
-        elem_list: A list of elements to generate a lower case list from.
+        elem_list: A list of elements to generate symbol variants from.
     Returns:
-        A list with all elements.
+        A sorted list with all elements and their lowercase variants, sorted by length (descending).
     """
-    re_elem = []
+    result = []
     for elem in elem_list:
+        result.append(elem)
+        result.append(elem.lower())
+    return sorted(set(result), key=len, reverse=True)
 
-        re_elem.append(elem.lower())
 
-    return sorted(elem_list, reverse=True) + sorted(re_elem, reverse=True)
-
-
-atoms = list(set(pt) - set("H"))
-bonds = ["=", "#", "$", "/", "\\"]
+# Pre-compute all symbols (periodic table symbols + aromatic symbols)
+# Sort by length (longest first) to ensure longer matches are tried first in regex
+_ALL_SYMBOLS = generate_all_symbols(list(set(pt) - set("H"))) + AROMATIC_SYMBOLS
+_SEMI_SYMBOL_PATTERN = generate_regex_from_list(_ALL_SYMBOLS)
 
 
 class SmilesLex(Lexer):
@@ -56,10 +58,14 @@ class SmilesLex(Lexer):
         digit: A regex for digits
     """
 
-    literals = {".", "@", "-", "+", ":", "%", "H", ")", "(", "]", "[", "H"}
+    literals = {".", "@", "-", "+", ":", "%", "H", ")", "(", "]", "["}
 
     tokens = {"semi_bond", "digit", "semi_symbol"}
 
-    semi_symbol = rf"{generate_regex_from_list(generate_lower(atoms))}"
-    semi_bond = rf"{generate_regex_from_list(bonds)}"
-    digit = r"\d"
+    semi_symbol = _SEMI_SYMBOL_PATTERN
+    semi_bond = r'[=#$/\\]'
+
+    @_(r'\d')
+    def digit(self, t):
+        t.value = int(t.value)
+        return t

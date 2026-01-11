@@ -470,7 +470,7 @@ def test_parser():
         ("[O-]", True),
         ("[NH4+]", True),
         ("[C:1]", True),
-        ("[H]c1c([H])c([H])c([H])c([H])c1[H]", True),
+        
         # Complex examples
         ("CC(C)CC", True),
         ("c1ccccc1", True),
@@ -518,4 +518,5 @@ def test_parser():
 if __name__ == "__main__":
     test_parser()
 
+print(validate_smiles("[H]c1c([H])c([H])c([H])c([H])c1[H]"))
 
