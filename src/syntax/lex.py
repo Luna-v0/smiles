@@ -42,7 +42,9 @@ def generate_all_symbols(elem_list: list[str]) -> list[str]:
 
 # Pre-compute all symbols (periodic table symbols + aromatic symbols)
 # Sort by length (longest first) to ensure longer matches are tried first in regex
-_ALL_SYMBOLS = generate_all_symbols(list(set(pt) - set("H"))) + AROMATIC_SYMBOLS
+# Use only uppercase periodic table symbols (lowercase comes from AROMATIC_SYMBOLS)
+pt_uppercase = [s for s in pt if s != "H"]  # Exclude H, it's a literal
+_ALL_SYMBOLS = sorted(set(pt_uppercase + AROMATIC_SYMBOLS), key=len, reverse=True)
 _SEMI_SYMBOL_PATTERN = generate_regex_from_list(_ALL_SYMBOLS)
 
 

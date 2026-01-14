@@ -55,7 +55,7 @@ class GraphBuilder:
                 bond_type = ":"
             else:
                 bond_type = "-"
-        
+
         self.graph.add_edge(atom1, atom2, bond_type=bond_type)
         self.last_atom = atom2
 
@@ -148,10 +148,10 @@ class GraphBuilder:
             
             # Use atoms up to where next ring opened (if any)
             # For fused rings, we include the atom where the next ring opens (shared atom)
-            # and one atom after (also shared in many cases like naphthalene)
+            # but not atoms after that (they belong to the other ring)
             if next_ring_open_index <= closing_index:
-                # Include the shared atom and one after (for fused rings like naphthalene)
-                end_index = min(closing_index, next_ring_open_index + 1)
+                # Include only up to the shared atom (where next ring opens)
+                end_index = next_ring_open_index
             else:
                 end_index = closing_index
             
@@ -172,22 +172,22 @@ class GraphBuilder:
             # Always include opening and closing atoms
             allowed_atoms.add(opening_atom)
             allowed_atoms.add(atom)
-            
+
             # Find path using BFS
             from collections import deque
             queue = deque([(opening_atom, [opening_atom])])
             visited = {opening_atom}
             found_path = None
-            
+
             all_paths = []
             while queue:
                 current, path = queue.popleft()
-                
+
                 if current == atom:
                     # Found a path - collect all paths, prefer longer ones
                     all_paths.append(path)
                     continue
-                
+
                 if current in self.graph.adjacency_list:
                     for neighbor, _ in self.graph.adjacency_list[current]:
                         if neighbor not in allowed_atoms:
@@ -235,7 +235,30 @@ class GraphBuilder:
                     cycle = self.atom_sequence[opening_index:end_index + 1]
                 else:
                     cycle = self.atom_sequence[opening_index:] + self.atom_sequence[:end_index + 1]
-                
+
+                # For fused rings, include atoms from other rings that closed between opening and closing
+                # These are the shared atoms that connect the rings
+                atoms_to_insert = []
+                for other_ring_num, other_close_index in self.ring_close_history.items():
+                    if other_ring_num != ring_number and opening_index < other_close_index < closing_index:
+                        if other_close_index < len(self.atom_sequence):
+                            other_atom = self.atom_sequence[other_close_index]
+                            if other_atom not in cycle:
+                                atoms_to_insert.append((other_close_index, other_atom))
+
+                # Insert the atoms at their proper positions in the cycle
+                # Sort by index so we insert in the right order
+                for insert_index, insert_atom in sorted(atoms_to_insert):
+                    # Find the position in the cycle where this atom should go
+                    # It should go after the last atom with index < insert_index
+                    insert_pos = 0
+                    for i, cycle_atom in enumerate(cycle):
+                        if cycle_atom in self.atom_sequence:
+                            cycle_atom_index = self.atom_sequence.index(cycle_atom)
+                            if cycle_atom_index < insert_index:
+                                insert_pos = i + 1
+                    cycle.insert(insert_pos, insert_atom)
+
                 # Ensure closing atom is included (it might be after end_index)
                 if atom not in cycle and atom != opening_atom:
                     cycle.append(atom)

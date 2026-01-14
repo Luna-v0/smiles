@@ -164,40 +164,53 @@ class MolecularGraph:
         for cycle in self.cycles:
             # Check if cycle contains aromatic atoms
             aromatic_atoms = [atom for atom in cycle if getattr(atom, 'aromatic', False)]
-            
+
             if not aromatic_atoms:
-                # Non-aromatic cycle - return False (not aromatic)
-                return False
-            
+                # Non-aromatic cycle - skip validation (non-aromatic cycles are valid)
+                continue
+
             aromatic_cycles_found = True
-            
+
             # Count pi electrons in the cycle
+            # For aromatic rings, each atom contributes pi electrons based on its type:
+            # - C (aromatic carbon): 1 pi electron
+            # - N (pyridine-like nitrogen, no H): 1 pi electron
+            # - [nH] (pyrrole-like nitrogen with H): 2 pi electrons
+            # - O, S (oxygen, sulfur): 2 pi electrons (from lone pairs)
+            # - Se, As: 2 pi electrons (from lone pairs)
             pi_electrons = 0
-            
-            # Count pi electrons from bonds
-            for i, atom in enumerate(cycle):
-                next_atom = cycle[(i + 1) % len(cycle)]
-                
-                # Find bond between these atoms
-                bond_type = None
-                if atom in self.adjacency_list:
-                    for neighbor, bt in self.adjacency_list[atom]:
-                        if neighbor == next_atom:
-                            bond_type = bt
-                            break
-                
-                if bond_type:
-                    # Count pi electrons from bond
-                    # For aromatic bonds (:), count as 1 pi electron per bond
-                    # For double bonds (=), count as 2 pi electrons
-                    # For triple bonds (#), count as 2 pi electrons (one pi bond)
-                    if bond_type == ":":
-                        pi_electrons += 1
-                    elif bond_type == "=":
+
+            for atom in cycle:
+                if not getattr(atom, 'aromatic', False):
+                    continue
+
+                symbol = atom.symbol.upper()
+
+                # Check if it's a BracketAtom with explicit hydrogen
+                from chem.atomic import BracketAtom
+                has_explicit_h = False
+                if isinstance(atom, BracketAtom) and atom.hcount is not None and atom.hcount > 0:
+                    has_explicit_h = True
+
+                # Count pi electrons based on atom type
+                if symbol == 'C':
+                    # Aromatic carbon contributes 1 pi electron
+                    pi_electrons += 1
+                elif symbol == 'N':
+                    # Nitrogen: 2 pi electrons if it has H (pyrrole-like), 1 if not (pyridine-like)
+                    if has_explicit_h:
                         pi_electrons += 2
-                    elif bond_type == "#":
-                        pi_electrons += 2  # One pi bond in triple bond
-                    # Single bonds don't contribute pi electrons
+                    else:
+                        pi_electrons += 1
+                elif symbol in ['O', 'S', 'SE', 'AS']:
+                    # Heteroatoms with lone pairs contribute 2 pi electrons
+                    pi_electrons += 2
+                elif symbol in ['B', 'P']:
+                    # Boron and phosphorus: 1 pi electron
+                    pi_electrons += 1
+                else:
+                    # Default: assume 1 pi electron for aromatic atoms
+                    pi_electrons += 1
             
             # Check Hückel's rule: 4n+2 pi electrons
             # For n=0: 2 electrons, n=1: 6 electrons, n=2: 10 electrons, etc.
