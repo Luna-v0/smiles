@@ -2,9 +2,9 @@ from itertools import combinations
 
 from sly import Parser
 
-from smiles_checker.chem.chemistry import chemistry as chem
-from smiles_checker.validator.lex import SmilesLex
-from smiles_checker.validator.parser_manager import parser_manager as pm
+from chem.chemistry import chemistry as chem
+from syntax.lex import SmilesLex
+from syntax.parser_manager import parser_manager as pm
 
 
 def generate_combinations(rule: str) -> list[str]:
@@ -80,6 +80,10 @@ class SmilesParser(Parser):
     debugfile = "parser.out"
     tokens = SmilesLex.tokens
     use_only_grammar = False
+
+    precedence = (
+        ('left', '.', '-', 'semi_bond', '[', 'H', 'semi_symbol', 'digit', '%', '('),
+    )
 
     def error(self, t):
         raise Exception(f"Error on {str(t)}")

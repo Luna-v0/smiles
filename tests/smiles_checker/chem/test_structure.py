@@ -1,6 +1,6 @@
-from smiles_checker.chem.atomic import Atom, BracketAtom
-from smiles_checker.chem.chemistry import chemistry
-from smiles_checker.chem.structure import Graph
+from chem.atomic import Atom, BracketAtom
+from chem.chemistry import chemistry
+from chem.structure import Graph
 
 
 def test_add_edge():

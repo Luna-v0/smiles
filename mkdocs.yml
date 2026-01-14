@@ -43,5 +43,5 @@ markdown_extensions:
 nav:
   - Home: index.md
   - API Reference:
-    - Validator: reference/validator.md
+    - Syntax: reference/validator.md
     - Chem: reference/chem.md

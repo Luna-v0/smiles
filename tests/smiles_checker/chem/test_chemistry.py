@@ -1,28 +1,31 @@
 import pytest
 
-from smiles_checker.chem import Atom, chemistry
-from smiles_checker.exceptions import ParserException
+from chem import Atom, chemistry
+from exceptions import ParserException
 
 
 def test_atom():
-    assert chemistry.Atom("C") == chemistry.Atom(
-        "C"
-    ), "Atoms with the same symbol should be equal"
-    assert chemistry.Atom("C") != chemistry.Atom(
-        "N"
-    ), "Atoms with different symbols should not be equal"
+    # Atoms are compared by atom_id for graph purposes, not symbol
+    # Each Atom instance is unique even with the same symbol
+    atom1 = chemistry.Atom("C")
+    atom2 = chemistry.Atom("C")
+    assert atom1 != atom2, "Different Atom instances should not be equal (graph uniqueness)"
+    assert atom1.symbol == atom2.symbol, "Atoms with the same symbol should have same symbol attribute"
+    assert chemistry.Atom("C").symbol != chemistry.Atom("N").symbol, "Atoms with different symbols should have different symbol attributes"
     assert chemistry.Atom("C") != chemistry.BracketAtom(
         "C", hidrogens=0
     ), "Atom and BracketAtom should not be equal"
 
 
 def test_bracket_atom():
-    assert chemistry.BracketAtom("He", hidrogens=1) == chemistry.BracketAtom(
-        "He", hidrogens=1
-    ), "BracketAtoms with the same symbol and hydrogens should be equal"
-    assert chemistry.BracketAtom("He", hidrogens=1) != chemistry.BracketAtom(
-        "He", hidrogens=2
-    ), "BracketAtoms with different hydrogens should not be equal"
+    # BracketAtoms are compared by atom_id for graph purposes, not symbol/hcount
+    # Each BracketAtom instance is unique even with the same properties
+    atom1 = chemistry.BracketAtom("He", hidrogens=1)
+    atom2 = chemistry.BracketAtom("He", hidrogens=1)
+    assert atom1 != atom2, "Different BracketAtom instances should not be equal (graph uniqueness)"
+    assert atom1.symbol == atom2.symbol and atom1.hcount == atom2.hcount, "BracketAtoms with the same symbol and hydrogens should have same attributes"
+    atom3 = chemistry.BracketAtom("He", hidrogens=2)
+    assert atom1.hcount != atom3.hcount, "BracketAtoms with different hydrogens should have different hcount attributes"
 
     assert (
         chemistry.BracketAtom("He", hidrogens=1).compute_valency() == False

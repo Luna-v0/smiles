@@ -1,6 +1,11 @@
 import pytest
 import pandas as pd
-from smiles_checker import validate_smiles
+# Since pythonpath includes src, we can import directly
+import sys
+import os
+# Add src to path for this import
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../../..'))
+from src import validate_smiles
 
 # Load test data from CSV
 test_data = pd.read_csv('tests/smiles_checker/validator/test_molecules_from_values.csv')
