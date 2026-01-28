@@ -337,9 +337,8 @@ def test_huckel_with_nitrogen_and_oxygen():
 
     graph.add_cycle([n1, c1, c2, c3, o1])
 
-    assert (
-        graph.huckel() == False
-    )  # 6 pi electrons, but not a valid aromatic system due to simplified huckel
+    # 6 pi electrons (N=1, O=2, 3C=3): 4*1+2 = valid aromatic (like oxazole)
+    assert graph.huckel() == True
 
 
 def test_huckel_with_double_and_aromatic_bonds():

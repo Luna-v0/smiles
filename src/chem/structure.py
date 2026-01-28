@@ -245,6 +245,46 @@ class MolecularGraph:
 
         return pi_electrons
 
+    def _has_aromatic_bonds(self, cycle: List[Atom]) -> bool:
+        """
+        Check if cycle contains aromatic bonds.
+
+        Args:
+            cycle: List of atoms forming a cycle.
+
+        Returns:
+            True if any bond in the cycle is aromatic (:).
+        """
+        for i, atom in enumerate(cycle):
+            next_atom = cycle[(i + 1) % len(cycle)]
+            if atom in self.adjacency_list:
+                for neighbor, bond_type in self.adjacency_list[atom]:
+                    if neighbor == next_atom and bond_type == ":":
+                        return True
+        return False
+
+    def _count_pi_from_bonds(self, cycle: List[Atom]) -> int:
+        """
+        Count pi electrons from double/triple bonds in cycle.
+
+        Args:
+            cycle: List of atoms forming a cycle.
+
+        Returns:
+            Total pi electrons from double and triple bonds.
+        """
+        pi_electrons = 0
+        for i, atom in enumerate(cycle):
+            next_atom = cycle[(i + 1) % len(cycle)]
+            if atom in self.adjacency_list:
+                for neighbor, bond_type in self.adjacency_list[atom]:
+                    if neighbor == next_atom:
+                        if bond_type == "=":
+                            pi_electrons += 2
+                        elif bond_type == "#":
+                            pi_electrons += 4
+        return pi_electrons
+
     def validate_fused_aromatic_system(self, system: List[List[Atom]]) -> bool:
         """
         Validate a fused aromatic system.
@@ -331,24 +371,31 @@ class MolecularGraph:
             if len(system) == 1:
                 # Isolated cycle - validate independently
                 cycle = system[0]
+
+                # Check if cycle has aromatic bonds
+                has_aromatic_bonds = self._has_aromatic_bonds(cycle)
                 aromatic_atoms = [a for a in cycle if getattr(a, 'aromatic', False)]
 
-                if not aromatic_atoms:
-                    # Non-aromatic cycle - skip validation
-                    continue
+                # Case 1: Aromatic bonds but no aromatic atoms -> FAIL
+                if has_aromatic_bonds and not aromatic_atoms:
+                    return False
 
-                # Validate single aromatic cycle
+                # Case 2: No aromatic bonds and no aromatic atoms -> check for pi bonds
+                if not has_aromatic_bonds and not aromatic_atoms:
+                    # Check for double/triple bonds (pi bonds)
+                    pi_from_bonds = self._count_pi_from_bonds(cycle)
+                    if pi_from_bonds == 0:
+                        # Purely aliphatic, skip
+                        continue
+                    # Has pi bonds but no aromatic atoms -> not a valid aromatic system
+                    return False
+
+                # Case 3: Has aromatic atoms -> validate with Huckel
                 pi_electrons = self._count_pi_electrons(cycle)
                 if pi_electrons < 2:
                     return False
                 n = (pi_electrons - 2) / 4
                 if n < 0 or abs(n - round(n)) > 1e-10:
-                    # Check if this might be a spurious cycle (odd number of carbons)
-                    # In complex molecules, our cycle detection may find non-chemical cycles
-                    # If it's a small cycle (4-6 atoms) with odd pi count, treat as spurious
-                    if len(cycle) <= 6 and pi_electrons % 2 == 1:
-                        # Likely a spurious cycle - skip validation
-                        continue
                     return False
             else:
                 # Fused ring system - validate as a unit
