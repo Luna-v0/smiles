@@ -26,6 +26,10 @@ class ParserManager:
         self.last_atom: Optional[Atom] = None
         # Old API compatibility
         self.current_open_rnum: List[int] = []
+        # Branch context: pending bond to apply to next atom
+        self.pending_branch_bond: Optional[str] = None
+        self.branch_start_atom: Optional[Atom] = None
+        self.branch_stack: List[Tuple[Atom, Optional[str]]] = []  # Stack for nested branches
 
     def _get_last_atom_from_chains(self, chains_data):
         """Helper to extract the last atom from a chains structure."""
@@ -44,6 +48,9 @@ class ParserManager:
         self.closed_cycles = set()
         self.graph_builder.clear()
         self.last_atom = None
+        self.pending_branch_bond = None
+        self.branch_start_atom = None
+        self.branch_stack = []
     
     def validate(self) -> bool:
         """
@@ -215,18 +222,13 @@ class ParserManager:
         """
         Function to parse the 'rnum' rule.
         rnum -> digit digit digit | digit digit | digit
-        
+
+        Ring numbers can be reused after being closed (valid in SMILES).
+
         Returns:
             The ring number.
         """
         cycle_num = ring_number
-
-        if cycle_num in self.closed_cycles:
-            raise ParserException(
-                rule="rnum",
-                parameter=str(cycle_num),
-                message=f"Cycle number {cycle_num} already closed.",
-            )
 
         if cycle_num in self.open_cycles:
             # Close the ring using graph builder
@@ -241,7 +243,11 @@ class ParserManager:
             del self.open_cycles[cycle_num]
             self.closed_cycles.add(cycle_num)
         else:
-            # Open a new ring
+            # Open a new ring (or reopen a previously closed one)
+            # Remove from closed_cycles if reusing a ring number
+            if cycle_num in self.closed_cycles:
+                self.closed_cycles.discard(cycle_num)
+
             if self.last_atom:
                 self.graph_builder.open_ring(cycle_num, self.last_atom, bond_type)
                 # Store reference for parser_manager tracking
@@ -251,14 +257,24 @@ class ParserManager:
                 # No last_atom - this shouldn't happen in valid SMILES, but handle gracefully
                 # Store the ring number for later when we have an atom
                 pass
-        
+
         return cycle_num
+
+    def _apply_pending_branch_bond(self, new_atom: Atom):
+        """Apply pending branch bond if one exists."""
+        if self.pending_branch_bond and self.branch_start_atom:
+            # Add bond from branch start to this atom
+            self.graph_builder.add_bond(
+                self.branch_start_atom, new_atom, self.pending_branch_bond
+            )
+            # Clear the pending bond (only applies to first atom in branch)
+            self.pending_branch_bond = None
 
     def atom(self, symbol=None, **kwargs) -> Union[Atom, BracketAtom]:
         """
         Function to parse the 'atom' rule.
         atom -> symbol | bracket_atom
-        
+
         Args:
             symbol: Atomic symbol (for compatibility with old API).
             **kwargs: Other arguments (bracket_atom, etc.).
@@ -268,6 +284,7 @@ class ParserManager:
             try:
                 atom = chem.Atom(symbol=symbol)
                 self.graph_builder.add_atom(atom)
+                self._apply_pending_branch_bond(atom)
                 self.last_atom = atom
                 return atom
             except ParserException as e:
@@ -279,18 +296,20 @@ class ParserManager:
                         message=f"Invalid Symbol {symbol}"
                     )
                 raise
-        
+
         # New API with kwargs
         if "symbol" in kwargs:
             symbol = kwargs["symbol"]
             atom = chem.Atom(symbol=symbol)
             self.graph_builder.add_atom(atom)
+            self._apply_pending_branch_bond(atom)
             self.last_atom = atom
             return atom
-        
+
         match kwargs:
             case {"bracket_atom": bracket_atom}:
                 self.graph_builder.add_atom(bracket_atom)
+                self._apply_pending_branch_bond(bracket_atom)
                 self.last_atom = bracket_atom
                 return bracket_atom
             case _:
@@ -325,7 +344,10 @@ class ParserManager:
     def inner_branch(self, **kwargs):
         match kwargs:
             case {"bond_dot": str(bond_dot), "line": line}:
-                raise NotImplementedError("Not implemented inner branch with bond dot")
+                # Branch starts with a bond like (=C1)
+                # The bond connects the previous atom to the first atom in this branch
+                # We need to return the bond info so branch() can use it
+                return {"bond": bond_dot, "line": line}
             case {"line": line}:
                 return line
             case {
@@ -333,19 +355,53 @@ class ParserManager:
                 "line": line,
                 "inner_branch": inner_branch,
             }:
-                raise NotImplementedError(
-                    "Not implemented inner branch with bond dot and inner branch"
-                )
+                # Multiple elements in branch with bond
+                return {"bond": bond_dot, "line": line, "inner_branch": inner_branch}
             case {"line": line, "inner_branch": inner_branch}:
-                raise NotImplementedError(
-                    "Not implemented inner branch with line and inner branch"
-                )
+                # Multiple lines in branch (no initial bond)
+                return {"line": line, "inner_branch": inner_branch}
             case _:
                 raise ParserException(
                     rule="inner_branch",
                     parameter=str(kwargs),
                     message="Invalid inner branch rule",
                 )
+
+    def start_branch(self):
+        """
+        Called when '(' is encountered - saves state for branch processing.
+        """
+        # Save current state to the stack for nested branches
+        self.branch_stack.append((self.last_atom, self.pending_branch_bond))
+        self.branch_start_atom = self.last_atom
+        self.pending_branch_bond = None
+
+    def save_branch_bond(self, bond_dot: str) -> str:
+        """
+        Called when a bond is encountered at the start of a branch.
+        Saves the bond to be applied when the first atom in the branch is parsed.
+
+        Returns:
+            The bond string (for yacc rule processing).
+        """
+        self.pending_branch_bond = bond_dot
+        return bond_dot
+
+    def end_branch(self, inner_branch):
+        """
+        Called when ')' is encountered - restores state after branch processing.
+        """
+        # Restore last_atom to the branch start atom
+        # This ensures atoms after the branch connect to where we branched from
+        if self.branch_stack:
+            saved_last_atom, _ = self.branch_stack.pop()
+            self.last_atom = saved_last_atom
+        elif self.branch_start_atom:
+            self.last_atom = self.branch_start_atom
+
+        self.branch_start_atom = None
+        self.pending_branch_bond = None
+        return inner_branch
 
     def branch(self, inner_branch):
         return inner_branch
@@ -416,7 +472,7 @@ class ParserManager:
                     message="Cannot start with a cycle number.",
                 )
                 return
-            if chain.get("bond") and "atom" not in chain:  # starts with a bond without atom
+            if chain.get("bond") and "atom" not in chain and "rnum" not in chain:  # starts with a bond without atom or rnum
                 raise ParserException(
                     rule="chains",
                     parameter=str(chain),
@@ -460,6 +516,12 @@ class ParserManager:
                 # Atom followed by ring number - ring opens at atom1
                 # rnum() already handled opening/closing
                 # Keep last_atom as atom1 so next atom connects to it
+                self.last_atom = atom1
+                return {"chains": {"atom": atom1}}
+            case {"chains": {"atom": atom1}, "chain": {"bond": bond, "rnum": rnum}}:
+                # Atom followed by bonded ring closure (e.g., c1...=1)
+                # The rnum() was already called with the bond type from yacc
+                # Just update last_atom
                 self.last_atom = atom1
                 return {"chains": {"atom": atom1}}
             case {"chains": {"chains": nested_chains}, "chain": chain_data}:

@@ -142,9 +142,18 @@ class SmilesParser(Parser):
     def chain(self, rules):
         return pm.chain(bond=rules.bond, atom=rules.atom)
 
-    @_("bond rnum")
+    @_("bond digit")
     def chain(self, rules):
-        return pm.chain(bond=rules.bond, rnum=rules.rnum)
+        # Handle bonded ring closure (e.g., =1) - pass bond to rnum
+        rnum_result = pm.rnum(ring_number=rules.digit, bond_type=rules.bond)
+        return pm.chain(bond=rules.bond, rnum=rnum_result)
+
+    @_('bond "%" digit digit')
+    def chain(self, rules):
+        # Handle bonded two-digit ring closure (e.g., =%12)
+        ring_num = 10 * rules[2] + rules[3]
+        rnum_result = pm.rnum(ring_number=ring_num, bond_type=rules.bond)
+        return pm.chain(bond=rules.bond, rnum=rnum_result)
 
     @_("atom")
     def chain(self, rules):
@@ -162,27 +171,40 @@ class SmilesParser(Parser):
     def symbol(self, rules):
         return rules[0]
 
-    @_('"(" inner_branch ")"')  # type: ignore
+    @_("open_paren inner_branch close_paren")  # type: ignore
     def branch(self, rules):
-        return pm.branch(rules.inner_branch)
+        return pm.end_branch(rules.inner_branch)
 
-    @_("bond_dot line")  # type: ignore
+    @_('"("')  # type: ignore
+    def open_paren(self, rules):
+        pm.start_branch()
+        return "("
+
+    @_('")"')  # type: ignore
+    def close_paren(self, rules):
+        return ")"
+
+    @_("branch_bond line")  # type: ignore
     def inner_branch(self, rules):
-        return pm.inner_branch(bond_dot=rules.bond_dot, line=rules.line)
+        return pm.inner_branch(bond_dot=rules.branch_bond, line=rules.line)
 
     @_("line")
     def inner_branch(self, rules):
         return pm.inner_branch(line=rules.line)
 
-    @_("bond_dot line inner_branch")  # type: ignore
+    @_("branch_bond line inner_branch")  # type: ignore
     def inner_branch(self, rules):
         return pm.inner_branch(
-            bond_dot=rules.bond_dot, line=rules.line, inner_branch=rules.inner_branch
+            bond_dot=rules.branch_bond, line=rules.line, inner_branch=rules.inner_branch
         )
 
     @_("line inner_branch")  # type: ignore
     def inner_branch(self, rules):
         return pm.inner_branch(line=rules.line, inner_branch=rules.inner_branch)
+
+    @_("bond_dot")  # type: ignore
+    def branch_bond(self, rules):
+        return pm.save_branch_bond(rules.bond_dot)
 
     @_("bond", '"."')  # type: ignore
     def bond_dot(self, rules):

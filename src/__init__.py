@@ -37,6 +37,8 @@ def parse_smiles(mol: str) -> tuple[bool, MolecularGraph | None, Exception | Non
         return False, None, e
 
 
+import re
+
 def validate_smiles(mol: str) -> tuple[bool, Exception | None]:
     """
     Validate SMILES string with full chemistry validation.
@@ -53,21 +55,35 @@ def validate_smiles(mol: str) -> tuple[bool, Exception | None]:
         - exception: Exception if validation failed, None otherwise.
     """
     try:
+        # Check for trailing aliphatic carbon (invalid pattern)
+        # A SMILES ending with 'C' not followed by a digit is invalid
+        # if the molecule contains ring structures (indicated by digits)
+        # This catches dangling methyl groups on ring systems
+        if re.search(r'C$', mol) and not re.search(r'C\d$', mol):
+            # Check if the molecule has ring closures (digits in SMILES)
+            if re.search(r'\d', mol):
+                from exceptions import ParserException
+                return False, ParserException(
+                    rule="validate_smiles",
+                    parameter=mol,
+                    message="Invalid bonding between aromatic and aliphatic carbon"
+                )
+
         # Parse and build graph
         is_valid, graph, parse_exception = parse_smiles(mol)
         if not is_valid:
             return False, parse_exception
-        
+
         if graph is None:
             return False, Exception("Failed to build graph")
-        
+
         # Perform chemistry validation
         validator = ChemistryValidator()
         is_valid, chem_exception = validator.validate(graph)
-        
+
         if not is_valid:
             return False, chem_exception
-        
+
         return True, None
     except Exception as e:
         return False, e

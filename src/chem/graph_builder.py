@@ -63,18 +63,17 @@ class GraphBuilder:
         """
         Open a ring at a given atom.
 
+        Ring numbers can be reused after being closed (valid in SMILES).
+
         Args:
             ring_number: Ring number identifier.
             atom: Atom where ring opens.
             bond_type: Bond type for the ring closure.
         """
+        # Remove from closed_cycles if reusing a ring number
         if ring_number in self.closed_cycles:
-            raise ParserException(
-                rule="open_ring",
-                parameter=str(ring_number),
-                message=f"Ring number {ring_number} already closed.",
-            )
-        
+            self.closed_cycles.discard(ring_number)
+
         # Store opening atom, bond type, and current position in atom sequence
         # The atom_index should be the position where this atom appears in the sequence
         # Since atom is added via add_atom before open_ring is called, it should be in sequence
@@ -99,12 +98,8 @@ class GraphBuilder:
             atom: Atom where ring closes.
             bond_type: Bond type for the ring closure.
         """
-        if ring_number in self.closed_cycles:
-            raise ParserException(
-                rule="close_ring",
-                parameter=str(ring_number),
-                message=f"Ring number {ring_number} already closed.",
-            )
+        # Ring numbers can be reused, so we allow closing a ring number
+        # that was previously closed (as long as it's currently open)
         
         if ring_number not in self.open_cycles:
             # Ring opens and closes at same position (self-loop)

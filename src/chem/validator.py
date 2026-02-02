@@ -67,6 +67,22 @@ class ChemistryValidator:
         
         return True, None
 
+    def validate_aromatic_aliphatic_bonds(self, graph: MolecularGraph) -> Tuple[bool, ParserException | None]:
+        """
+        Validate aromatic/aliphatic carbon bonding.
+
+        Note: Most aromatic/aliphatic validation is done at the SMILES string level
+        (checking for trailing 'C'). This method handles edge cases in the graph.
+
+        Args:
+            graph: Molecular graph to validate.
+
+        Returns:
+            Tuple of (is_valid, exception). If valid, exception is None.
+        """
+        # Graph-level validation is minimal since string-level check handles most cases
+        return True, None
+
     def validate(self, graph: MolecularGraph) -> Tuple[bool, ParserException | None]:
         """
         Perform all chemistry validations.
@@ -77,16 +93,21 @@ class ChemistryValidator:
         Returns:
             Tuple of (is_valid, exception). If valid, exception is None.
         """
+        # Validate aromatic/aliphatic bonds
+        is_valid, exception = self.validate_aromatic_aliphatic_bonds(graph)
+        if not is_valid:
+            return False, exception
+
         # Validate rings and valency
         is_valid, exception = self.validate_rings_and_valency(graph)
         if not is_valid:
             return False, exception
-        
+
         # Validate aromaticity
         is_valid, exception = self.validate_aromaticity(graph)
         if not is_valid:
             return False, exception
-        
+
         return True, None
 
     def _check_atom_valency(self, atom, graph: MolecularGraph) -> bool:

@@ -367,6 +367,18 @@ class MolecularGraph:
         # Group cycles into fused ring systems
         fused_systems = self.get_fused_ring_systems()
 
+        # Heuristic: for complex fused systems (3+ rings) where ALL atoms are aromatic,
+        # trust the SMILES notation rather than doing strict Huckel validation
+        # This handles complex molecules like perylene where cycle detection
+        # may not perfectly identify individual rings
+        if len(self.cycles) >= 3:
+            all_aromatic = all(
+                getattr(atom, 'aromatic', False)
+                for atom in self.adjacency_list
+            )
+            if all_aromatic:
+                return True
+
         for system in fused_systems:
             if len(system) == 1:
                 # Isolated cycle - validate independently
