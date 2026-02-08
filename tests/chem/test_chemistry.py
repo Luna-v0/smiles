@@ -249,3 +249,58 @@ def test_atom_next_subshell_invalid_input():
     atom = Atom("H")
     assert atom._next_subshell("z") == "s"
 
+
+# Tests for bracket atom valency using octet rule
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
+from src import validate_smiles
+
+
+def test_bracket_atom_valency_li_unstable():
+    """CC[Li] should fail - Li without charge has 1 valence electron, not 2 (duet)."""
+    result, exception = validate_smiles("CC[Li]")
+    assert result is False, "CC[Li] should be invalid - Li is not stable without charge"
+
+
+def test_bracket_atom_valency_li_cation_stable():
+    """CC[Li+] should pass - Li+ has 2 electrons (noble gas config)."""
+    result, exception = validate_smiles("[Li+]")
+    assert result is True, "[Li+] should be valid - Li+ has duet configuration"
+
+
+def test_bracket_atom_valency_na_unstable():
+    """[Na] should fail - Na without charge has 1 valence electron."""
+    result, exception = validate_smiles("[Na]")
+    assert result is False, "[Na] should be invalid - Na is not stable without charge"
+
+
+def test_bracket_atom_valency_na_cation_stable():
+    """[Na+] should pass - Na+ has 8 electrons in valency shell (noble gas config)."""
+    result, exception = validate_smiles("[Na+]")
+    assert result is True, "[Na+] should be valid - Na+ has octet configuration"
+
+
+def test_bracket_atom_valency_ch4_stable():
+    """[CH4] should pass - Carbon with 4 hydrogens satisfies octet."""
+    result, exception = validate_smiles("[CH4]")
+    assert result is True, "[CH4] should be valid - C with 4H has 8 valence electrons"
+
+
+def test_bracket_atom_valency_nh3_stable():
+    """[NH3] should pass - Nitrogen with 3 hydrogens satisfies octet."""
+    result, exception = validate_smiles("[NH3]")
+    assert result is True, "[NH3] should be valid - N with 3H has 8 valence electrons"
+
+
+def test_bracket_atom_valency_oh2_stable():
+    """[OH2] should pass - Oxygen with 2 hydrogens satisfies octet."""
+    result, exception = validate_smiles("[OH2]")
+    assert result is True, "[OH2] should be valid - O with 2H has 8 valence electrons"
+
+
+def test_bracket_atom_valency_alh3_unstable():
+    """[AlH3] should fail - Al with 3H has only 6 valence electrons, not 8."""
+    result, exception = validate_smiles("[AlH3]")
+    assert result is False, "[AlH3] should be invalid - Al with 3H has only 6 valence electrons"
+

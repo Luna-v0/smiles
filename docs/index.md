@@ -8,12 +8,13 @@ The SMILES validation system is powered by a custom parser built with the [SLY](
 
 ## Next Steps
 
-- [ ] Implementing aromacity
+- [x] Implementing aromaticity
     * [x] Check if rings are closed
     * [x] Check if all benzene examples are working properly
-    * [ ] Complex polycyclic aromatic hydrocarbons with multiple fused rings (Acridine, Carbazole, etc.)
-    * [ ] Molecules using advanced ring numbering patterns (reusing ring numbers)
-    * [ ] Molecules with mixed aromatic/non-aromatic structures
+    * [x] Complex polycyclic aromatic hydrocarbons with multiple fused rings (Acridine, Carbazole, etc.)
+    * [x] Molecules using advanced ring numbering patterns (reusing ring numbers)
+    * [x] Molecules with mixed aromatic/non-aromatic structures
+- [x] Bracket atom valency validation using octet rule
 - [ ] Analysing and Implementing [RD filters](https://github.com/PatWalters/rd_filters)
 - [ ] Analysing more chemistry filters for the parser like: [Filters 1](https://practicalcheminformatics.blogspot.com/2023/07/a-simple-tool-for-exploring-functional.html) [Filters 2](https://practicalcheminformatics.blogspot.com/2024/05/generative-molecular-design-isnt-as.html)
-- [ ] Removing all shift/reduce conflicts
+- [ ] Removing all shift/reduce conflicts (currently 26)

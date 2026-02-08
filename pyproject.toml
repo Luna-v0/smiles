@@ -3,14 +3,21 @@ name = "slyparser"
 version = "0.1.0"
 description = "A LALR(1) parser using SLY"
 dependencies = [
+  "matplotlib>=3.10.8",
   "mkdocs>=1.6.1",
   "mkdocs-material>=9.6.12",
   "mkdocstrings[python]>=0.29.1",
+  "molvs>=0.1.1",
+  "networkx>=3.4.2",
   "notebook>=7.4.1",
   "pandas>=2.2.3",
+  "partialsmiles>=2.0",
   "pymdown-extensions>=10.15",
+  "pysmiles>=2.0.1",
   "pytest>=8.3.5",
   "rdkit>=2025.9.4",
+  "scipy>=1.15.3",
+  "seaborn>=0.13.2",
   "sly",
 ]
 

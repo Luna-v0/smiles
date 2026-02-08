@@ -30,6 +30,8 @@ class ParserManager:
         self.pending_branch_bond: Optional[str] = None
         self.branch_start_atom: Optional[Atom] = None
         self.branch_stack: List[Tuple[Atom, Optional[str]]] = []  # Stack for nested branches
+        # Track if first atom in branch has been processed (for implicit single bonds)
+        self._first_branch_atom_processed: bool = False
 
     def _get_last_atom_from_chains(self, chains_data):
         """Helper to extract the last atom from a chains structure."""
@@ -51,6 +53,7 @@ class ParserManager:
         self.pending_branch_bond = None
         self.branch_start_atom = None
         self.branch_stack = []
+        self._first_branch_atom_processed = False
     
     def validate(self) -> bool:
         """
@@ -261,13 +264,16 @@ class ParserManager:
         return cycle_num
 
     def _apply_pending_branch_bond(self, new_atom: Atom):
-        """Apply pending branch bond if one exists."""
-        if self.pending_branch_bond and self.branch_start_atom:
-            # Add bond from branch start to this atom
+        """Apply pending branch bond if one exists, or implicit single bond for first branch atom."""
+        if self.branch_start_atom and not self._first_branch_atom_processed:
+            # First atom in branch - connect to branch_start_atom
+            bond_type = self.pending_branch_bond if self.pending_branch_bond else "-"
             self.graph_builder.add_bond(
-                self.branch_start_atom, new_atom, self.pending_branch_bond
+                self.branch_start_atom, new_atom, bond_type
             )
-            # Clear the pending bond (only applies to first atom in branch)
+            # Mark that we've processed the first atom in this branch
+            self._first_branch_atom_processed = True
+            # Clear the pending bond
             self.pending_branch_bond = None
 
     def atom(self, symbol=None, **kwargs) -> Union[Atom, BracketAtom]:
@@ -371,10 +377,11 @@ class ParserManager:
         """
         Called when '(' is encountered - saves state for branch processing.
         """
-        # Save current state to the stack for nested branches
-        self.branch_stack.append((self.last_atom, self.pending_branch_bond))
+        # Save current state to the stack for nested branches (including the flag)
+        self.branch_stack.append((self.last_atom, self.pending_branch_bond, self._first_branch_atom_processed))
         self.branch_start_atom = self.last_atom
         self.pending_branch_bond = None
+        self._first_branch_atom_processed = False  # Reset for new branch
 
     def save_branch_bond(self, bond_dot: str) -> str:
         """
@@ -394,8 +401,10 @@ class ParserManager:
         # Restore last_atom to the branch start atom
         # This ensures atoms after the branch connect to where we branched from
         if self.branch_stack:
-            saved_last_atom, _ = self.branch_stack.pop()
+            saved_last_atom, saved_pending_bond, saved_first_atom_flag = self.branch_stack.pop()
             self.last_atom = saved_last_atom
+            # Restore the flag state for nested branches
+            self._first_branch_atom_processed = saved_first_atom_flag
         elif self.branch_start_atom:
             self.last_atom = self.branch_start_atom
 
