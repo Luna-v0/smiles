@@ -1,10 +1,10 @@
-# Validator Module
+# Syntax Module
 
-::: validator.parser_manager
+::: syntax.parser_manager
     handler: python
 
-::: validator.yacc
+::: syntax.yacc
     handler: python
 
-::: validator.lex
+::: syntax.lex
     handler: python

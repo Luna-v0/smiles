@@ -1,25 +1,31 @@
-from smiles_checker.chem import Atom, chemistry
 import pytest
 
+from chem import Atom, chemistry
+from exceptions import ParserException
+
+
 def test_atom():
-    assert chemistry.Atom("C") == chemistry.Atom(
-        "C"
-    ), "Atoms with the same symbol should be equal"
-    assert chemistry.Atom("C") != chemistry.Atom(
-        "N"
-    ), "Atoms with different symbols should not be equal"
+    # Atoms are compared by atom_id for graph purposes, not symbol
+    # Each Atom instance is unique even with the same symbol
+    atom1 = chemistry.Atom("C")
+    atom2 = chemistry.Atom("C")
+    assert atom1 != atom2, "Different Atom instances should not be equal (graph uniqueness)"
+    assert atom1.symbol == atom2.symbol, "Atoms with the same symbol should have same symbol attribute"
+    assert chemistry.Atom("C").symbol != chemistry.Atom("N").symbol, "Atoms with different symbols should have different symbol attributes"
     assert chemistry.Atom("C") != chemistry.BracketAtom(
         "C", hidrogens=0
     ), "Atom and BracketAtom should not be equal"
 
 
 def test_bracket_atom():
-    assert chemistry.BracketAtom("He", hidrogens=1) == chemistry.BracketAtom(
-        "He", hidrogens=1
-    ), "BracketAtoms with the same symbol and hydrogens should be equal"
-    assert chemistry.BracketAtom("He", hidrogens=1) != chemistry.BracketAtom(
-        "He", hidrogens=2
-    ), "BracketAtoms with different hydrogens should not be equal"
+    # BracketAtoms are compared by atom_id for graph purposes, not symbol/hcount
+    # Each BracketAtom instance is unique even with the same properties
+    atom1 = chemistry.BracketAtom("He", hidrogens=1)
+    atom2 = chemistry.BracketAtom("He", hidrogens=1)
+    assert atom1 != atom2, "Different BracketAtom instances should not be equal (graph uniqueness)"
+    assert atom1.symbol == atom2.symbol and atom1.hcount == atom2.hcount, "BracketAtoms with the same symbol and hydrogens should have same attributes"
+    atom3 = chemistry.BracketAtom("He", hidrogens=2)
+    assert atom1.hcount != atom3.hcount, "BracketAtoms with different hydrogens should have different hcount attributes"
 
     assert (
         chemistry.BracketAtom("He", hidrogens=1).compute_valency() == False
@@ -89,12 +95,13 @@ def test_electron_distribution_and_subshells():
     # Should become 1s2 2s2 2p6 3s1
     neon_anion = chemistry.BracketAtom("Ne", charge=-1)
     assert (
-            neon_anion.get_electrons_in_specific_subshell(3, "s") == 1
-        ), "Neon anion should have 1 electron in 3s subshell"
+        neon_anion.get_electrons_in_specific_subshell(3, "s") == 1
+    ), "Neon anion should have 1 electron in 3s subshell"
     assert (
         neon_anion.electrons_in_valency == 1
     ), "Neon anion should have 1 valence electron (in 3s)"
     assert neon_anion.valency_layer == 3, "Neon anion valency layer should be 3"
+
 
 def test_number_of_electrons_per_bond():
     assert chemistry.number_of_electrons_per_bond("=") == 2
@@ -107,13 +114,18 @@ def test_number_of_electrons_per_bond():
     with pytest.raises(Exception, match="Invalid Bond invalid_bond"):
         chemistry.number_of_electrons_per_bond("invalid_bond")
 
+
 def test_atom_invalid_symbol():
-    with pytest.raises(Exception, match="Invalid Symbol X"):
+    with pytest.raises(ParserException) as exc_info:
         chemistry.Atom("X")
+    assert exc_info.value.message == "Invalid Atom Symbol: X"
+
 
 def test_bracket_atom_invalid_symbol():
-    with pytest.raises(Exception, match="Invalid Symbol Xx"):
+    with pytest.raises(ParserException) as exc_info:
         chemistry.BracketAtom("Xx")
+    assert exc_info.value.message == "Invalid Atom Symbol: Xx"
+
 
 def test_atom_empty_electron_configuration():
     atom = Atom("H", electron_configuration="")
@@ -122,12 +134,14 @@ def test_atom_empty_electron_configuration():
     assert atom.layers == ()
     assert atom.electrons_by_layers == ()
 
+
 def test_atom_no_match_in_electron_configuration():
     atom = Atom("H", electron_configuration="invalid_config")
     assert atom.valency_layer == 0
     assert atom.electrons_in_valency == 0
     assert atom.layers == ()
     assert atom.electrons_by_layers == ()
+
 
 def test_bracket_atom_electron_addition_new_shell():
     # Test adding electrons to create a new shell (e.g., H- to H)
@@ -137,6 +151,7 @@ def test_bracket_atom_electron_addition_new_shell():
     assert hydrogen_anion.get_electrons_in_specific_subshell(1, "s") == 2
     assert hydrogen_anion.electrons_in_valency == 2
     assert hydrogen_anion.valency_layer == 1
+
 
 def test_bracket_atom_electron_removal_empty_shell():
     # Test removing all electrons from an atom
@@ -148,51 +163,144 @@ def test_bracket_atom_electron_removal_empty_shell():
     assert hydrogen_cation.layers == ()
     assert hydrogen_cation.electrons_by_layers == ()
 
+
 def test_next_subshell_index_error():
     # This test is designed to hit the IndexError in _next_subshell
     # by passing 'f' and then trying to get the next subshell.
     # This will force the 'return 's'' branch.
     atom = chemistry.BracketAtom("H")
-    assert atom._next_subshell('f') == 's'
+    assert atom._next_subshell("f") == "s"
+
 
 def test_max_electrons_in_subshell_invalid():
     atom = chemistry.BracketAtom("H")
-    assert atom._max_electrons_in_subshell('x') == 0
+    assert atom._max_electrons_in_subshell("x") == 0
+
 
 def test_atom_lowercase_symbol():
     atom = chemistry.Atom("c")
     assert atom.symbol == "C"
+
 
 def test_bracket_atom_lowercase_symbol():
     atom = chemistry.BracketAtom("c")
     assert atom.symbol == "C"
     assert atom.aromatic == True
 
+
 def test_validate_valency_bracket():
-    assert chemistry.validate_valency_bracket(isotope=None, symbol="C", chiral=None, hcount=4, charge=0, map=None) == True
-    assert chemistry.validate_valency_bracket(isotope=None, symbol="O", chiral=None, hcount=0, charge=0, map=None) == False
+    assert (
+        chemistry.validate_valency_bracket(
+            isotope=None, symbol="C", chiral=None, hcount=4, charge=0, map=None
+        )
+        == True
+    )
+    assert (
+        chemistry.validate_valency_bracket(
+            isotope=None, symbol="O", chiral=None, hcount=0, charge=0, map=None
+        )
+        == False
+    )
+
 
 def test_get_electrons_in_specific_subshell_not_found():
     atom = Atom("C")
     assert atom.get_electrons_in_specific_subshell(1, "p") == 0
 
+
 def test_bracket_atom_electron_addition_empty_atom():
     atom = chemistry.BracketAtom("H", charge=-1)
     assert atom.electrons_in_valency == 2
+
 
 def test_bracket_atom_electron_addition_multiple_shells():
     atom = chemistry.BracketAtom("Ne", charge=-1)
     assert atom.get_electrons_in_specific_subshell(3, "s") == 1
 
+
 def test_validate_valency_bracket_no_hcount_no_charge():
-    assert chemistry.validate_valency_bracket(isotope=None, symbol="C", chiral=None, hcount=None, charge=None, map=None) == False
+    assert (
+        chemistry.validate_valency_bracket(
+            isotope=None, symbol="C", chiral=None, hcount=None, charge=None, map=None
+        )
+        == False
+    )
+
 
 def test_validate_valency_bracket_with_charge():
-    assert chemistry.validate_valency_bracket(isotope=None, symbol="N", chiral=None, hcount=0, charge=1, map=None) == False
+    assert (
+        chemistry.validate_valency_bracket(
+            isotope=None, symbol="N", chiral=None, hcount=0, charge=1, map=None
+        )
+        == False
+    )
+
 
 def test_validate_valency_bracket_with_hcount():
-    assert chemistry.validate_valency_bracket(isotope=None, symbol="O", chiral=None, hcount=2, charge=0, map=None) == True
+    assert (
+        chemistry.validate_valency_bracket(
+            isotope=None, symbol="O", chiral=None, hcount=2, charge=0, map=None
+        )
+        == True
+    )
+
 
 def test_atom_next_subshell_invalid_input():
     atom = Atom("H")
-    assert atom._next_subshell('z') == 's'
+    assert atom._next_subshell("z") == "s"
+
+
+# Tests for bracket atom valency using octet rule
+import sys
+import os
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
+from src import validate_smiles
+
+
+def test_bracket_atom_valency_li_unstable():
+    """CC[Li] should fail - Li without charge has 1 valence electron, not 2 (duet)."""
+    result, exception = validate_smiles("CC[Li]")
+    assert result is False, "CC[Li] should be invalid - Li is not stable without charge"
+
+
+def test_bracket_atom_valency_li_cation_stable():
+    """CC[Li+] should pass - Li+ has 2 electrons (noble gas config)."""
+    result, exception = validate_smiles("[Li+]")
+    assert result is True, "[Li+] should be valid - Li+ has duet configuration"
+
+
+def test_bracket_atom_valency_na_unstable():
+    """[Na] should fail - Na without charge has 1 valence electron."""
+    result, exception = validate_smiles("[Na]")
+    assert result is False, "[Na] should be invalid - Na is not stable without charge"
+
+
+def test_bracket_atom_valency_na_cation_stable():
+    """[Na+] should pass - Na+ has 8 electrons in valency shell (noble gas config)."""
+    result, exception = validate_smiles("[Na+]")
+    assert result is True, "[Na+] should be valid - Na+ has octet configuration"
+
+
+def test_bracket_atom_valency_ch4_stable():
+    """[CH4] should pass - Carbon with 4 hydrogens satisfies octet."""
+    result, exception = validate_smiles("[CH4]")
+    assert result is True, "[CH4] should be valid - C with 4H has 8 valence electrons"
+
+
+def test_bracket_atom_valency_nh3_stable():
+    """[NH3] should pass - Nitrogen with 3 hydrogens satisfies octet."""
+    result, exception = validate_smiles("[NH3]")
+    assert result is True, "[NH3] should be valid - N with 3H has 8 valence electrons"
+
+
+def test_bracket_atom_valency_oh2_stable():
+    """[OH2] should pass - Oxygen with 2 hydrogens satisfies octet."""
+    result, exception = validate_smiles("[OH2]")
+    assert result is True, "[OH2] should be valid - O with 2H has 8 valence electrons"
+
+
+def test_bracket_atom_valency_alh3_unstable():
+    """[AlH3] should fail - Al with 3H has only 6 valence electrons, not 8."""
+    result, exception = validate_smiles("[AlH3]")
+    assert result is False, "[AlH3] should be invalid - Al with 3H has only 6 valence electrons"
+
