@@ -114,9 +114,9 @@ class ChemistryValidator:
         """
         Check if an atom's valency is satisfied using the octet rule.
 
-        For non-aromatic bracket atoms NOT in rings, verifies that the internal
-        configuration (symbol + charge + hydrogen count) satisfies the octet rule
-        (8 electrons) or duet rule (2 electrons for H, He, Li, Be).
+        For non-aromatic bracket atoms NOT in rings, verifies that the effective
+        electron count (internal configuration + graph bond electrons) satisfies
+        the octet rule (8 electrons) or duet rule (2 electrons for H, He, Li, Be).
 
         Aromatic bracket atoms and atoms in rings are handled more leniently
         because they participate in bonding that contributes to their valency.
@@ -143,6 +143,29 @@ class ChemistryValidator:
         if is_in_ring:
             return True
 
-        # For non-ring, non-aromatic BracketAtoms, use the octet rule via compute_valency()
-        # This checks if the bracket atom's internal configuration is stable
-        return atom.compute_valency()
+        # Count bond electrons from graph connections.
+        # Each bond contributes shared electrons to the atom's effective valence:
+        #   single/aromatic = 1, double = 2, triple = 3, quadruple = 4
+        bond_electrons = 0
+        for neighbor, bond_type in graph.adjacency_list.get(atom, []):
+            if bond_type == '=':
+                bond_electrons += 2
+            elif bond_type == '#':
+                bond_electrons += 3
+            elif bond_type == '$':
+                bond_electrons += 4
+            else:
+                bond_electrons += 1
+
+        effective_electrons = atom.electrons_in_valency + bond_electrons
+
+        # Duet rule: H and He need 2 electrons
+        if atom.symbol in ['H', 'HE']:
+            return effective_electrons == 2
+
+        # Li, Be: must satisfy duet rule internally (via charge), not via covalent bonds
+        if atom.symbol in ['LI', 'BE']:
+            return atom.electrons_in_valency == 2
+
+        # Octet rule for most other elements (>= to allow expanded octets)
+        return effective_electrons >= 8

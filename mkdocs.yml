@@ -42,6 +42,7 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Validation Algorithms: validation_algorithms.md
   - API Reference:
     - Syntax: reference/validator.md
     - Chem: reference/chem.md
