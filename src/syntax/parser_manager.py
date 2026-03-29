@@ -29,9 +29,11 @@ class ParserManager:
         # Branch context: pending bond to apply to next atom
         self.pending_branch_bond: Optional[str] = None
         self.branch_start_atom: Optional[Atom] = None
-        self.branch_stack: List[Tuple[Atom, Optional[str]]] = []  # Stack for nested branches
+        self.branch_stack: List[Tuple[Atom, Optional[str], bool, bool]] = []  # Stack for nested branches (last_atom, pending_bond, first_branch_processed, connect_next)
         # Track if first atom in branch has been processed (for implicit single bonds)
         self._first_branch_atom_processed: bool = False
+        # Track if next atom should connect to last_atom (for atoms following branches)
+        self._connect_next_atom: bool = False
 
     def _get_last_atom_from_chains(self, chains_data):
         """Helper to extract the last atom from a chains structure."""
@@ -54,6 +56,7 @@ class ParserManager:
         self.branch_start_atom = None
         self.branch_stack = []
         self._first_branch_atom_processed = False
+        self._connect_next_atom = False
     
     def validate(self) -> bool:
         """
@@ -285,14 +288,26 @@ class ParserManager:
             symbol: Atomic symbol (for compatibility with old API).
             **kwargs: Other arguments (bracket_atom, etc.).
         """
+        # Helper to finalize atom addition with proper bond connections
+        def finalize_atom(atom):
+            self.graph_builder.add_atom(atom)
+            
+            # Check if we need to connect to last_atom (after a branch)
+            if self._connect_next_atom and self.last_atom:
+                self.graph_builder.add_bond(self.last_atom, atom, "-")
+                self._connect_next_atom = False
+            else:
+                # Normal branch bond handling
+                self._apply_pending_branch_bond(atom)
+            
+            self.last_atom = atom
+            return atom
+        
         # Support old API: atom("C")
         if symbol is not None and not kwargs:
             try:
                 atom = chem.Atom(symbol=symbol)
-                self.graph_builder.add_atom(atom)
-                self._apply_pending_branch_bond(atom)
-                self.last_atom = atom
-                return atom
+                return finalize_atom(atom)
             except ParserException as e:
                 # Convert error message format for old API compatibility
                 if "Invalid Atom Symbol" in e.message:
@@ -307,17 +322,11 @@ class ParserManager:
         if "symbol" in kwargs:
             symbol = kwargs["symbol"]
             atom = chem.Atom(symbol=symbol)
-            self.graph_builder.add_atom(atom)
-            self._apply_pending_branch_bond(atom)
-            self.last_atom = atom
-            return atom
+            return finalize_atom(atom)
 
         match kwargs:
             case {"bracket_atom": bracket_atom}:
-                self.graph_builder.add_atom(bracket_atom)
-                self._apply_pending_branch_bond(bracket_atom)
-                self.last_atom = bracket_atom
-                return bracket_atom
+                return finalize_atom(bracket_atom)
             case _:
                 raise ParserException(
                     rule="atom",
@@ -377,11 +386,12 @@ class ParserManager:
         """
         Called when '(' is encountered - saves state for branch processing.
         """
-        # Save current state to the stack for nested branches (including the flag)
-        self.branch_stack.append((self.last_atom, self.pending_branch_bond, self._first_branch_atom_processed))
+        # Save current state to the stack for nested branches (including both flags)
+        self.branch_stack.append((self.last_atom, self.pending_branch_bond, self._first_branch_atom_processed, self._connect_next_atom))
         self.branch_start_atom = self.last_atom
         self.pending_branch_bond = None
         self._first_branch_atom_processed = False  # Reset for new branch
+        self._connect_next_atom = False  # Reset - atoms inside branch shouldn't use this flag
 
     def save_branch_bond(self, bond_dot: str) -> str:
         """
@@ -401,15 +411,18 @@ class ParserManager:
         # Restore last_atom to the branch start atom
         # This ensures atoms after the branch connect to where we branched from
         if self.branch_stack:
-            saved_last_atom, saved_pending_bond, saved_first_atom_flag = self.branch_stack.pop()
+            saved_last_atom, saved_pending_bond, saved_first_atom_flag, saved_connect_next = self.branch_stack.pop()
             self.last_atom = saved_last_atom
             # Restore the flag state for nested branches
             self._first_branch_atom_processed = saved_first_atom_flag
+            # Don't restore _connect_next_atom - we always set it True after branch closes
         elif self.branch_start_atom:
             self.last_atom = self.branch_start_atom
 
         self.branch_start_atom = None
         self.pending_branch_bond = None
+        # Flag that next atom should connect to last_atom (for atoms following branches)
+        self._connect_next_atom = True
         return inner_branch
 
     def branch(self, inner_branch):
@@ -548,11 +561,12 @@ class ParserManager:
                 
                 # Process chain_data
                 if chain_data.get("atom"):
-                    if last_atom_to_use:
-                        # Connect last atom to new atom
-                        self.graph_builder.add_bond(last_atom_to_use, chain_data["atom"])
-                    self.last_atom = chain_data["atom"]
-                    return {"chains": {"atom": chain_data["atom"]}}
+                    new_atom = chain_data["atom"]
+                    if last_atom_to_use and last_atom_to_use != new_atom:
+                        # Connect last atom to new atom (avoid self-loops)
+                        self.graph_builder.add_bond(last_atom_to_use, new_atom)
+                    self.last_atom = new_atom
+                    return {"chains": {"atom": new_atom}}
                 elif chain_data.get("rnum"):
                     # Ring number - rnum() already called from yacc rule, just update last_atom
                     # Don't call rnum() again to avoid double-closing
@@ -609,6 +623,21 @@ class ParserManager:
         Function to parse the 'chain_branch' rule.
         chain_branch -> chains | branch | chains chain_branch | branch chain_branch
         """
+        # Check if this is a combined chains + branch structure
+        if "chains" in kwargs and "branch" in kwargs:
+            # We have both chains and branch - need to process atoms after branch
+            # The branch may contain nested chains with atoms that need connection
+            branch_data = kwargs.get("branch")
+            
+            # If branch_data has nested chains, those atoms need to be connected
+            # after the branch closes (to last_atom which was restored by end_branch)
+            if isinstance(branch_data, dict) and "chains" in branch_data:
+                # Extract atoms from the nested chains inside branch_data
+                nested_chains = branch_data.get("chains")
+                self._process_nested_chains_after_branch(nested_chains)
+            
+            return kwargs
+        
         if kwargs.get("chain_branch") is None:
             if "chains" in kwargs:
                 return kwargs
@@ -622,6 +651,25 @@ class ParserManager:
                     parameter=str(kwargs),
                     message="Invalid chain branch rule",
                 )
+    
+    def _process_nested_chains_after_branch(self, chains_data):
+        """
+        Process nested chains that appear after a branch.
+        These contain atoms that should be connected to last_atom.
+        """
+        if not chains_data:
+            return
+        
+        if isinstance(chains_data, dict):
+            # Look for atoms in the chains structure
+            if "atom" in chains_data:
+                atom = chains_data["atom"]
+                if self.last_atom and self.last_atom != atom:
+                    self.graph_builder.add_bond(self.last_atom, atom)
+                    self.last_atom = atom
+            elif "chains" in chains_data:
+                # Recursively process nested chains
+                self._process_nested_chains_after_branch(chains_data["chains"])
 
     def line(self, **kwargs) -> Union[str, List[str]]:
         """
@@ -641,6 +689,40 @@ class ParserManager:
                 # Simple case: atom + single atom in chains
                 self.graph_builder.add_bond(atom, atom2)
                 self.last_atom = atom2
+                return {}
+            case {"atom": atom, "chain_branch": {"chains": chain_data, "branch": _}}:
+                # Chain branch contains both chains and branch(es)
+                # Extract first atom from chains to connect to initial atom
+                first_atom_in_chains = None
+                if isinstance(chain_data, dict):
+                    if "atom" in chain_data:
+                        first_atom_in_chains = chain_data["atom"]
+                    elif "chains" in chain_data:
+                        first_atom_in_chains = self._get_last_atom_from_chains(chain_data["chains"])
+                
+                if atom and first_atom_in_chains and not self.graph_builder.are_bonded(atom, first_atom_in_chains):
+                    self.graph_builder.add_bond(atom, first_atom_in_chains)
+                    self.last_atom = first_atom_in_chains
+                elif atom:
+                    self.last_atom = atom
+                return {}
+            case {"atom": atom, "chain_branch": {"branch": _, "chains": chain_data}}:
+                # Same as above but with different key order
+                first_atom_in_chains = None
+                if isinstance(chain_data, dict):
+                    if "atom" in chain_data:
+                        first_atom_in_chains = chain_data["atom"]
+                    elif "chains" in chain_data:
+                        first_atom_in_chains = self._get_last_atom_from_chains(chain_data["chains"])
+                
+                if atom and first_atom_in_chains and not self.graph_builder.are_bonded(atom, first_atom_in_chains):
+                    self.graph_builder.add_bond(atom, first_atom_in_chains)
+                    self.last_atom = first_atom_in_chains
+                elif atom:
+                    self.last_atom = atom
+                return {}
+            case {"atom": atom, "chain_branch": {"branches_opened": _}}:
+                # Only branches, no chains following - atom is already connected
                 return {}
             case {"atom": atom, "chain_branch": {"chains": chain_data}}:
                 # Handle chains that may contain rnum or other chain elements

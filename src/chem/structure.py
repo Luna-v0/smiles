@@ -287,122 +287,193 @@ class MolecularGraph:
 
     def validate_fused_aromatic_system(self, system: List[List[Atom]]) -> bool:
         """
-        Validate a fused aromatic system.
+        Validate a fused aromatic ring system using Hückel's rule.
 
-        For fused aromatic systems, we use relaxed rules:
-        - If all atoms are aromatic and at least one cycle satisfies Hückel's rule,
-          the entire system is considered valid
-        - For complex fused systems where no individual cycle satisfies the rule,
-          we check if the total unique aromatic atoms satisfy a reasonable pi count
-        - This accounts for delocalized π-electrons across the fused system
+        Two complementary checks are applied in order:
+
+        1. **Per-ring Hückel (primary rule)** — at least one detected ring in
+           the system must satisfy 4n+2 π electrons.  This is the physically
+           correct rule: every valid PAH contains rings whose π count is a
+           Hückel number (e.g. 6π benzene, 10π naphthalene-ring, etc.).
+
+        2. **Full-component Hückel (fallback for imperfect cycle detection)** —
+           the total π electrons across *all* aromatic atoms in the connected
+           aromatic component (obtained via a BFS over the adjacency list) must
+           satisfy 4n+2.  This catches cases where the graph builder does not
+           produce the minimal ring set; for example, it may detect a 5-atom
+           and a 6-atom ring for an indole-type system instead of the correct
+           6-membered and 5-membered chemical rings.  Counting the full
+           component gives the true π-electron tally (e.g. 10π for indole,
+           matching 4(2)+2).
+
+        Mixed aromatic/non-aromatic systems are accepted without further check:
+        the non-aromatic atoms carry explicit bond orders and are validated
+        separately via the valency check.
 
         Args:
-            system: List of cycles that form a fused ring system.
+            system: List of cycles that form the ring system to validate.
 
         Returns:
-            True if the fused system is valid, False otherwise.
+            True if the system satisfies either Hückel check described above,
+            or if it is a mixed aromatic/non-aromatic system.  False otherwise.
         """
-        # Get all unique atoms in the system
-        all_atoms = set()
+        # Collect all unique atoms from the detected cycles.
+        all_atoms: Set[Atom] = set()
         for cycle in system:
             all_atoms.update(cycle)
 
-        # Check if all atoms are aromatic
-        aromatic_atoms = [a for a in all_atoms if getattr(a, 'aromatic', False)]
-        if len(aromatic_atoms) != len(all_atoms):
-            # Mixed aromatic/non-aromatic system - skip validation (considered valid)
+        # Mixed systems: non-aromatic atoms carry explicit bond orders, so
+        # aromatic validation is not applicable to the whole system.
+        aromatic_cycle_atoms = {a for a in all_atoms if getattr(a, 'aromatic', False)}
+        if len(aromatic_cycle_atoms) != len(all_atoms):
             return True
 
-        # All atoms are aromatic - check if at least one cycle is valid
+        # --- Primary check: at least one detected ring satisfies Hückel 4n+2 ---
         for cycle in system:
             pi_electrons = self._count_pi_electrons(cycle)
             if pi_electrons >= 2:
                 n = (pi_electrons - 2) / 4
                 if n >= 0 and abs(n - round(n)) < 1e-10:
-                    # Found at least one valid cycle - entire system is valid
                     return True
 
-        # No valid individual cycles found
-        # For complex fused systems, check if total pi electrons make sense
-        # Count total unique pi electrons in the system
-        total_pi = 0
-        for atom in aromatic_atoms:
-            symbol = atom.symbol.upper()
-            from chem.atomic import BracketAtom
-            has_explicit_h = isinstance(atom, BracketAtom) and atom.hcount is not None and atom.hcount > 0
+        # --- Fallback check: total π electrons for the full connected component ---
+        # The graph builder may not always produce minimal rings.  When no single
+        # detected ring satisfies Hückel, count the π electrons for every
+        # aromatic atom in the connected component (via adjacency list BFS) and
+        # check whether the total satisfies 4n+2 for the entire conjugated system.
+        comp_atoms: Set[Atom] = set()
+        stack = list(aromatic_cycle_atoms)
+        while stack:
+            atom = stack.pop()
+            if atom in comp_atoms:
+                continue
+            comp_atoms.add(atom)
+            for nbr, _ in self.adjacency_list.get(atom, []):
+                if nbr not in comp_atoms and getattr(nbr, 'aromatic', False):
+                    stack.append(nbr)
 
-            if symbol == 'C':
-                total_pi += 1
-            elif symbol == 'N':
-                total_pi += 2 if has_explicit_h else 1
-            elif symbol in ['O', 'S', 'SE', 'AS']:
-                total_pi += 2
-            elif symbol in ['B', 'P']:
-                total_pi += 1
-            else:
-                total_pi += 1
+        total_pi = self._count_pi_electrons(list(comp_atoms))
+        if total_pi >= 2:
+            n = (total_pi - 2) / 4
+            if n >= 0 and abs(n - round(n)) < 1e-10:
+                return True
 
-        # For fused systems with 2+ rings, be very lenient
-        # Just check that the total pi count is reasonable (even number and >= 6)
-        if len(system) >= 2 and total_pi >= 6 and total_pi % 2 == 0:
-            return True
-
-        # Still no validation criteria met
         return False
+
+    def _group_cycles_by_aromatic_component(self) -> List[List[List[Atom]]]:
+        """
+        Group detected cycles by their aromatic connected component.
+
+        Uses a BFS over all aromatic atoms in the adjacency list to identify
+        connected components.  Every cycle whose atoms belong to the same
+        component is placed in the same group.
+
+        This is more reliable than grouping by shared cycle atoms alone (as
+        ``get_fused_ring_systems`` does) because it captures rings that are
+        bonded together but do not share two or more atom references — a
+        situation that can arise from the graph builder's cycle detection for
+        complex SMILES strings.
+
+        Returns:
+            List of groups; each group is a list of cycles (each cycle is a
+            list of atoms).  Cycles whose atoms belong to the same aromatic
+            connected component are placed in the same group.
+        """
+        # Build the set of aromatic atoms present in any cycle.
+        cycle_atom_to_cycles: dict = {}
+        for cycle in self.cycles:
+            for atom in cycle:
+                if atom not in cycle_atom_to_cycles:
+                    cycle_atom_to_cycles[atom] = []
+                cycle_atom_to_cycles[atom].append(cycle)
+
+        # BFS over aromatic atoms in the adjacency list to assign component IDs.
+        component_id: dict = {}
+        comp_index = 0
+        for start in self.adjacency_list:
+            if not getattr(start, 'aromatic', False):
+                continue
+            if start in component_id:
+                continue
+            # New component.
+            queue = [start]
+            while queue:
+                atom = queue.pop(0)
+                if atom in component_id:
+                    continue
+                component_id[atom] = comp_index
+                for nbr, _ in self.adjacency_list.get(atom, []):
+                    if getattr(nbr, 'aromatic', False) and nbr not in component_id:
+                        queue.append(nbr)
+            comp_index += 1
+
+        # Assign each cycle to the component of its first atom.
+        comp_cycles: dict = {}
+        for cycle in self.cycles:
+            cid = None
+            for atom in cycle:
+                cid = component_id.get(atom)
+                if cid is not None:
+                    break
+            if cid is None:
+                cid = -1  # Fallback: no aromatic atom in cycle.
+            if cid not in comp_cycles:
+                comp_cycles[cid] = []
+            comp_cycles[cid].append(cycle)
+
+        return list(comp_cycles.values())
 
     def huckel(self) -> bool:
         """
-        Check aromaticity using Hückel's rule (4n+2 pi electrons).
+        Check aromaticity of every ring system in the molecule.
 
-        For fused aromatic systems, validates the system as a whole.
-        For isolated aromatic cycles, validates each independently.
+        Strategy:
+            Cycles are first grouped by their aromatic connected component
+            (determined via the adjacency list).  Within each component:
+
+            * A single detected cycle is validated with the strict Hückel
+              4n+2 rule — this correctly rejects isolated anti-aromatic rings
+              such as cyclobutadiene.
+            * Two or more detected cycles are validated together via
+              ``validate_fused_aromatic_system``, which requires at least one
+              ring to satisfy Hückel's rule.
+
+        Using the adjacency-list connected component (rather than shared-atom
+        grouping) ensures that rings belonging to the same physical molecule
+        are always validated as a unit, even when the graph builder creates
+        cycle objects that do not share two or more atom references.
 
         Returns:
-            True if all aromatic cycles satisfy Hückel's rule, False otherwise.
+            True if all aromatic ring systems pass their respective checks,
+            False otherwise.
         """
-        # If no cycles, return True (no aromaticity to check)
         if not self.cycles:
             return True
 
-        # Group cycles into fused ring systems
-        fused_systems = self.get_fused_ring_systems()
+        # Group cycles by connected aromatic component.
+        component_groups = self._group_cycles_by_aromatic_component()
 
-        # Heuristic: for complex fused systems (3+ rings) where ALL atoms are aromatic,
-        # trust the SMILES notation rather than doing strict Huckel validation
-        # This handles complex molecules like perylene where cycle detection
-        # may not perfectly identify individual rings
-        if len(self.cycles) >= 3:
-            all_aromatic = all(
-                getattr(atom, 'aromatic', False)
-                for atom in self.adjacency_list
-            )
-            if all_aromatic:
-                return True
+        for cycles in component_groups:
+            if len(cycles) == 1:
+                # Possibly isolated ring — apply the strict per-ring check.
+                cycle = cycles[0]
 
-        for system in fused_systems:
-            if len(system) == 1:
-                # Isolated cycle - validate independently
-                cycle = system[0]
-
-                # Check if cycle has aromatic bonds
                 has_aromatic_bonds = self._has_aromatic_bonds(cycle)
                 aromatic_atoms = [a for a in cycle if getattr(a, 'aromatic', False)]
 
-                # Case 1: Aromatic bonds but no aromatic atoms -> FAIL
+                # Aromatic bonds without aromatic atoms is invalid.
                 if has_aromatic_bonds and not aromatic_atoms:
                     return False
 
-                # Case 2: No aromatic bonds and no aromatic atoms -> check for pi bonds
+                # No aromatic notation at all — check for explicit pi bonds.
                 if not has_aromatic_bonds and not aromatic_atoms:
-                    # Check for double/triple bonds (pi bonds)
                     pi_from_bonds = self._count_pi_from_bonds(cycle)
                     if pi_from_bonds == 0:
-                        # Purely aliphatic, skip
-                        continue
-                    # Has pi bonds but no aromatic atoms -> not a valid aromatic system
+                        continue  # Purely aliphatic ring — skip.
+                    # Explicit pi bonds without aromatic atoms is invalid.
                     return False
 
-                # Case 3: Has aromatic atoms -> validate with Huckel
+                # Aromatic atoms present — apply Hückel 4n+2.
                 pi_electrons = self._count_pi_electrons(cycle)
                 if pi_electrons < 2:
                     return False
@@ -410,8 +481,8 @@ class MolecularGraph:
                 if n < 0 or abs(n - round(n)) > 1e-10:
                     return False
             else:
-                # Fused ring system - validate as a unit
-                if not self.validate_fused_aromatic_system(system):
+                # Multi-cycle aromatic system — validate as a unit.
+                if not self.validate_fused_aromatic_system(cycles):
                     return False
 
         return True

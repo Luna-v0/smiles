@@ -82,6 +82,7 @@ class SmilesParser(Parser):
     use_only_grammar = False
 
     precedence = (
+        ('right', 'CHAIN_END'),
         ('left', '.', '-', 'semi_bond', '[', 'H', 'semi_symbol', 'digit', '%', '('),
     )
 
@@ -92,7 +93,7 @@ class SmilesParser(Parser):
     def line(self, rules):
         return pm.line(atom=rules.atom, chain_branch=rules.chain_branch)
 
-    @_("atom")
+    @_("atom %prec CHAIN_END")
     def line(self, rules):
         return pm.line(atom=rules.atom)
 
@@ -104,15 +105,15 @@ class SmilesParser(Parser):
     def chain_branch(self, rules):
         return pm.chain_branch(branch=rules.branch, chains=rules.chain_branch)
 
-    @_("branch")
+    @_("branch %prec CHAIN_END")
     def chain_branch(self, rules):
         return pm.chain_branch(branch=rules.branch)
 
-    @_("chains")
+    @_("chains %prec CHAIN_END")
     def chain_branch(self, rules):
         return pm.chain_branch(chains=rules.chains)
 
-    @_("chain")  # type: ignore
+    @_("chain %prec CHAIN_END")  # type: ignore
     def chains(self, rules):
         return pm.chains(chain=rules.chain)
 
