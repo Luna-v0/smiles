@@ -1,0 +1,53 @@
+smiles,error_category,description
+,empty,Empty string
+" ",whitespace,Whitespace only
+C(CC,unmatched_parens,Unclosed parenthesis
+CC)C,unmatched_parens,Extra closing parenthesis
+(CC),unmatched_parens,Leading parenthesis with no anchor atom
+C((C)),unmatched_parens,Double opening parenthesis
+C1CC,unmatched_ring,Unclosed ring digit 1
+C1CCC2CC,unmatched_ring,Two unclosed ring digits
+C12CC,unmatched_ring,Two ring openings on same atom unclosed
+C%10CCC,unmatched_ring,Unclosed two-digit ring
+=CC,invalid_start,Starts with bond
+#CC,invalid_start,Starts with triple bond
+.C..C,invalid_syntax,Consecutive dot separators
+C=,dangling_bond,Dangling double bond at end
+C#,dangling_bond,Dangling triple bond at end
+C(=),dangling_bond,Bond inside parenthesis with no target
+C==C,invalid_bond,Double double bond
+C##C,invalid_bond,Double triple bond
+C=#C,invalid_bond,Mixed double-triple bond
+[,invalid_bracket,Unclosed bracket single char
+[C,invalid_bracket,Unclosed bracket atom
+[],invalid_bracket,Empty bracket
+[Xx],invalid_element,Invalid element symbol
+[Qq],invalid_element,Invalid lowercase element
+XC,invalid_element,Invalid bare element
+C(C)(C)(C)(C)(C)C,valency,Hexavalent carbon
+N(C)(C)(C)(C)C,valency,Pentavalent nitrogen with 5 single bonds
+O(C)(C)(C)C,valency,Tetravalent oxygen with 4 single bonds
+[CH6],valency,Carbon with 6 hydrogens
+[NH5],valency,Nitrogen with 5 hydrogens
+[OH4],valency,Oxygen with 4 hydrogens
+c1cc1,bad_aromaticity,3-membered aromatic ring
+c1ccc1,bad_aromaticity,4-membered aromatic ring
+c1cccccccc1,bad_aromaticity,9-membered aromatic ring (fails Huckel)
+c1ccc2cc1cc2,bad_aromaticity,Invalid fused aromatic system
+C1=CC=CC=CC=CC=C1,bad_ring,10-membered ring with alternating bonds
+C1CC=1,invalid_ring_bond,Ring closure with conflicting bond
+CC(C)(C)(C)CC,valency,Carbon with 5 bonds total
+S(=O)(=O)(=O)(=O)C,valency,Sulfur with too many double bonds
+P(=O)(=O)(=O)(=O)C,valency,Phosphorus with too many double bonds
+C1CC1=O,ring_strain,Cyclopropanone - strained ring
+[2H]C,invalid_bracket,Isotope without element
+C.C.C.C.C.,invalid_syntax,Trailing dot separator
+(C),invalid_start,Parenthesis without anchor
+C()C,invalid_syntax,Empty branch
+C()(C)C,invalid_syntax,Empty branch before real branch
+1CC1,invalid_start,Starts with ring digit
+C1.C1,disconnected_ring,Ring closure across disconnected fragments
+[C@@H](F)(Cl)(Br)(I)O,valency,Too many bonds on chiral carbon
+[C-5],invalid_charge,Excessive negative charge
+[C+5],invalid_charge,Excessive positive charge
+CC(=O)C(=O)C(=O)C(=O)C(=O)=O,unlikely,Chain of carbonyls (syntactically ok but chemically unlikely)

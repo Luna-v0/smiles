@@ -1,0 +1,210 @@
+ZINC Database - moléculas comerciais / drug-like 
+usar ZINC Drug-like ?
+usar ZINC Fragments ? 
+https://zinc.docking.org
+
+baixar em https://files.docking.org
+
+---
+import pandas as pd
+
+df = pd.read_csv("zinc20_base_smiles.smi", sep=" ", names=["smiles", "zinc_id"])
+
+print(df.head())
+---
+# remover inválidos vazios
+df = df.dropna()
+
+# remover duplicados
+df = df.drop_duplicates()
+
+# limitar tamanho
+df = df[df["smiles"].str.len() < 150]
+---
+df_sample = df.sample(n=100000, random_state=42)
+---
+from rdkit import Chem
+
+def rdkit_valid(sm):
+    return Chem.MolFromSmiles(sm) is not None
+
+df_sample["rdkit"] = df_sample["smiles"].apply(rdkit_valid)
+------------------------------------------------------------
+ChEMBL
+
+https://chembl.gitbook.io/chembl-interface-documentation/downloads
+
+
+---- Alternativa DEEPCHEM
+Tox21 from deepchem.molnet import load_tox21
+tasks, datasets, transformers = load_tox21()
+-
+ClinTox from deepchem.molnet import load_clintox
+-
+SIDER from deepchem.molnet import load_sider
+----
+
+---- Codigo para teste
+import sqlite3
+import pandas as pd
+
+conn = sqlite3.connect("chembl_34.db")
+
+query = """
+SELECT
+    molregno,
+    canonical_smiles
+FROM compound_structures
+WHERE canonical_smiles IS NOT NULL
+"""
+
+df = pd.read_sql(query, conn)
+
+print(df.head())
+print(len(df))
+----
+# remover vazios
+df = df.dropna()
+
+# remover duplicados
+df = df.drop_duplicates(subset=["canonical_smiles"])
+
+# limitar tamanho (evita outliers extremos)
+df = df[df["canonical_smiles"].str.len() < 200]
+df_sample = df.sample(n=100000, random_state=42)
+---
+from rdkit import Chem
+
+def is_valid(sm):
+    return Chem.MolFromSmiles(sm) is not None
+
+df_sample["rdkit_valid"] = df_sample["canonical_smiles"].apply(is_valid)
+
+------------------------------------------------------------
+QM9
+https://deepchemdata.s3-us-west-1.amazonaws.com/datasets/qm9.csv
+
+
+--------------
+Parece que tem no deepchem 
+--
+from deepchem.molnet import load_qm9
+
+tasks, datasets, transformers = load_qm9()
+train, valid, test = datasets
+
+print(train.X[:5])
+
+--- Codigo para teste
+import pandas as pd
+
+df = pd.read_csv("qm9.csv")
+
+print(df.columns)
+print(df.head())
+---
+df = df.dropna(subset=["smiles"])
+df = df.drop_duplicates(subset=["smiles"])
+---
+df_sample = df.sample(n=10000, random_state=42)
+---
+from rdkit import Chem
+
+def is_valid(sm):
+    return Chem.MolFromSmiles(sm) is not None
+
+df_sample["rdkit_valid"] = df_sample["smiles"].apply(is_valid)
+---
+results = []
+
+for sm in df_sample["smiles"]:
+    ours = yacc_validate(sm)  
+    rdkit = is_valid(sm)
+
+    results.append((ours, rdkit))
+---
+import pandas as pd
+
+res = pd.DataFrame(results, columns=["ours", "rdkit"])
+
+tp = ((res["ours"] == True) & (res["rdkit"] == True)).sum()
+fp = ((res["ours"] == True) & (res["rdkit"] == False)).sum()
+fn = ((res["ours"] == False) & (res["rdkit"] == True)).sum()
+
+precision = tp / (tp + fp)
+recall = tp / (tp + fn)
+f1 = 2 * precision * recall / (precision + recall)
+
+print(precision, recall, f1)	
+
+
+--------------------------------------------------
+MOSES - Bases com SMILES inválidos
+- foi derivado de "ZINC Clean Leads"
+https://github.com/molecularsets/moses
+
+
+---Alternativa Deepchem
+from deepchem.molnet import load_moses
+---
+
+--- Codigo p/ teste
+pip install moses
+
+from moses import get_dataset
+
+# datasets disponíveis: train, test, test_scaffolds
+train = get_dataset("train")
+test = get_dataset("test")
+test_scaffolds = get_dataset("test_scaffolds")
+
+print(len(train))
+print(train[:10])
+-
+train = list(set(train))  # remove duplicados
+
+train = [sm for sm in train if len(sm) < 150]  # limitar a 150
+--
+from rdkit import Chem
+
+def is_valid(sm):
+    return Chem.MolFromSmiles(sm) is not None
+
+valid_ratio = sum(is_valid(sm) for sm in train) / len(train)
+
+print("Valid rate:", valid_ratio)
+--
+results = []
+
+for sm in train[:10000]:
+    ours = yacc_validate(sm)  
+    rdkit = is_valid(sm)
+
+    results.append((ours, rdkit))
+--
+import pandas as pd
+
+df = pd.DataFrame(results, columns=["ours", "rdkit"])
+
+tp = ((df["ours"] == True) & (df["rdkit"] == True)).sum()
+fp = ((df["ours"] == True) & (df["rdkit"] == False)).sum()
+fn = ((df["ours"] == False) & (df["rdkit"] == True)).sum()
+
+precision = tp / (tp + fp)
+recall = tp / (tp + fn)
+f1 = 2 * precision * recall / (precision + recall)
+
+print(f"Precision: {precision:.4f}")
+print(f"Recall: {recall:.4f}")
+print(f"F1: {f1:.4f}")
+
+--- alternativa github
+git clone https://github.com/molecularsets/moses.git
+-
+import pandas as pd
+
+df = pd.read_csv("data/train.csv")
+
+smiles = df["SMILES"].tolist()
+
+print(smiles[:10])
