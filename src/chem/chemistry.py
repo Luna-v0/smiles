@@ -48,6 +48,7 @@ class ChemistryModule:
 
         Args:
             symbol: Atomic symbol (case-sensitive for aromaticity).
+                    "*" is a wildcard atom (matches any atom).
             electron_configuration: Optional electron configuration override.
 
         Returns:
@@ -56,6 +57,10 @@ class ChemistryModule:
         Raises:
             ParserException: If symbol is invalid.
         """
+        # Wildcard atom: skip periodic table validation and electron config
+        if symbol == "*":
+            return Atom(symbol="*", electron_configuration="")
+
         symbol_upper = symbol.upper()
         # Check if any symbol in pt_symbols matches (case-insensitive)
         if not any(s.upper() == symbol_upper for s in pt_symbols):
@@ -64,12 +69,12 @@ class ChemistryModule:
                 parameter=symbol,
                 message=f"Invalid Atom Symbol: {symbol}"
             )
-        
+
         # Get electron configuration from periodic table if not provided
         if electron_configuration is None:
             element_data = _element_by_symbol.get(symbol_upper, {})
             electron_configuration = element_data.get("electron_configuration", "")
-        
+
         return Atom(symbol=symbol, electron_configuration=electron_configuration)
 
     def BracketAtom(
@@ -106,6 +111,23 @@ class ChemistryModule:
         Raises:
             ParserException: If symbol is invalid.
         """
+        # Wildcard bracket atom: skip periodic table validation and electron config
+        if symbol == "*":
+            if hidrogens is not None:
+                hcount = hidrogens
+            if map is not None:
+                mol_map = map
+            return BracketAtom(
+                symbol="*",
+                isotope=isotope,
+                chiral=chiral,
+                hcount=hcount,
+                charge=charge,
+                mol_map=mol_map,
+                electron_configuration="",
+                aromatic=False if aromatic is None else aromatic,
+            )
+
         symbol_upper = symbol.upper()
         # Check if any symbol in pt_symbols matches (case-insensitive)
         if not any(s.upper() == symbol_upper for s in pt_symbols):
@@ -114,18 +136,18 @@ class ChemistryModule:
                 parameter=symbol,
                 message=f"Invalid Atom Symbol: {symbol}"
             )
-        
+
         # Handle parameter aliases
         if hidrogens is not None:
             hcount = hidrogens
         if map is not None:
             mol_map = map
-        
+
         # Get electron configuration from periodic table if not provided
         if electron_configuration is None:
             element_data = _element_by_symbol.get(symbol_upper, {})
             electron_configuration = element_data.get("electron_configuration", "")
-        
+
         # Determine aromaticity
         if aromatic is None:
             aromatic = symbol.islower()

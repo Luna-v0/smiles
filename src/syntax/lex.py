@@ -60,7 +60,7 @@ class SmilesLex(Lexer):
         digit: A regex for digits
     """
 
-    literals = {".", "@", "-", "+", ":", "%", "H", ")", "(", "]", "["}
+    literals = {".", "@", "-", "+", ":", "%", "H", ")", "(", "]", "[", "*"}
 
     tokens = {"semi_bond", "digit", "semi_symbol"}
 

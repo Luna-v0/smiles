@@ -131,6 +131,10 @@ class ChemistryValidator:
         """
         from chem.atomic import BracketAtom
 
+        # Wildcard atoms (*) are placeholders and do not have a fixed valency
+        if getattr(atom, 'symbol', None) == "*":
+            return True
+
         # Regular atoms (not bracket atoms) are assumed to follow standard valency rules
         if not isinstance(atom, BracketAtom):
             return True

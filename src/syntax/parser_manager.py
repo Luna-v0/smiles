@@ -43,6 +43,15 @@ class ParserManager:
             elif "chains" in chains_data:
                 return self._get_last_atom_from_chains(chains_data["chains"])
         return None
+
+    def _has_dot_break(self, chains_data) -> bool:
+        """True if a dot_break flag is propagated through any nesting level."""
+        if isinstance(chains_data, dict):
+            if chains_data.get("dot_break"):
+                return True
+            if "chains" in chains_data:
+                return self._has_dot_break(chains_data["chains"])
+        return False
     
     def clear(self) -> None:
         """
@@ -435,10 +444,14 @@ class ParserManager:
         """
         return semi_symbol
 
-    def dot_proxy(self, atom: str) -> str:
+    def dot_proxy(self, atom) -> "Atom":
         """
         Function to parse the 'dot_proxy' rule.
         dot_proxy -> "." atom
+
+        The dot operator introduces a disconnected component within the same
+        molecule (e.g. salts, co-crystals). The preceding atom and the following
+        atom share the molecular graph but are not bonded.
         """
         if self.has_open_cycles():
             raise ParserException(
@@ -447,10 +460,9 @@ class ParserManager:
                 message="Cannot use dot proxy with open cycles.",
             )
 
-        # Validation will be done by ChemistryValidator
-        # Just clear state for next molecule
-        graph = self.graph_builder.get_graph()
-        self.clear()
+        self.pending_branch_bond = None
+        self._connect_next_atom = False
+        self.last_atom = atom
         return atom
 
     def chain(self, **kwargs) -> str:
@@ -459,8 +471,8 @@ class ParserManager:
         chain -> dot_proxy | bond atom | bond rnum | atom | rnum
         """
         match kwargs:
-            case {"dot_proxy": str(dot_proxy)}:
-                return {"atom": self.dot_proxy(atom=dot_proxy)}
+            case {"dot_proxy": dot_proxy}:
+                return {"atom": self.dot_proxy(atom=dot_proxy), "dot_break": True}
             case {"bond": str(bond), "atom": atom}:
                 return {"bond": bond, "atom": atom}
             case {"bond": str(bond), "rnum": int(rnum)}:
@@ -502,6 +514,32 @@ class ParserManager:
                 )
                 return
             return {"chains": kwargs.get("chain")}
+
+        # Dot handling — check before the usual cases. Because reductions
+        # produce nested {"chains": {"chains": ...}} structures, we unwrap
+        # through any depth to find the propagated dot_break flag and the
+        # innermost atom of the tail.
+        chains_val = kwargs.get("chains")
+        chain_val = kwargs.get("chain")
+        if isinstance(chain_val, dict) and chain_val.get("dot_break") and "atom" in chain_val:
+            # chain is a dot-disconnected component; bond its atom to the
+            # tail's innermost atom (the next atom in source order) unless
+            # the tail is itself the start of another disconnected component
+            # (dot_break propagated). Always propagate dot_break upward so
+            # the reduction above does not bond anything further left.
+            atom2 = chain_val["atom"]
+            if not self._has_dot_break(chains_val):
+                tail_atom = self._get_last_atom_from_chains(chains_val)
+                if tail_atom is not None and tail_atom is not atom2:
+                    self.graph_builder.add_bond(atom2, tail_atom)
+            self.last_atom = atom2
+            return {"chains": {"atom": atom2, "dot_break": True}}
+        if self._has_dot_break(chains_val) and isinstance(chain_val, dict) and "atom" in chain_val:
+            # Tail has a dot break propagated up: do NOT bond chain's atom
+            # to anything in chains. The dot_break is consumed here.
+            atom2 = chain_val["atom"]
+            self.last_atom = atom2
+            return {"chains": {"atom": atom2}}
 
         match kwargs:
             case {"chains": {"rnum": rnum}, "chain": {"rnum": rnum2}}:
@@ -684,7 +722,25 @@ class ParserManager:
                 self.last_atom = atom
             return atom if atom else kwargs
 
+        # Dot handling for chain_branch: if the chains piece has a dot_break
+        # propagated through any depth, the initial atom is disconnected
+        # from the chains' first atom — do not bond them.
+        cb = kwargs.get("chain_branch")
+        if isinstance(cb, dict) and "chains" in cb and self._has_dot_break(cb.get("chains")):
+            atom = kwargs.get("atom")
+            tail_atom = self._get_last_atom_from_chains(cb["chains"])
+            if tail_atom is not None:
+                self.last_atom = tail_atom
+            elif atom:
+                self.last_atom = atom
+            return {}
+
         match kwargs:
+            case {"atom": atom, "chain_branch": {"chains": {"atom": atom2, "dot_break": True}}}:
+                # First atom in chain_branch is disconnected by a leading
+                # dot (e.g. "C.X..." — the initial atom is isolated).
+                self.last_atom = atom2
+                return {}
             case {"atom": atom, "chain_branch": {"chains": {"atom": atom2}}}:
                 # Simple case: atom + single atom in chains
                 self.graph_builder.add_bond(atom, atom2)

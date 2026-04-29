@@ -83,7 +83,7 @@ class SmilesParser(Parser):
 
     precedence = (
         ('right', 'CHAIN_END'),
-        ('left', '.', '-', 'semi_bond', '[', 'H', 'semi_symbol', 'digit', '%', '('),
+        ('left', '.', '-', 'semi_bond', '[', 'H', 'semi_symbol', 'digit', '%', '(', '*'),
     )
 
     def error(self, t):
@@ -168,7 +168,7 @@ class SmilesParser(Parser):
     def dot_proxy(self, rules):
         return pm.dot_proxy(rules.atom)
 
-    @_("semi_symbol", '"H"')  # type: ignore
+    @_("semi_symbol", '"H"', '"*"')  # type: ignore
     def symbol(self, rules):
         return rules[0]
 
