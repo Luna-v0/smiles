@@ -1,11 +1,12 @@
 import functools
 from dataclasses import dataclass, field
 from types import prepare_class
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 from chem.atomic import Atom, BracketAtom
 from chem.chemistry import chemistry as chem
 from chem.graph_builder import GraphBuilder
+from chem.structure import MolecularGraph
 from exceptions import ParserException
 
 
@@ -34,6 +35,22 @@ class ParserManager:
         self._first_branch_atom_processed: bool = False
         # Track if next atom should connect to last_atom (for atoms following branches)
         self._connect_next_atom: bool = False
+
+        # --- Canonical graph construction (the hand-off to the backend) ---------
+        # The legacy GraphBuilder above is kept intact so the frozen grammar's
+        # validation/return contract is unchanged, but its connectivity is
+        # unreliable.  We build a second, correct graph here using the canonical
+        # left-to-right SMILES algorithm (an anchor atom plus a branch stack),
+        # driven by the semantic actions that fire in source order
+        # (``atom`` / ``start_branch`` / ``end_branch``).  This is what
+        # ``parse_smiles`` hands to the chemistry backend.
+        self.cgraph = MolecularGraph()
+        self._anchor: Optional[Atom] = None          # atom the next atom bonds to
+        self._branch_anchors: List[Atom] = []        # saved anchors for branches
+        self._pending_bond: Optional[str] = None      # explicit bond for next bond
+        self._no_bond_next: bool = False             # dot: next atom is disconnected
+        self._open_rings: Dict[int, Tuple[Atom, str]] = {}  # ring_num -> (atom, bond)
+        self._parent_edge: Dict[Atom, Atom] = {}     # atom -> atom it bonded to
 
     def _get_last_atom_from_chains(self, chains_data):
         """Helper to extract the last atom from a chains structure."""
@@ -66,7 +83,59 @@ class ParserManager:
         self.branch_stack = []
         self._first_branch_atom_processed = False
         self._connect_next_atom = False
-    
+        # Canonical graph state
+        self.cgraph = MolecularGraph()
+        self._anchor = None
+        self._branch_anchors = []
+        self._pending_bond = None
+        self._no_bond_next = False
+        self._open_rings = {}
+        self._parent_edge = {}
+
+    def get_graph(self) -> MolecularGraph:
+        """Return the canonical molecule graph handed to the chemistry backend."""
+        return self.cgraph
+
+    def _canonical_add_atom(self, atom: Atom) -> None:
+        """Register an atom and bond it to the current anchor (source order)."""
+        if atom not in self.cgraph.adjacency_list:
+            self.cgraph.adjacency_list[atom] = []
+        if self._no_bond_next or self._pending_bond == ".":
+            # A dot disconnects this atom from the preceding one.
+            self._no_bond_next = False
+            self._pending_bond = None
+        elif self._anchor is not None:
+            bond_type = self._pending_bond
+            if bond_type is None:
+                bond_type = (
+                    ":" if getattr(self._anchor, "aromatic", False)
+                    and getattr(atom, "aromatic", False) else "-"
+                )
+            self.cgraph.add_edge(self._anchor, atom, bond_type=bond_type)
+            self._parent_edge[atom] = self._anchor
+        self._pending_bond = None
+        self._anchor = atom
+
+    def _canonical_set_bond(self, atom: Atom, bond_type: str) -> None:
+        """Set the order of the bond connecting ``atom`` to its parent."""
+        parent = self._parent_edge.get(atom)
+        if parent is not None and bond_type:
+            self.cgraph.update_edge(parent, atom, bond_type)
+
+    def _canonical_ring(self, ring_number: int, bond_type: str = "-") -> None:
+        """Open or close a ring-closure bond on the current anchor."""
+        if self._anchor is None:
+            return
+        if ring_number in self._open_rings:
+            opening_atom, opening_bond = self._open_rings.pop(ring_number)
+            bond = bond_type if bond_type and bond_type != "-" else opening_bond
+            if bond in (None, "-") and getattr(opening_atom, "aromatic", False) \
+                    and getattr(self._anchor, "aromatic", False):
+                bond = ":"
+            self.cgraph.add_edge(opening_atom, self._anchor, bond_type=bond or "-")
+        else:
+            self._open_rings[ring_number] = (self._anchor, bond_type)
+
     def validate(self) -> bool:
         """
         Validate that all rings are closed.
@@ -136,7 +205,7 @@ class ParserManager:
         Returns:
             bool: True if there are open cycles, False otherwise.
         """
-        return len(self.open_cycles) > 0
+        return len(self.open_cycles) > 0 or len(self._open_rings) > 0
 
     def add_atom_to_cycles(self, atom: Atom) -> None:
         for cycle in self.open_cycles.values():
@@ -245,6 +314,9 @@ class ParserManager:
         """
         cycle_num = ring_number
 
+        # Canonical: open/close the ring-closure bond on the current anchor.
+        self._canonical_ring(cycle_num, bond_type)
+
         if cycle_num in self.open_cycles:
             # Close the ring using graph builder
             if self.last_atom:
@@ -299,8 +371,11 @@ class ParserManager:
         """
         # Helper to finalize atom addition with proper bond connections
         def finalize_atom(atom):
+            # Canonical (correct) construction — the graph handed to the backend.
+            self._canonical_add_atom(atom)
+
             self.graph_builder.add_atom(atom)
-            
+
             # Check if we need to connect to last_atom (after a branch)
             if self._connect_next_atom and self.last_atom:
                 self.graph_builder.add_bond(self.last_atom, atom, "-")
@@ -395,6 +470,8 @@ class ParserManager:
         """
         Called when '(' is encountered - saves state for branch processing.
         """
+        # Canonical: remember the atom the branch hangs off of.
+        self._branch_anchors.append(self._anchor)
         # Save current state to the stack for nested branches (including both flags)
         self.branch_stack.append((self.last_atom, self.pending_branch_bond, self._first_branch_atom_processed, self._connect_next_atom))
         self.branch_start_atom = self.last_atom
@@ -411,12 +488,16 @@ class ParserManager:
             The bond string (for yacc rule processing).
         """
         self.pending_branch_bond = bond_dot
+        self._pending_bond = bond_dot  # canonical: applies to the first branch atom
         return bond_dot
 
     def end_branch(self, inner_branch):
         """
         Called when ')' is encountered - restores state after branch processing.
         """
+        # Canonical: the atom after the branch bonds to the pre-branch anchor.
+        if self._branch_anchors:
+            self._anchor = self._branch_anchors.pop()
         # Restore last_atom to the branch start atom
         # This ensures atoms after the branch connect to where we branched from
         if self.branch_stack:
@@ -463,6 +544,13 @@ class ParserManager:
         self.pending_branch_bond = None
         self._connect_next_atom = False
         self.last_atom = atom
+        # Canonical: the dot disconnects ``atom`` — undo the bond that
+        # _canonical_add_atom optimistically created, and continue from here.
+        parent = self._parent_edge.pop(atom, None)
+        if parent is not None:
+            self.cgraph.remove_edge(parent, atom)
+        self._anchor = atom
+        self._no_bond_next = False
         return atom
 
     def chain(self, **kwargs) -> str:
@@ -474,6 +562,8 @@ class ParserManager:
             case {"dot_proxy": dot_proxy}:
                 return {"atom": self.dot_proxy(atom=dot_proxy), "dot_break": True}
             case {"bond": str(bond), "atom": atom}:
+                # Canonical: record the explicit main-chain bond order.
+                self._canonical_set_bond(atom, bond)
                 return {"bond": bond, "atom": atom}
             case {"bond": str(bond), "rnum": int(rnum)}:
                 # rnum() already called from yacc rule, just return the data

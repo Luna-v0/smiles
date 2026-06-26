@@ -47,6 +47,36 @@ class MolecularGraph:
         self.adjacency_list[atom1].append((atom2, bond_type))
         self.adjacency_list[atom2].append((atom1, bond_type))
 
+    def update_edge(self, atom1: Atom, atom2: Atom, bond_type: str):
+        """
+        Update the bond type of an existing edge in both directions.
+
+        Args:
+            atom1: First atom.
+            atom2: Second atom.
+            bond_type: New bond type to set.
+        """
+        for a, b in ((atom1, atom2), (atom2, atom1)):
+            neighbors = self.adjacency_list.get(a, [])
+            for i, (neighbor, _) in enumerate(neighbors):
+                if neighbor is b:
+                    neighbors[i] = (b, bond_type)
+                    break
+
+    def remove_edge(self, atom1: Atom, atom2: Atom):
+        """
+        Remove the edge between two atoms in both directions (no-op if absent).
+
+        Args:
+            atom1: First atom.
+            atom2: Second atom.
+        """
+        for a, b in ((atom1, atom2), (atom2, atom1)):
+            if a in self.adjacency_list:
+                self.adjacency_list[a] = [
+                    (n, bt) for (n, bt) in self.adjacency_list[a] if n is not b
+                ]
+
     def add_cycle(self, cycle: List[Atom]):
         """
         Add a cycle to the graph.

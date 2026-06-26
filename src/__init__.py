@@ -28,16 +28,24 @@ def parse_smiles(mol: str) -> tuple[bool, MolecularGraph | None, Exception | Non
         - exception: Exception if parsing failed, None otherwise.
     """
     try:
+        mol = mol.strip()  # tolerate surrounding whitespace (e.g. trailing newline)
         parser.parse(lexer.tokenize(mol))
-        graph = parser_manager.graph_builder.get_graph()
+        if parser_manager.has_open_cycles():
+            from exceptions import ParserException
+            exc = ParserException(
+                rule="parse_smiles",
+                parameter=mol,
+                message="Unclosed ring number(s)",
+            )
+            parser_manager.clear()
+            return False, None, exc
+        graph = parser_manager.get_graph()
         parser_manager.clear()
         return True, graph, None
     except Exception as e:
         parser_manager.clear()
         return False, None, e
 
-
-import re
 
 def validate_smiles(mol: str) -> tuple[bool, Exception | None]:
     """
@@ -55,20 +63,6 @@ def validate_smiles(mol: str) -> tuple[bool, Exception | None]:
         - exception: Exception if validation failed, None otherwise.
     """
     try:
-        # Check for trailing aliphatic carbon (invalid pattern)
-        # A SMILES ending with 'C' not followed by a digit is invalid
-        # if the molecule contains ring structures (indicated by digits)
-        # This catches dangling methyl groups on ring systems
-        if re.search(r'C$', mol) and not re.search(r'C\d$', mol):
-            # Check if the molecule has ring closures (digits in SMILES)
-            if re.search(r'\d', mol):
-                from exceptions import ParserException
-                return False, ParserException(
-                    rule="validate_smiles",
-                    parameter=mol,
-                    message="Invalid bonding between aromatic and aliphatic carbon"
-                )
-
         # Parse and build graph
         is_valid, graph, parse_exception = parse_smiles(mol)
         if not is_valid:

@@ -1,3 +1,4 @@
+import copy
 import re
 
 from sly import Lexer
@@ -67,7 +68,48 @@ class SmilesLex(Lexer):
     semi_symbol = _SEMI_SYMBOL_PATTERN
     semi_bond = r'[=#$/\\]'
 
+    # Two-character element symbols that are legal as *bare* (non-bracket) atoms.
+    # Outside brackets the organic subset only allows Cl and Br (plus the
+    # aromatic se/as); every other two-letter periodic symbol (e.g. Cn, Sc, Os,
+    # Na) is only legal inside ``[...]``.  The base regex greedily matches the
+    # longest periodic-table symbol, which mis-reads e.g. ``Cn1ccnc1`` as
+    # Copernicium instead of C + aromatic n, so :meth:`tokenize` splits such
+    # tokens back into single atoms when they occur outside brackets.
+    _BARE_TWO_CHAR = {"Cl", "Br", "se", "as"}
+
     @_(r'\d')
     def digit(self, t):
         t.value = int(t.value)
         return t
+
+    def tokenize(self, text, lineno=1, index=0):
+        """Tokenize, splitting greedily-merged bare two-letter atoms.
+
+        Wraps the SLY tokenizer so that a two-character ``semi_symbol`` found
+        outside brackets — and not one of the genuinely two-character bare
+        atoms — is emitted as two single-character atom tokens.  Bracket
+        contents (where the full periodic table is valid) are left untouched.
+        """
+        bracket_depth = 0
+        for token in super().tokenize(text, lineno, index):
+            if token.type == "[":
+                bracket_depth += 1
+            elif token.type == "]":
+                bracket_depth -= 1
+
+            if (
+                bracket_depth == 0
+                and token.type == "semi_symbol"
+                and len(token.value) == 2
+                and token.value not in self._BARE_TWO_CHAR
+            ):
+                first = copy.copy(token)
+                first.value = token.value[0]
+                first.end = token.index + 1
+                second = copy.copy(token)
+                second.value = token.value[1]
+                second.index = token.index + 1
+                yield first
+                yield second
+            else:
+                yield token
