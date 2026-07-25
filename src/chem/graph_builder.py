@@ -59,6 +59,19 @@ class GraphBuilder:
         self.graph.add_edge(atom1, atom2, bond_type=bond_type)
         self.last_atom = atom2
 
+    def are_bonded(self, atom1: Atom, atom2: Atom) -> bool:
+        """
+        Check if two atoms are already bonded.
+
+        Args:
+            atom1: First atom.
+            atom2: Second atom.
+
+        Returns:
+            True if atoms are bonded, False otherwise.
+        """
+        return any(neighbor == atom2 for neighbor, _ in self.graph.adjacency_list.get(atom1, []))
+
     def open_ring(self, ring_number: int, atom: Atom, bond_type: str = "-"):
         """
         Open a ring at a given atom.

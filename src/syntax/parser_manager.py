@@ -1,11 +1,12 @@
 import functools
 from dataclasses import dataclass, field
 from types import prepare_class
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 from chem.atomic import Atom, BracketAtom
 from chem.chemistry import chemistry as chem
 from chem.graph_builder import GraphBuilder
+from chem.structure import MolecularGraph
 from exceptions import ParserException
 
 
@@ -29,9 +30,27 @@ class ParserManager:
         # Branch context: pending bond to apply to next atom
         self.pending_branch_bond: Optional[str] = None
         self.branch_start_atom: Optional[Atom] = None
-        self.branch_stack: List[Tuple[Atom, Optional[str]]] = []  # Stack for nested branches
+        self.branch_stack: List[Tuple[Atom, Optional[str], bool, bool]] = []  # Stack for nested branches (last_atom, pending_bond, first_branch_processed, connect_next)
         # Track if first atom in branch has been processed (for implicit single bonds)
         self._first_branch_atom_processed: bool = False
+        # Track if next atom should connect to last_atom (for atoms following branches)
+        self._connect_next_atom: bool = False
+
+        # --- Canonical graph construction (the hand-off to the backend) ---------
+        # The legacy GraphBuilder above is kept intact so the frozen grammar's
+        # validation/return contract is unchanged, but its connectivity is
+        # unreliable.  We build a second, correct graph here using the canonical
+        # left-to-right SMILES algorithm (an anchor atom plus a branch stack),
+        # driven by the semantic actions that fire in source order
+        # (``atom`` / ``start_branch`` / ``end_branch``).  This is what
+        # ``parse_smiles`` hands to the chemistry backend.
+        self.cgraph = MolecularGraph()
+        self._anchor: Optional[Atom] = None          # atom the next atom bonds to
+        self._branch_anchors: List[Atom] = []        # saved anchors for branches
+        self._pending_bond: Optional[str] = None      # explicit bond for next bond
+        self._no_bond_next: bool = False             # dot: next atom is disconnected
+        self._open_rings: Dict[int, Tuple[Atom, str]] = {}  # ring_num -> (atom, bond)
+        self._parent_edge: Dict[Atom, Atom] = {}     # atom -> atom it bonded to
 
     def _get_last_atom_from_chains(self, chains_data):
         """Helper to extract the last atom from a chains structure."""
@@ -41,6 +60,15 @@ class ParserManager:
             elif "chains" in chains_data:
                 return self._get_last_atom_from_chains(chains_data["chains"])
         return None
+
+    def _has_dot_break(self, chains_data) -> bool:
+        """True if a dot_break flag is propagated through any nesting level."""
+        if isinstance(chains_data, dict):
+            if chains_data.get("dot_break"):
+                return True
+            if "chains" in chains_data:
+                return self._has_dot_break(chains_data["chains"])
+        return False
     
     def clear(self) -> None:
         """
@@ -54,7 +82,60 @@ class ParserManager:
         self.branch_start_atom = None
         self.branch_stack = []
         self._first_branch_atom_processed = False
-    
+        self._connect_next_atom = False
+        # Canonical graph state
+        self.cgraph = MolecularGraph()
+        self._anchor = None
+        self._branch_anchors = []
+        self._pending_bond = None
+        self._no_bond_next = False
+        self._open_rings = {}
+        self._parent_edge = {}
+
+    def get_graph(self) -> MolecularGraph:
+        """Return the canonical molecule graph handed to the chemistry backend."""
+        return self.cgraph
+
+    def _canonical_add_atom(self, atom: Atom) -> None:
+        """Register an atom and bond it to the current anchor (source order)."""
+        if atom not in self.cgraph.adjacency_list:
+            self.cgraph.adjacency_list[atom] = []
+        if self._no_bond_next or self._pending_bond == ".":
+            # A dot disconnects this atom from the preceding one.
+            self._no_bond_next = False
+            self._pending_bond = None
+        elif self._anchor is not None:
+            bond_type = self._pending_bond
+            if bond_type is None:
+                bond_type = (
+                    ":" if getattr(self._anchor, "aromatic", False)
+                    and getattr(atom, "aromatic", False) else "-"
+                )
+            self.cgraph.add_edge(self._anchor, atom, bond_type=bond_type)
+            self._parent_edge[atom] = self._anchor
+        self._pending_bond = None
+        self._anchor = atom
+
+    def _canonical_set_bond(self, atom: Atom, bond_type: str) -> None:
+        """Set the order of the bond connecting ``atom`` to its parent."""
+        parent = self._parent_edge.get(atom)
+        if parent is not None and bond_type:
+            self.cgraph.update_edge(parent, atom, bond_type)
+
+    def _canonical_ring(self, ring_number: int, bond_type: str = "-") -> None:
+        """Open or close a ring-closure bond on the current anchor."""
+        if self._anchor is None:
+            return
+        if ring_number in self._open_rings:
+            opening_atom, opening_bond = self._open_rings.pop(ring_number)
+            bond = bond_type if bond_type and bond_type != "-" else opening_bond
+            if bond in (None, "-") and getattr(opening_atom, "aromatic", False) \
+                    and getattr(self._anchor, "aromatic", False):
+                bond = ":"
+            self.cgraph.add_edge(opening_atom, self._anchor, bond_type=bond or "-")
+        else:
+            self._open_rings[ring_number] = (self._anchor, bond_type)
+
     def validate(self) -> bool:
         """
         Validate that all rings are closed.
@@ -124,7 +205,7 @@ class ParserManager:
         Returns:
             bool: True if there are open cycles, False otherwise.
         """
-        return len(self.open_cycles) > 0
+        return len(self.open_cycles) > 0 or len(self._open_rings) > 0
 
     def add_atom_to_cycles(self, atom: Atom) -> None:
         for cycle in self.open_cycles.values():
@@ -233,6 +314,9 @@ class ParserManager:
         """
         cycle_num = ring_number
 
+        # Canonical: open/close the ring-closure bond on the current anchor.
+        self._canonical_ring(cycle_num, bond_type)
+
         if cycle_num in self.open_cycles:
             # Close the ring using graph builder
             if self.last_atom:
@@ -285,14 +369,29 @@ class ParserManager:
             symbol: Atomic symbol (for compatibility with old API).
             **kwargs: Other arguments (bracket_atom, etc.).
         """
+        # Helper to finalize atom addition with proper bond connections
+        def finalize_atom(atom):
+            # Canonical (correct) construction — the graph handed to the backend.
+            self._canonical_add_atom(atom)
+
+            self.graph_builder.add_atom(atom)
+
+            # Check if we need to connect to last_atom (after a branch)
+            if self._connect_next_atom and self.last_atom:
+                self.graph_builder.add_bond(self.last_atom, atom, "-")
+                self._connect_next_atom = False
+            else:
+                # Normal branch bond handling
+                self._apply_pending_branch_bond(atom)
+            
+            self.last_atom = atom
+            return atom
+        
         # Support old API: atom("C")
         if symbol is not None and not kwargs:
             try:
                 atom = chem.Atom(symbol=symbol)
-                self.graph_builder.add_atom(atom)
-                self._apply_pending_branch_bond(atom)
-                self.last_atom = atom
-                return atom
+                return finalize_atom(atom)
             except ParserException as e:
                 # Convert error message format for old API compatibility
                 if "Invalid Atom Symbol" in e.message:
@@ -307,17 +406,11 @@ class ParserManager:
         if "symbol" in kwargs:
             symbol = kwargs["symbol"]
             atom = chem.Atom(symbol=symbol)
-            self.graph_builder.add_atom(atom)
-            self._apply_pending_branch_bond(atom)
-            self.last_atom = atom
-            return atom
+            return finalize_atom(atom)
 
         match kwargs:
             case {"bracket_atom": bracket_atom}:
-                self.graph_builder.add_atom(bracket_atom)
-                self._apply_pending_branch_bond(bracket_atom)
-                self.last_atom = bracket_atom
-                return bracket_atom
+                return finalize_atom(bracket_atom)
             case _:
                 raise ParserException(
                     rule="atom",
@@ -377,11 +470,14 @@ class ParserManager:
         """
         Called when '(' is encountered - saves state for branch processing.
         """
-        # Save current state to the stack for nested branches (including the flag)
-        self.branch_stack.append((self.last_atom, self.pending_branch_bond, self._first_branch_atom_processed))
+        # Canonical: remember the atom the branch hangs off of.
+        self._branch_anchors.append(self._anchor)
+        # Save current state to the stack for nested branches (including both flags)
+        self.branch_stack.append((self.last_atom, self.pending_branch_bond, self._first_branch_atom_processed, self._connect_next_atom))
         self.branch_start_atom = self.last_atom
         self.pending_branch_bond = None
         self._first_branch_atom_processed = False  # Reset for new branch
+        self._connect_next_atom = False  # Reset - atoms inside branch shouldn't use this flag
 
     def save_branch_bond(self, bond_dot: str) -> str:
         """
@@ -392,24 +488,31 @@ class ParserManager:
             The bond string (for yacc rule processing).
         """
         self.pending_branch_bond = bond_dot
+        self._pending_bond = bond_dot  # canonical: applies to the first branch atom
         return bond_dot
 
     def end_branch(self, inner_branch):
         """
         Called when ')' is encountered - restores state after branch processing.
         """
+        # Canonical: the atom after the branch bonds to the pre-branch anchor.
+        if self._branch_anchors:
+            self._anchor = self._branch_anchors.pop()
         # Restore last_atom to the branch start atom
         # This ensures atoms after the branch connect to where we branched from
         if self.branch_stack:
-            saved_last_atom, saved_pending_bond, saved_first_atom_flag = self.branch_stack.pop()
+            saved_last_atom, saved_pending_bond, saved_first_atom_flag, saved_connect_next = self.branch_stack.pop()
             self.last_atom = saved_last_atom
             # Restore the flag state for nested branches
             self._first_branch_atom_processed = saved_first_atom_flag
+            # Don't restore _connect_next_atom - we always set it True after branch closes
         elif self.branch_start_atom:
             self.last_atom = self.branch_start_atom
 
         self.branch_start_atom = None
         self.pending_branch_bond = None
+        # Flag that next atom should connect to last_atom (for atoms following branches)
+        self._connect_next_atom = True
         return inner_branch
 
     def branch(self, inner_branch):
@@ -422,10 +525,14 @@ class ParserManager:
         """
         return semi_symbol
 
-    def dot_proxy(self, atom: str) -> str:
+    def dot_proxy(self, atom) -> "Atom":
         """
         Function to parse the 'dot_proxy' rule.
         dot_proxy -> "." atom
+
+        The dot operator introduces a disconnected component within the same
+        molecule (e.g. salts, co-crystals). The preceding atom and the following
+        atom share the molecular graph but are not bonded.
         """
         if self.has_open_cycles():
             raise ParserException(
@@ -434,10 +541,16 @@ class ParserManager:
                 message="Cannot use dot proxy with open cycles.",
             )
 
-        # Validation will be done by ChemistryValidator
-        # Just clear state for next molecule
-        graph = self.graph_builder.get_graph()
-        self.clear()
+        self.pending_branch_bond = None
+        self._connect_next_atom = False
+        self.last_atom = atom
+        # Canonical: the dot disconnects ``atom`` — undo the bond that
+        # _canonical_add_atom optimistically created, and continue from here.
+        parent = self._parent_edge.pop(atom, None)
+        if parent is not None:
+            self.cgraph.remove_edge(parent, atom)
+        self._anchor = atom
+        self._no_bond_next = False
         return atom
 
     def chain(self, **kwargs) -> str:
@@ -446,9 +559,11 @@ class ParserManager:
         chain -> dot_proxy | bond atom | bond rnum | atom | rnum
         """
         match kwargs:
-            case {"dot_proxy": str(dot_proxy)}:
-                return {"atom": self.dot_proxy(atom=dot_proxy)}
+            case {"dot_proxy": dot_proxy}:
+                return {"atom": self.dot_proxy(atom=dot_proxy), "dot_break": True}
             case {"bond": str(bond), "atom": atom}:
+                # Canonical: record the explicit main-chain bond order.
+                self._canonical_set_bond(atom, bond)
                 return {"bond": bond, "atom": atom}
             case {"bond": str(bond), "rnum": int(rnum)}:
                 # rnum() already called from yacc rule, just return the data
@@ -489,6 +604,32 @@ class ParserManager:
                 )
                 return
             return {"chains": kwargs.get("chain")}
+
+        # Dot handling — check before the usual cases. Because reductions
+        # produce nested {"chains": {"chains": ...}} structures, we unwrap
+        # through any depth to find the propagated dot_break flag and the
+        # innermost atom of the tail.
+        chains_val = kwargs.get("chains")
+        chain_val = kwargs.get("chain")
+        if isinstance(chain_val, dict) and chain_val.get("dot_break") and "atom" in chain_val:
+            # chain is a dot-disconnected component; bond its atom to the
+            # tail's innermost atom (the next atom in source order) unless
+            # the tail is itself the start of another disconnected component
+            # (dot_break propagated). Always propagate dot_break upward so
+            # the reduction above does not bond anything further left.
+            atom2 = chain_val["atom"]
+            if not self._has_dot_break(chains_val):
+                tail_atom = self._get_last_atom_from_chains(chains_val)
+                if tail_atom is not None and tail_atom is not atom2:
+                    self.graph_builder.add_bond(atom2, tail_atom)
+            self.last_atom = atom2
+            return {"chains": {"atom": atom2, "dot_break": True}}
+        if self._has_dot_break(chains_val) and isinstance(chain_val, dict) and "atom" in chain_val:
+            # Tail has a dot break propagated up: do NOT bond chain's atom
+            # to anything in chains. The dot_break is consumed here.
+            atom2 = chain_val["atom"]
+            self.last_atom = atom2
+            return {"chains": {"atom": atom2}}
 
         match kwargs:
             case {"chains": {"rnum": rnum}, "chain": {"rnum": rnum2}}:
@@ -548,11 +689,12 @@ class ParserManager:
                 
                 # Process chain_data
                 if chain_data.get("atom"):
-                    if last_atom_to_use:
-                        # Connect last atom to new atom
-                        self.graph_builder.add_bond(last_atom_to_use, chain_data["atom"])
-                    self.last_atom = chain_data["atom"]
-                    return {"chains": {"atom": chain_data["atom"]}}
+                    new_atom = chain_data["atom"]
+                    if last_atom_to_use and last_atom_to_use != new_atom:
+                        # Connect last atom to new atom (avoid self-loops)
+                        self.graph_builder.add_bond(last_atom_to_use, new_atom)
+                    self.last_atom = new_atom
+                    return {"chains": {"atom": new_atom}}
                 elif chain_data.get("rnum"):
                     # Ring number - rnum() already called from yacc rule, just update last_atom
                     # Don't call rnum() again to avoid double-closing
@@ -609,6 +751,21 @@ class ParserManager:
         Function to parse the 'chain_branch' rule.
         chain_branch -> chains | branch | chains chain_branch | branch chain_branch
         """
+        # Check if this is a combined chains + branch structure
+        if "chains" in kwargs and "branch" in kwargs:
+            # We have both chains and branch - need to process atoms after branch
+            # The branch may contain nested chains with atoms that need connection
+            branch_data = kwargs.get("branch")
+            
+            # If branch_data has nested chains, those atoms need to be connected
+            # after the branch closes (to last_atom which was restored by end_branch)
+            if isinstance(branch_data, dict) and "chains" in branch_data:
+                # Extract atoms from the nested chains inside branch_data
+                nested_chains = branch_data.get("chains")
+                self._process_nested_chains_after_branch(nested_chains)
+            
+            return kwargs
+        
         if kwargs.get("chain_branch") is None:
             if "chains" in kwargs:
                 return kwargs
@@ -622,6 +779,25 @@ class ParserManager:
                     parameter=str(kwargs),
                     message="Invalid chain branch rule",
                 )
+    
+    def _process_nested_chains_after_branch(self, chains_data):
+        """
+        Process nested chains that appear after a branch.
+        These contain atoms that should be connected to last_atom.
+        """
+        if not chains_data:
+            return
+        
+        if isinstance(chains_data, dict):
+            # Look for atoms in the chains structure
+            if "atom" in chains_data:
+                atom = chains_data["atom"]
+                if self.last_atom and self.last_atom != atom:
+                    self.graph_builder.add_bond(self.last_atom, atom)
+                    self.last_atom = atom
+            elif "chains" in chains_data:
+                # Recursively process nested chains
+                self._process_nested_chains_after_branch(chains_data["chains"])
 
     def line(self, **kwargs) -> Union[str, List[str]]:
         """
@@ -636,11 +812,63 @@ class ParserManager:
                 self.last_atom = atom
             return atom if atom else kwargs
 
+        # Dot handling for chain_branch: if the chains piece has a dot_break
+        # propagated through any depth, the initial atom is disconnected
+        # from the chains' first atom — do not bond them.
+        cb = kwargs.get("chain_branch")
+        if isinstance(cb, dict) and "chains" in cb and self._has_dot_break(cb.get("chains")):
+            atom = kwargs.get("atom")
+            tail_atom = self._get_last_atom_from_chains(cb["chains"])
+            if tail_atom is not None:
+                self.last_atom = tail_atom
+            elif atom:
+                self.last_atom = atom
+            return {}
+
         match kwargs:
+            case {"atom": atom, "chain_branch": {"chains": {"atom": atom2, "dot_break": True}}}:
+                # First atom in chain_branch is disconnected by a leading
+                # dot (e.g. "C.X..." — the initial atom is isolated).
+                self.last_atom = atom2
+                return {}
             case {"atom": atom, "chain_branch": {"chains": {"atom": atom2}}}:
                 # Simple case: atom + single atom in chains
                 self.graph_builder.add_bond(atom, atom2)
                 self.last_atom = atom2
+                return {}
+            case {"atom": atom, "chain_branch": {"chains": chain_data, "branch": _}}:
+                # Chain branch contains both chains and branch(es)
+                # Extract first atom from chains to connect to initial atom
+                first_atom_in_chains = None
+                if isinstance(chain_data, dict):
+                    if "atom" in chain_data:
+                        first_atom_in_chains = chain_data["atom"]
+                    elif "chains" in chain_data:
+                        first_atom_in_chains = self._get_last_atom_from_chains(chain_data["chains"])
+                
+                if atom and first_atom_in_chains and not self.graph_builder.are_bonded(atom, first_atom_in_chains):
+                    self.graph_builder.add_bond(atom, first_atom_in_chains)
+                    self.last_atom = first_atom_in_chains
+                elif atom:
+                    self.last_atom = atom
+                return {}
+            case {"atom": atom, "chain_branch": {"branch": _, "chains": chain_data}}:
+                # Same as above but with different key order
+                first_atom_in_chains = None
+                if isinstance(chain_data, dict):
+                    if "atom" in chain_data:
+                        first_atom_in_chains = chain_data["atom"]
+                    elif "chains" in chain_data:
+                        first_atom_in_chains = self._get_last_atom_from_chains(chain_data["chains"])
+                
+                if atom and first_atom_in_chains and not self.graph_builder.are_bonded(atom, first_atom_in_chains):
+                    self.graph_builder.add_bond(atom, first_atom_in_chains)
+                    self.last_atom = first_atom_in_chains
+                elif atom:
+                    self.last_atom = atom
+                return {}
+            case {"atom": atom, "chain_branch": {"branches_opened": _}}:
+                # Only branches, no chains following - atom is already connected
                 return {}
             case {"atom": atom, "chain_branch": {"chains": chain_data}}:
                 # Handle chains that may contain rnum or other chain elements

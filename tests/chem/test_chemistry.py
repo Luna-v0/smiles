@@ -257,10 +257,15 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), '../..'))
 from src import validate_smiles
 
 
-def test_bracket_atom_valency_li_unstable():
-    """CC[Li] should fail - Li without charge has 1 valence electron, not 2 (duet)."""
+def test_bracket_atom_valency_li_alkyl_valid():
+    """CC[Li] (ethyllithium) is valid: a one-bonded Li satisfies valence 1.
+
+    Updated for the pysmiles chemistry backend, which uses a per-element
+    valence model and agrees with RDKit here (the old octet/duet rule wrongly
+    rejected it). See docs/chemistry_backend_study.md.
+    """
     result, exception = validate_smiles("CC[Li]")
-    assert result is False, "CC[Li] should be invalid - Li is not stable without charge"
+    assert result is True, "CC[Li] should be valid - one-bonded Li satisfies its valence"
 
 
 def test_bracket_atom_valency_li_cation_stable():
@@ -269,10 +274,15 @@ def test_bracket_atom_valency_li_cation_stable():
     assert result is True, "[Li+] should be valid - Li+ has duet configuration"
 
 
-def test_bracket_atom_valency_na_unstable():
-    """[Na] should fail - Na without charge has 1 valence electron."""
+def test_bracket_atom_valency_na_valid():
+    """[Na] (a bare sodium atom) is accepted under the permissive policy.
+
+    The validator deliberately accepts radicals / under-valent species (it only
+    rejects impossible over-valence and malformed syntax).  A lone [Na] is such
+    a species.  See docs/chemistry_backend_study.md.
+    """
     result, exception = validate_smiles("[Na]")
-    assert result is False, "[Na] should be invalid - Na is not stable without charge"
+    assert result is True, "[Na] is accepted (radicals/under-valent species allowed)"
 
 
 def test_bracket_atom_valency_na_cation_stable():
@@ -299,8 +309,13 @@ def test_bracket_atom_valency_oh2_stable():
     assert result is True, "[OH2] should be valid - O with 2H has 8 valence electrons"
 
 
-def test_bracket_atom_valency_alh3_unstable():
-    """[AlH3] should fail - Al with 3H has only 6 valence electrons, not 8."""
+def test_bracket_atom_valency_alh3_valid():
+    """[AlH3] (alane) is valid: aluminium's valence is 3.
+
+    Updated for the pysmiles chemistry backend, which agrees with RDKit here
+    (the old octet rule wrongly demanded 8 electrons). See
+    docs/chemistry_backend_study.md.
+    """
     result, exception = validate_smiles("[AlH3]")
-    assert result is False, "[AlH3] should be invalid - Al with 3H has only 6 valence electrons"
+    assert result is True, "[AlH3] should be valid - aluminium has valence 3"
 

@@ -6,6 +6,11 @@ Welcome to the documentation for the **Smiles Validator** library, an essential 
 
 The SMILES validation system is powered by a custom parser built with the [SLY](https://github.com/dabeaz/sly) LALR(1) toolkit. The grammar used is adapted from the LL(1) parser described in [this article](https://depth-first.com/articles/2020/04/20/smiles-formal-grammar/) and the [OpenSMILES](https://opensmiles.org/opensmiles.html) specification. For chemical data, such as atomic weights and valence information, the project retrieves information from the [Bowserinator/Periodic-Table-JSON](https://github.com/Bowserinator/Periodic-Table-JSON/tree/master) repository.
 
+## Documentation
+
+- [**Validation Algorithms**](validation.md) - Hückel's rule (aromaticity) and octet rule (valency) validation
+- [**RDKit Comparison**](rdkit_comparison.md) - Comparison with RDKit validation
+
 ## Next Steps
 
 - [x] Implementing aromaticity

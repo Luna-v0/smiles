@@ -10,8 +10,18 @@ class ChemistryValidator:
     """
     Validates chemistry rules for molecular graphs.
 
-    Performs valency and aromaticity validation.
+    Performs valency and aromaticity validation by delegating to a backend
+    chemistry engine (see ``chem.adapter``).
+
+    Args:
+        backend: Which chemistry driver to use. ``"pysmiles"`` (default) is the
+            permissive policy (accepts hypervalent/radical species); ``"rdkit"``
+            is the strict, RDKit-equivalent policy. Both bypass the backend's
+            own SMILES string parser.
     """
+
+    def __init__(self, backend: str = "pysmiles"):
+        self.backend = backend
 
     def validate_rings_and_valency(self, graph: MolecularGraph) -> Tuple[bool, ParserException | None]:
         """
@@ -85,7 +95,12 @@ class ChemistryValidator:
 
     def validate(self, graph: MolecularGraph) -> Tuple[bool, ParserException | None]:
         """
-        Perform all chemistry validations.
+        Perform chemistry validation by delegating to a backend engine.
+
+        Valency and aromaticity are validated by the pysmiles chemistry engine,
+        which is driven from the graph *we* constructed (its SMILES string
+        parser is never used).  See ``docs/chemistry_backend_study.md`` and
+        ``chem.adapter``.
 
         Args:
             graph: Molecular graph to validate.
@@ -93,21 +108,17 @@ class ChemistryValidator:
         Returns:
             Tuple of (is_valid, exception). If valid, exception is None.
         """
-        # Validate aromatic/aliphatic bonds
-        is_valid, exception = self.validate_aromatic_aliphatic_bonds(graph)
-        if not is_valid:
-            return False, exception
+        from chem.adapter import to_descriptor, valid_pysmiles, valid_rdkit
 
-        # Validate rings and valency
-        is_valid, exception = self.validate_rings_and_valency(graph)
+        driver = valid_rdkit if self.backend == "rdkit" else valid_pysmiles
+        atoms, bonds = to_descriptor(graph)
+        is_valid, reason = driver(atoms, bonds)
         if not is_valid:
-            return False, exception
-
-        # Validate aromaticity
-        is_valid, exception = self.validate_aromaticity(graph)
-        if not is_valid:
-            return False, exception
-
+            return False, ParserException(
+                rule="chemistry",
+                parameter=reason or "",
+                message=reason or "chemistry validation failed",
+            )
         return True, None
 
     def _check_atom_valency(self, atom, graph: MolecularGraph, is_in_ring: bool = False) -> bool:
@@ -130,6 +141,10 @@ class ChemistryValidator:
             True if valency is satisfied, False otherwise.
         """
         from chem.atomic import BracketAtom
+
+        # Wildcard atoms (*) are placeholders and do not have a fixed valency
+        if getattr(atom, 'symbol', None) == "*":
+            return True
 
         # Regular atoms (not bracket atoms) are assumed to follow standard valency rules
         if not isinstance(atom, BracketAtom):

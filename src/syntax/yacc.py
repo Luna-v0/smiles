@@ -82,7 +82,8 @@ class SmilesParser(Parser):
     use_only_grammar = False
 
     precedence = (
-        ('left', '.', '-', 'semi_bond', '[', 'H', 'semi_symbol', 'digit', '%', '('),
+        ('right', 'CHAIN_END'),
+        ('left', '.', '-', 'semi_bond', '[', 'H', 'semi_symbol', 'digit', '%', '(', '*'),
     )
 
     def error(self, t):
@@ -92,7 +93,7 @@ class SmilesParser(Parser):
     def line(self, rules):
         return pm.line(atom=rules.atom, chain_branch=rules.chain_branch)
 
-    @_("atom")
+    @_("atom %prec CHAIN_END")
     def line(self, rules):
         return pm.line(atom=rules.atom)
 
@@ -104,15 +105,15 @@ class SmilesParser(Parser):
     def chain_branch(self, rules):
         return pm.chain_branch(branch=rules.branch, chains=rules.chain_branch)
 
-    @_("branch")
+    @_("branch %prec CHAIN_END")
     def chain_branch(self, rules):
         return pm.chain_branch(branch=rules.branch)
 
-    @_("chains")
+    @_("chains %prec CHAIN_END")
     def chain_branch(self, rules):
         return pm.chain_branch(chains=rules.chains)
 
-    @_("chain")  # type: ignore
+    @_("chain %prec CHAIN_END")  # type: ignore
     def chains(self, rules):
         return pm.chains(chain=rules.chain)
 
@@ -167,7 +168,7 @@ class SmilesParser(Parser):
     def dot_proxy(self, rules):
         return pm.dot_proxy(rules.atom)
 
-    @_("semi_symbol", '"H"')  # type: ignore
+    @_("semi_symbol", '"H"', '"*"')  # type: ignore
     def symbol(self, rules):
         return rules[0]
 
