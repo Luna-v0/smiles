@@ -36,3 +36,8 @@ where = ["src"]
 pythonpath = ["src"]
 addopts = "-ra -q"
 testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "jupyterlab>=4.5.6",
+]

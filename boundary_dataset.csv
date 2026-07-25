@@ -1,0 +1,1148 @@
+smiles,grammar,rdkit,direction,rdkit_reason,seed
+Cc1cc2c(cc1C(=C)c83ccc(co3)C(=O)[O-])C(CCC2(C)C)(C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)C)(C)C
+C[C@]12C[C@@H]([C@H]3[C@H]([C@@H]1CC[C@@]2(C(=O)COC(=O)CC(C)(C)C)O)#CCC4=CC(=O)C=C[C@]34C)O,True,False,LEAK,valence too high,C[C@]12C[C@@H]([C@H]3[C@H]([C@@H]1CC[C@@]2(C(=O)COC(=O)CC(C)(C)C)O)CCC4=CC(=O)C=C[C@]34C)O
+c1ccc(c(c1)C2=N9CC(=O)Nc3c2cc(cc3)[N+](=O)[O-])Cl,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(c(c1)C2=NCC(=O)Nc3c2cc(cc3)[N+](=O)[O-])Cl
+CC(C)NC(=O)C1=CC=3C(C=C1)CNNC,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NC(=O)C1=CC=C(C=C1)CNNC
+CCCCc1c(c2cc(ccc2o1)NS(=On)(=O)C)C(=O)c3ccc(cc3)OCCC[NH+](CCCC)CCCC,True,False,LEAK,valence too high,CCCCc1c(c2cc(ccc2o1)NS(=O)(=O)C)C(=O)c3ccc(cc3)OCCC[NH+](CCCC)CCCC
+[H]/[NH+]=C(/C=CC(=O)nC(=C\C=c2ccc(=C([NH3+])N)cc2)/C=C1)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C1=CC(=O)/C(=C\C=c2ccc(=C([NH3+])N)cc2)/C=C1)\N
+CCN1C(=O)C(NC1=O)C=CC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),CCN1C(=O)C(NC1=O)C2=CC=CC=C2
+c1ccc(cc1)C(CCC[NH3+]2CCCCC2)(c3ccccc3)O,True,False,LEAK,valence too high,c1ccc(cc1)C(CCC[NH+]2CCCCC2)(c3ccccc3)O
+CCCSc1nc(c2c(n1)(nn2)[C@@H]3C[C@@H]([C@H]([C@H]3O)O)OCCO)N[C@@H]4C[C@H]4c5ccc(c(c5)F)F,True,False,LEAK,aromaticity / kekulization,CCCSc1nc(c2c(n1)n(nn2)[C@@H]3C[C@@H]([C@H]([C@H]3O)O)OCCO)N[C@@H]4C[C@H]4c5ccc(c(c5)F)F
+CC(C)CN(C[C@H]([C@H](Cc1cHcccc1)NC(=O)O[C@H]/CO[C@@H]3[C@H]2CCO3)O)S(=O)(=O)c4ccc(cc4)N,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CN(C[C@H]([C@H](Cc1ccccc1)NC(=O)O[C@H]2CO[C@@H]3[C@H]2CCO3)O)S(=O)(=O)c4ccc(cc4)N
+c15cc(ccc1C(=O)NCC(=O)[O-])N,True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1C(=O)NCC(=O)[O-])N
+CCN1I(=O)C(NC1=O)C=CC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),CCN1C(=O)C(NC1=O)C=CC=CC=C2
+CCCCC(=O)N(Cc1ccc(cc1)c2cccc2c3[n-]nnn3)[C@@H](C(C)C)C(=O9)[O-],True,False,LEAK,syntax (ring closure / parens / token),CCCCC(=O)N(Cc1ccc(cc1)c2ccccc2c3[n-]nnn3)[C@@H](C(C)C)C(=O)[O-]
+C1=CC=C(C=C1)C(=C(C2=CC=CC=C2)C3=CC=C(C=C)OCCO)CCCl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=C1)C(=C(C2=CC=CC=C2)C3=CC=C(C=C3)OCCO)CCCl
+C1=CC(/CC=CCC(C(=O)O)N)N(CCCl)CCCl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC=C1CC(C(=O)O)N)N(CCCl)CCCl
+CC(C)CN(C[C@H]([C@H](Cc1cHcccc1)NC(=O)O[C@H]/CO[C@@H]3[C@H]2CCO3)O)S(=O)(=O)c4ccc,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CN(C[C@H]([C@H](Cc1cHcccc1)NC(=O)O[C@H]/CO[C@@H]3[C@H]2CCO3)O)S(=O)(=O)c4ccc(cc4)N
+CCCC(C)(COC(=OI)N)COC(=O)N,True,False,LEAK,valence too high,CCCC(C)(COC(=O)N)COC(=O)N
+C1=CC(=C)=C1NC(=NC(=NCCCCCCN=C(N)N=C(N)NC2=CC=C(C=C2)ClCN)N)Cl,True,False,LEAK,valence too high,C1=CC(=CC=C1NC(=NC(=NCCCCCCN=C(N)N=C(N)NC2=CC=C(C=C2)Cl)N)N)Cl
+CN(C)CCCN1C=CC=CC=C2CCC3=CC=CC=C31,True,False,LEAK,syntax (ring closure / parens / token),CN(C)CCCN1C2=CC=CC=C2CCC3=CC=CC=C31
+ccc(ccc1c2c(c3ccc(cc3s2)O)C(O)c4ccc(cc4)OCC[NH+]5CCCCC5)O,True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1c2c(c3ccc(cc3s2)O)C(=O)c4ccc(cc4)OCC[NH+]5CCCCC5)O
+CNS(=O)(=O)CCc1ccc2c(c1)c(c[nH])C3CC[NH+](CC3)C,True,False,LEAK,syntax (ring closure / parens / token),CNS(=O)(=O)CCc1ccc2c(c1)c(c[nH]2)C3CC[NH+](CC3)C
+CC1=C[C@@H]2[C@H](CC[C@]3([ClH]2CC[C@@]3(C(=O)C)OC(=O)C)C)[C@@]4(C1=CC(=O)CC4)C,True,False,LEAK,valence too high,CC1=C[C@@H]2[C@H](CC[C@]3([C@H]2CC[C@@]3(C(=O)C)OC(=O)C)C)[C@@]4(C1=CC(=O)CC4)C
+c1ccc(cc1)C(CCC[NH3+]2CCCCC2)(c3ccccc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(CCC[NH3+]2CCCCC2)(c3ccccc3)O
+CC(C)6OC(=O)C(C)(C)Oc1ccc(cc)C(=O)c2ccc(cc2)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)OC(=O)C(C)(C)Oc1ccc(cc1)C(=O)c2ccc(cc2)Cl
+C1=CC(=C2C(=CNCCNCCO)C(=O)C3=C(C=CC(=C3C2=O)O)O)NCCNCCO,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=C2C(=C1NCCNCCO)C(=O)C3=C(C=CC(=C3C2=O)O)O)NCCNCCO
+c1cc(ccc1c2ccc(o2)/C=N/N3C3C(=O)NC3=O)[N+](=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1c2ccc(o2)/C=N/N3CC(=O)NC3=O)[N+](=O)[O-]
+C[NH+](C)CCn1c(nnn1)SCC2=C(N3[C@@H]([C@@H](C3=O)NC(=O)Cc4csc(n4)N)SC)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CCn1c(nnn1)SCC2=C(N3[C@@H]([C@@H](C3=O)NC(=O)Cc4csc(n4)N)SC2)C(=O)[O-]
+C1=CC(C(C(=C1)Cl)CC(=O)N7C(N)N)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=C(C(=C1)Cl)CC(=O)N=C(N)N)Cl
+CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F
+C[N+]1(CCC7C1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(CCCC1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+c1ccc(cc1)C(=O)1c2cccc(c7N)CC(=O)N,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(=O)c2cccc(c2N)CC(=O)N
+C1=CC(=CC=C1C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC=C1C#N)C(C2=CC=C(C=C2)C#N)N3C=NC=N3
+C1CN8(CCC1N2C=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)F,True,False,LEAK,syntax (ring closure / parens / token),C1CN(CCC1N2C3=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)F
+C(CN(CC(=O)O=CC(=O)O)N(CC(=O)O)CC=O)O,True,False,LEAK,valence too high,C(CN(CC(=O)O)CC(=O)O)N(CC(=O)O)CC(=O)O
+CN(C1=C(N=C(N=C1N)C2=NN(C3=C2C9=CC=N)CC4=CC=CC=C4F)N)C(=O)OC,True,False,LEAK,syntax (ring closure / parens / token),CN(C1=C(N=C(N=C1N)C2=NN(C3=C2C=CC=N3)CC4=CC=CC=C4F)N)C(=O)OC
+CC(C)NCC(COC1=CC=CC2=CC=CC=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NCC(COC1=CC=CC2=CC=CC=C21)O
+C(CN(CC(=O)O=CC(=O)O)N(CPC(=O)O)CC=O)O,True,False,LEAK,valence too high,C(CN(CC(=O)O=CC(=O)O)N(CC(=O)O)CC=O)O
+CC(=O)NC1=[N](N=C(S1)S(=O)(=O)N)C,True,False,LEAK,valence too high,CC(=O)NC1=[N+](N=C(S1)S(=O)(=O)N)C
+Cc1cccc(c1NC(=O)c2cnc(s2)Nc3cc(nc(n3)C)N4CC[NH](CC4)CCO)Cl,True,False,LEAK,valence too high,Cc1cccc(c1NC(=O)c2cnc(s2)Nc3cc(nc(n3)C)N4CC[NH+](CC4)CCO)Cl
+C[NH+]CCCCC1CCN2c3ccc9cc3Sc4c2cc(cc4)S(=O)C,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]1CCCCC1CCN2c3ccccc3Sc4c2cc(cc4)S(=O)C
+CC1C2CC3=C(C13(CCN2CC=C(C)C)C)C=C(C=C3)O,True,False,LEAK,syntax (ring closure / parens / token),CC1C2CC3=C(C1(CCN2CC=C(C)C)C)C=C(C=C3)O
+c1cc(ccc1c2ccc(o2)/C=N/N3CC(=O)N3=O)[N+](=O)[O-],True,False,LEAK,valence too high,c1cc(ccc1c2ccc(o2)/C=N/N3CC(=O)NC3=O)[N+](=O)[O-]
+c1cc(ccc1c2ccc(o2)/C=NCN3/3C(=O)NC3=O)[N+](=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1c2ccc(o2)/C=N/N3C3C(=O)NC3=O)[N+](=O)[O-]
+CNC(=O)C=NC=CC(=C1)OC2=CC=C(C7=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F
+CC1=CC(=NO)C(=O)NNCC2=CC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC(=NO1)C(=O)NNCC2=CC=CC=C2
+c1cc(ccc1c2ccc(o2)/C=N/N3C/C(=O)N3=O)[N+](=O)[O-],True,False,LEAK,valence too high,c1cc(ccc1c2ccc(o2)/C=N/N3CC(=O)N3=O)[N+](=O)[O-]
+C[N+]1(C3CC7C1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(CCC7C1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)C)3(C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)C)(C)C
+CC[NH+](CC)7CCN1c2ccc(cc2C(=NCC1=O)c3ccccc3F)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC[NH+](CC)CCN1c2ccc(cc2C(=NCC1=O)c3ccccc3F)Cl
+c1cc(cnc5)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),c1cc(cnc1)C(=O)[O-]
+C[NH+]1CC[C@]23c4c5ccc(c4O[C@H]1C(=O)CC[C@]3([C@H]1C5)O)OC,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]1CC[C@]23c4c5ccc(c4O[C@H]2C(=O)CC[C@]3([C@H]1C5)O)OC
+Cc1cc2c(ccC(=C)c83ccc(co3)C(=O)[O-])C(CCC2(C)C)(C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)c83ccc(co3)C(=O)[O-])C(CCC2(C)C)(C)C
+c15cc(ccc1C(=O3)CC(=O)[O-])N,True,False,LEAK,syntax (ring closure / parens / token),c15cc(ccc1C(=O)NCC(=O)[O-])N
+CcOC(=O)CC\CCCCCCC(C)c1cCccc1I,True,False,LEAK,aromaticity / kekulization,CCOC(=O)CCCCCCCCC(C)c1ccccc1I
+CC(C=CC=9C(C=C1)C(=O)C2=CC=CS2)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C1=CC=C(C=C1)C(=O)C2=CC=CS2)C(=O)O
+CC(=O)/N=c\1/n(nc(s1)s(=O)(=O)N)C,True,False,LEAK,aromaticity / kekulization,CC(=O)/N=c\1/n(nc(s1)S(=O)(=O)N)C
+C[N+]1(C3CC7C1)CC2=C(N3C(C(C3=O)NC(=O)C6(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+c1ccc(cc1)C(=O8)c2cccc(c2N)CC(=O)N,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(=O)c2cccc(c2N)CC(=O)N
+CC(C)OC(=O)C(C)(C)Oc1ccc(cc)C(=O)c2ccc(cc2)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)6OC(=O)C(C)(C)Oc1ccc(cc)C(=O)c2ccc(cc2)Cl
+c1cc(ccc1C[C@@H](C(=O3)[O-])[NH3+]5)O,True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1C[C@@H](C(=O)[O-])[NH3+])O
+CN1CC[C@@]23C=C[C@@H](C[C@@H]2OC4=C(C=CC(=C34)C)OC)O,True,False,LEAK,syntax (ring closure / parens / token),CN1CC[C@@]23C=C[C@@H](C[C@@H]2OC4=C(C=CC(=C34)C1)OC)O
+c1c[5H]nc1CC[NH3+],True,False,LEAK,valence too high,c1c[nH]nc1CC[NH3+]
+CC(C)(C)C(C=CC1=CC2=C(C=C1)O3CO2)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)(C)C(C=CC1=CC2=C(C=C1)OCO2)O
+C1=CC(=C(C=C1)O)C(CCN(C(C)C)C(C)C)CN=CC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC(=C(C=C1)O)C(CCN(C(C)C)C(C)C)C2=CC=CC=C2
+COC1=C(C=C(C=C1)CNC2=NC(=NC=C2C(=O)NCC3=NC=CC=N)N4CCC[C@H]4CO)Cl,True,False,LEAK,syntax (ring closure / parens / token),COC1=C(C=C(C=C1)CNC2=NC(=NC=C2C(=O)NCC3=NC=CC=N3)N4CCC[C@H]4CO)Cl
+[H]/[NH+]=C(/C=CC(=O)/C(=C\C=c2ccc(=C([NH3+])N)cc2)/C=C1)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C1=CC(=O)/C(=C\C=c2ccc(=C([NH3+])N)cc2)/C=C1)\N
+CCH(C)(C)CC(C)(C)c1ccc(cc)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)(C)CC(C)(C)c1ccc(cc1)O
+C[N+]1(C3CC7C1)CC2=C(N3C(C(C3=O)NC(=O)C6(=NOC)C4=CSC(=N4)N)#SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C1)CC2=C(N3C(C(C3=O)NC(=O)C6(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+C1[C@@H]([C@H]([C@@H]([C@H]([C@@H]1[NH3+])O[C@H]#2[C@@H]([C@H]([C@@H]([C@H](O2)CO)O)[NH3+])O)O)O[C@@H]3[C@@H](C[C@@H]([C@H](O3)C[NH3+])O)[NH3+])[NH3+],True,False,LEAK,valence too high,C1[C@@H]([C@H]([C@@H]([C@H]([C@@H]1[NH3+])O[C@@H]2[C@@H]([C@H]([C@@H]([C@H](O2)CO)O)[NH3+])O)O)O[C@@H]3[C@@H](C[C@@H]([C@H](O3)C[NH3+])O)[NH3+])[NH3+]
+CCCCC(C)(C/C=C/[C@H]1[C@@H](CC(=O)[C@@H]1C8CCCCCC(=O)OC)O)O,True,False,LEAK,syntax (ring closure / parens / token),CCCCC(C)(C/C=C/[C@H]1[C@@H](CC(=O)[C@@H]1CCCCCCC(=O)OC)O)O
+CNS(=O)(=O)CCc1ccc2c(c1)(c[nH]2)C3CC[NH+](CC3)C,True,False,LEAK,aromaticity / kekulization,CNS(=O)(=O)CCc1ccc2c(c1)c(c[nH]2)C3CC[NH+](CC3)C
+CC(=O)/N=c\n(nc(s1)S(=O)(=O)N)C,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)/N=c\1/n(nc(s1)S(=O)(=O)N)C
+CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4c3C(ccc4)C2=C1)C,True,False,LEAK,aromaticity / kekulization,CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4c3c(ccc4)C2=C1)C
+CNC(=C[N](=O)[O-])NCC5SCC1=CSC(=N1)CN(C)C,True,False,LEAK,syntax (ring closure / parens / token),CNC(=C[N+](=O)[O-])NCCSCC1=CSC(=N1)CN(C)C
+C1COCC(=O)N1C2=CC=C(C=C2)N9CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1COCC(=O)N1C2=CC=C(C=C2)N3CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl
+CC(C=SCC=9C(C=C1)C(=O)C2=CC=CS2)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C=CC=9C(C=C1)C(=O)C2=CC=CS2)C(=O)O
+COC1=C(C=C2C(=C1)N=5N=C2NC3=9CC(=C(C=C3)F)Cl)OCCCN4CCOCC4,True,False,LEAK,syntax (ring closure / parens / token),COC1=C(C=C2C(=C1)N=CN=C2NC3=CC(=C(C=C3)F)Cl)OCCCN4CCOCC4
+C1CN8(CCC18N2C=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)F,True,False,LEAK,syntax (ring closure / parens / token),C1CN8(CCC1N2C=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)F
+CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2C9c3c[nH]c4c3c(ccc4)C2=C1)C,True,False,LEAK,syntax (ring closure / parens / token),CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4c3c(ccc4)C2=C1)C
+COc(C(Cl)Cl)(F)F,True,False,LEAK,aromaticity / kekulization,COC(C(Cl)Cl)(F)F
+C[NH+]1CCC(=C2cccccc3CCc4c2nccc)CC1,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]1CCC(=C2c3ccccc3CCc4c2nccc4)CC1
+[H]/[NH+]=C(/C=CC(=O)nC(=C8C=c2ccc(=C([NH3+])N)cc2)/C=C1)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)nC(=C\C=c2ccc(=C([NH3+])N)cc2)/C=C1)\N
+CCCNCC(COC1=CC=CC=C1C6(=O)CCC2=CC=CC=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CCCNCC(COC1=CC=CC=C1C(=O)CCC2=CC=CC=C2)O
+C1CCC(C1)C(CC#N)N2C=6C(C=N2)C3=C4C=CNC4=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1CCC(C1)C(CC#N)N2C=C(C=N2)C3=C4C=CNC4=NC=N3
+CC(C)CN(C[C@H]([C@H](Cc1cHcccc1)NC(=O)O[C@H]/CO[C@@H]3[C@H]2CCO3)2O)S(=O)(=O)c4ccc,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CN(C[C@H]([C@H](Cc1cHcccc1)NC(=O)O[C@H]/CO[C@@H]3[C@H]2CCO3)O)S(=O)(=O)c4ccc
+c61ccn2c(c1)nn(c2=O)CCC[NH+]3CCN(CC3)c4cccc(c4)Cl,True,False,LEAK,syntax (ring closure / parens / token),c1ccn2c(c1)nn(c2=O)CCC[NH+]3CCN(CC3)c4cccc(c4)Cl
+C6C[C@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4c3c(ccc4)C2=C1)C,True,False,LEAK,syntax (ring closure / parens / token),CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4c3c(ccc4)C2=C1)C
+CC(CN1CC(=O))C(=ONC1)N2CC(=O)NC(=O)C2,True,False,LEAK,valence too high,CC(CN1CC(=O)NC(=O)C1)N2CC(=O)NC(=O)C2
+CCC(=O)OCC(=O)C1(CCC2C1(CC(C3C26CCC4=CC(=O)C=CC34C)O)C)OC(=O)OCC,True,False,LEAK,syntax (ring closure / parens / token),CCC(=O)OCC(=O)C1(CCC2C1(CC(C3C2CCC4=CC(=O)C=CC34C)O)C)OC(=O)OCC
+CCCC(C6)C1(C(=O)NC(=[NH+]C1=O)S)CC=C,True,False,LEAK,syntax (ring closure / parens / token),CCCC(C)C1(C(=O)NC(=[NH+]C1=O)S)CC=C
+COCCOC(=O)NCCC4C[C@@H](C(=O)NCCCCCCCOP(=O)(C)O)NC(=O)OCCOC,True,False,LEAK,syntax (ring closure / parens / token),COCCOC(=O)NCCCC[C@@H](C(=O)NCCCCCCCOP(=O)(C)O)NC(=O)OCCOC
+C1CCC(C1)C(CC#N)N2C=C(C=N2)C=C4C=CNC4=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1CCC(C1)C(CC#N)N2C=C(C=N2)C3=C4C=CNC4=NC=N3
+CCC2CC3=C(C13(CCN2CC=C(C)C)C)C=C(C=C3)O,True,False,LEAK,syntax (ring closure / parens / token),CC1C2CC3=C(C13(CCN2CC=C(C)C)C)C=C(C=C3)O
+C1CC(=O)NC(=O)C1N2C,True,False,LEAK,syntax (ring closure / parens / token),C1CC(=O)NC(=O)C1N2C(=O)C3=CC=CC=C3C2=O
+C1CN8(CCC18N2C=CC=CC=C3NC2=O)CCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)F,True,False,LEAK,syntax (ring closure / parens / token),C1CN8(CCC18N2C=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)F
+CC(C)CN(C[C@H]([C@H](Cc1cHcccc1)NC(=O)O[C@H]/8CO[C@@H]3[C@H]2CCO3)O)S(=O)(=O)c4ccc(cc4)N,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CN(C[C@H]([C@H](Cc1cHcccc1)NC(=O)O[C@H]/CO[C@@H]3[C@H]2CCO3)O)S(=O)(=O)c4ccc(cc4)N
+CCN1C1(=O)C(NC1=O)C=CC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),CCN1C(=O)C(NC1=O)C=CC=CC=C2
+[H]/[NH+]=C(/C=CC(=O)nC(=C8C=c2cc\c(=C([NH3+])N)cc2)/C=C1)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)nC(=C8C=c2ccc(=C([NH3+])N)cc2)/C=C1)\N
+c12ccc(cc1)C(=O8)c2ccc2c(c2N)CC(=O)N,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(=O8)c2cccc(c2N)CC(=O)N
+c1cnc25c3c(cc2n1)[C@@H]4C[C@H]3C[NH2+]C4,True,False,LEAK,syntax (ring closure / parens / token),c1cnc2cc3c(cc2n1)[C@@H]4C[C@H]3C[NH2+]C4
+C[2N+]1(C3CC7C1)CC2=C(N3C(C(C3=O)NC(=O)C6(=NOC)C4=C1SC(=N4)N)#SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C1)CC2=C(N3C(C(C3=O)NC(=O)C6(=NOC)C4=CSC(=N4)N)#SC2)C(=O)[O-]
+CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccccc4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc2cccc(c2n1Cc3ccc(cc3)c4ccccc4c5[nH]oc(=O)n5)C(=O)OCc6c(oc(=O)o6)C
+C[C@]12C[C@@H]([C@H]C[C@H]([C@@H]1CC[C@@]2(C(=O)COC(=O)CC(C)(C)C)O)CCC4=CFC(=O)C=C[C@]34C)O,True,False,LEAK,syntax (ring closure / parens / token),C[C@]12C[C@@H]([C@H]3[C@H]([C@@H]1CC[C@@]2(C(=O)COC(=O)CC(C)(C)C)O)CCC4=CC(=O)C=C[C@]34C)O
+CN1CC[C@@]23C=C[C@@H](C[C@@H]2OC4=C(C=C(=C34)C)OC)O,True,False,LEAK,syntax (ring closure / parens / token),CN1CC[C@@]23C=C[C@@H](C[C@@H]2OC4=C(C=CC(=C34)C)OC)O
+CN1CCN(CC1)CCC=C2C3=CC=CC=CSC4=C2C=C(C=C4)S(=O)(=O)N(C)C,True,False,LEAK,syntax (ring closure / parens / token),CN1CCN(CC1)CCC=C2C3=CC=CC=C3SC4=C2C=C(C=C4)S(=O)(=O)N(C)C
+C1CN8(CCC18N2C=CC=CC=C3NC2=O)CCCC(C45=CC=C(C=C4)F)C5=CC=C(C=C5)F,True,False,LEAK,syntax (ring closure / parens / token),C1CN8(CCC18N2C=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)F
+CCH(C)(C)CC(C)(C)1Cccc(cc)O,True,False,LEAK,syntax (ring closure / parens / token),CCH(C)(C)CC(C)(C)c1ccc(cc)O
+CCCCOc1cc(ccc1N)C(=O)OCC[NH+]2(CC)CC,True,False,LEAK,syntax (ring closure / parens / token),CCCCOc1cc(ccc1N)C(=O)OCC[NH+](CC)CC
+Cc1ccc6c(c1)C[NH+]2CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc1cccc(c1)C[NH+]2CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl
+CN(C)NN=CC(=NC=N16)C(=O)N,True,False,LEAK,syntax (ring closure / parens / token),CN(C)NN=C1C(=NC=N1)C(=O)N
+CC1=C(=C(=C2CCC(OC2=C1C)(C)COC3=CC=FC(C=C3)CC4C(=O)NC(=O)S4)C)O,True,False,LEAK,valence too high,CC1=C(C(=C2CCC(OC2=C1C)(C)COC3=CC=C(C=C3)CC4C(=O)NC(=O)S4)C)O
+[H]/[NH+]=C(/C=CC(=O)nC(=C8C=c2cc\c(=C([NH+])N)cc2)/C=C)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)nC(=C8C=c2cc\c(=C([NH3+])N)cc2)/C=C1)\N
+CN(C6)CCCN1C2=CC=CC=C2CCC3=Co=CC=C31,True,False,LEAK,syntax (ring closure / parens / token),CN(C)CCCN1C2=CC=CC=C2CCC3=CC=CC=C31
+CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F
+C11=CC(=CC=C1C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC=C1C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N3
+C[NH2+3]/C(=C\[N+](=O)[O-])/NCCSCc1ccc(o1)C[NH+](C)C,True,False,LEAK,valence too high,C[NH2+]/C(=C\[N+](=O)[O-])/NCCSCc1ccc(o1)C[NH+](C)C
+CCN1C=C(C(=O)C2=CC(=C(C=C219)N3CCNCC3)F)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CCN1C=C(C(=O)C2=CC(=C(C=C21)N3CCNCC3)F)C(=O)O
+COC(=O)NC=NC2=C(N1)C=C(C=C2)C(=O)C3=CC=CC=C3,True,False,LEAK,syntax (ring closure / parens / token),COC(=O)NC1=NC2=C(N1)C=C(C=C2)C(=O)C3=CC=CC=C3
+CC(C4)NC(=O)C1=CC=C(C=C1)CNNC,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NC(=O)C1=CC=C(C=C1)CNNC
+c[NH+](C)CC/C=C\1/c2c5cccC2Sc3c1cc(cc3)Cl,True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CC/C=C\1/c2ccccc2Sc3c1cc(cc3)Cl
+Cc/cccc(c1)C[NH+]2CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc1cccc(c1)C[NH+]2CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl
+C=CC(=CC=C1NC(=NC(=NCCCCCCN=C(N)N=C(N)NC2=CC=C(C=C2)Cl)N)N)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC=C1NC(=NC(=NCCCCCCN=C(N)N=C(N)NC2=CC=C(C=C2)Cl)N)N)Cl
+CC(C)(C)CC(C)(C)cccc(cc)O,True,False,LEAK,aromaticity / kekulization,CC(C)(C)CC(C)(C)c1ccc(cc1)O
+CCN(CC)C(=O)/C(=C/c1cc(c(c(c)O)[O-])[N+](=O)[O-])/C#N,True,False,LEAK,syntax (ring closure / parens / token),CCN(CC)C(=O)/C(=C/c1cc(c(c(c1)O)[O-])[N+](=O)[O-])/C#N
+CN(C)NN=CC(=NC=No16)C(=O)N,True,False,LEAK,syntax (ring closure / parens / token),CN(C)NN=CC(=NC=N16)C(=O)N
+CCOc1nc2cccc(c2n1Cc3cc6c(cc3)c4ccccc4c5[nH]oc(=O)n5)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc2cccc(c2n1Cc3ccc(cc3)c4ccccc4c5[nH]oc(=O)n5)C(=O)OCc6c(oc(=O)o6)C
+CCC(C)C1C(=O)NC(C(=O)NC(C(=O)NC(CSSCC(C(=O)NC(C(=O)N1)CC=CC=C(C=C2)O)N)C(=O)N3CCCC3C(=O)NC(CC(C)C)C(=O)NCC(=O)N)CC(=O)N)C(C)O,True,False,LEAK,syntax (ring closure / parens / token),CCC(C)C1C(=O)NC(C(=O)NC(C(=O)NC(CSSCC(C(=O)NC(C(=O)N1)CC2=CC=C(C=C2)O)N)C(=O)N3CCCC3C(=O)NC(CC(C)C)C(=O)NCC(=O)N)CC(=O)N)C(C)O
+CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C4)Cl)C=C1NC=CC=C(C=C5)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)N=C1C=C2C(=NC3=CC=CC=C3N2C4=CC=C(C=C4)Cl)C=C1NC5=CC=C(C=C5)Cl
+C[NH+](C)CC3N(Ccccc(cc1)OC)c2ccccn2,True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CCN(Cc1ccc(cc1)OC)c2ccccn2
+CCCCOc1c1c(ccc1N)(=O)OCC[NH+]2(CC)CC,True,False,LEAK,syntax (ring closure / parens / token),CCCCOc1cc(ccc1N)C(=O)OCC[NH+]2(CC)CC
+CC[NH+](CCCC(C)Nc1cc[nH+]cc1ccc(c2)Cl)2CO,True,False,LEAK,valence too high,CC[NH+](CCCC(C)Nc1cc[nH+]c2c1ccc(c2)Cl)CCO
+CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C94)Cl)C=C1N=CC=C(C=C5)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C4)Cl)C=C1NC=CC=C(C=C5)Cl
+CC1=C(C(C(=C(N1)C)C(=O)OC(C)(C)CN(C)CCC(C2=CC=CC=C2)C3=CC=CC=C3)C4=CC6(=CC=C4)[N+](=O)[O-])C(=O)OC,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C(C(=C(N1)C)C(=O)OC(C)(C)CN(C)CCC(C2=CC=CC=C2)C3=CC=CC=C3)C4=CC(=CC=C4)[N+](=O)[O-])C(=O)OC
+cNS(=O)(=O)CCc1ccc2c(c1)(c[nH]2)C3CC[NH+](CC3)C,True,False,LEAK,aromaticity / kekulization,CNS(=O)(=O)CCc1ccc2c(c1)(c[nH]2)C3CC[NH+](CC3)C
+CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C3=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F
+Cc1ccc4c(c1)C[NH+]2CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc1cccc(c1)C[NH+]2CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl
+cnc[1H]nc1CC[NH3+],True,False,LEAK,syntax (ring closure / parens / token),c1c[nH]nc1CC[NH3+]
+CCC(C)C1C(=O)NC(C(=O)NC(C(=O)NC(CSSCC(C(=O)NC(C(=O)N)CC=CC=C(C=C)O)N)C(=O)N3CCCC3C(=O)NC(CC(C)C)C(=O)NCC(=O)N)CC(=O)N)C(C)O,True,False,LEAK,syntax (ring closure / parens / token),CCC(C)C1C(=O)NC(C(=O)NC(C(=O)NC(CSSCC(C(=O)NC(C(=O)N1)CC=CC=C(C=C2)O)N)C(=O)N3CCCC3C(=O)NC(CC(C)C)C(=O)NCC(=O)N)CC(=O)N)C(C)O
+CC(=O)/N=c\n(nc(s1))(=O)(O)NSC,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)/N=c\n(nc(s1)S(=O)(=O)N)C
+C3H(C)(C)CC(C)(C)1Cccc(cc)O,True,False,LEAK,syntax (ring closure / parens / token),CCH(C)(C)CC(C)(C)1Cccc(cc)O
+c1ccc(cc1)C(CHC[NH3+]2CCCCC2)(c3ccccc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(CCC[NH3+]2CCCCC2)(c3ccccc)O
+C1=C(=CC=C1C#N)C(C2=CC=C(C=C2)#N)N3C=NC=N3,True,False,LEAK,valence too high,C1=CC(=CC=C1C#N)C(C2=CC=C(C=C2)C#N)N3C=NC=N3
+CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C94)Cl)C=C1N=CC=C(C=C5)4Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C94)Cl)C=C1N=CC=C(C=C5)Cl
+CCN(CC)C(=O)/7C(=C/c1cc(c(c(c1)O)[O-])[N+](=O)[O-])/C#N,True,False,LEAK,syntax (ring closure / parens / token),CCN(CC)C(=O)/C(=C/c1cc(c(c(c1)O)[O-])[N+](=O)[O-])/C#N
+CCH(C)(C)CC(C)(C)Cccc(cc)O,True,False,LEAK,syntax (ring closure / parens / token),CCH(C)(C)CC(C)(C)1Cccc(cc)O
+CC(C)CN(C[C@H]([C@H](Cc1cHcccc1)NC(=O)O[C@H]/CO[C@@H]4[C@H]2CCO3)O)S(=O)(=O)c4ccc(cc4)N,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CN(C[C@H]([C@H](Cc1cHcccc1)NC(=O)O[C@H]/CO[C@@H]3[C@H]2CCO3)O)S(=O)(=O)c4ccc(cc4)N
+CC(C)CC1(C(=O)NC(=O)N\C=O)CC=C,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CC1(C(=O)NC(=O)NC1=O)CC=C
+CC(=O)/N=4c\1/n(=nc(s1)S(=O)(=O)N)C,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)/N=c\1/n(nc(s1)S(=O)(=O)N)C
+C5(=O)Nc1c(c(c(c(c1I)NC(=O)C)I)C(=O)[O-])I,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)Nc1c(c(c(c(c1I)NC(=O)C)I)C(=O)[O-])I
+Ccc2,True,False,LEAK,syntax (ring closure / parens / token),Cc1c2cc3c(c(c([nH]3)cc4nc(cc5nc(cc(c1C(C)O)[nH]2)C(=C5CCC(=O)[O-])C)C(=C4C)CCC(=O)[O-])C)C(C)OC(C)c6c(c7cc8c(c(c([nH]8)cc9nc(cc1nc(cc6[nH]7)C(=C1CCC(=O)[O-])C)C(=C9C)CCC(=O)[O-])C)C(C)O)C
+C8CC#CC(C)C1(C(=O)NC(=O)N(C1=O)C)CC=C,True,False,LEAK,syntax (ring closure / parens / token),CCC#CC(C)C1(C(=O)NC(=O)N(C1=O)C)CC=C
+C1[C@@H]([C@H]([C@@H]([C@H]([C@@H]1[NH3+])O[C@H]#2[C@@H]([C@H]([C@@H]([C@H](O2)CO)O)[NH3+])O)O)O1[C@@H]3[C@@H](C[C@@H]([C@H](O3)C[NH3+])O)[NH3+])[NH3+],True,False,LEAK,syntax (ring closure / parens / token),C1[C@@H]([C@H]([C@@H]([C@H]([C@@H]1[NH3+])O[C@H]#2[C@@H]([C@H]([C@@H]([C@H](O2)CO)O)[NH3+])O)O)O[C@@H]3[C@@H](C[C@@H]([C@H](O3)C[NH3+])O)[NH3+])[NH3+]
+[H]/[NH+]=C(/C=CC(=O)n-C(=C8C=c2cc\c(=C([NH3+])N)cc2)/C=C1)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)nC(=C8C=c2cc\c(=C([NH3+])N)cc2)/C=C1)\N
+C[N+](C)(C)nCCCCCCCCC[N+](C)(C)C,True,False,LEAK,aromaticity / kekulization,C[N+](C)(C)CCCCCCCCCC[N+](C)(C)C
+CN(C1=C(N=C(N=C1N)C2=NN(C3=C2C=CC=N3)C9C4=CC=CC=C4F)N)C(=O)OC,True,False,LEAK,syntax (ring closure / parens / token),CN(C1=C(N=C(N=C1N)C2=NN(C3=C2C=CC=N3)CC4=CC=CC=C4F)N)C(=O)OC
+CCC#CC(C)C1(C(=O)NC(=O)N(C1=O5)C)6CC=C,True,False,LEAK,syntax (ring closure / parens / token),CCC#CC(C)C1(C(=O)NC(=O)N(C1=O)C)CC=C
+C(CNCC(=O)O=CC(=O)O)N(CPC(=O)O)CC=OO,True,False,LEAK,valence too high,C(CN(CC(=O)O=CC(=O)O)N(CPC(=O)O)CC=O)O
+COC9COC(=O)NCCCC[C@@H](C(=O)NCCCCCCCOP(=O)(C)O)NC(=O)OCCOC,True,False,LEAK,syntax (ring closure / parens / token),COCCOC(=O)NCCCC[C@@H](C(=O)NCCCCCCCOP(=O)(C)O)NC(=O)OCCOC
+C[N+]1(C3CC7C)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4cccccn4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccccc4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C
+C[C@@H](C(=O)Nc1c(c(c(c(cI)C(=O)NC(CO)CO)I)C(=O)NC(CO)CO)I)O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H](C(=O)Nc1c(c(c(c(c1I)C(=O)NC(CO)CO)I)C(=O)NC(CO)CO)I)O
+c1ccc(cc1)C(CCC[NH+]2CCCCC2)(c3ccccc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(CCC[NH3+]2CCCCC2)(c3ccccc)O
+C1=CC(=C(C=C1)O)C(CCN(C(C)C)C(C7)C)CNICC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=C(C=C1)O)C(CCN(C(C)C)C(C)C)CN=CC=CC=C2
+C(=O)NC1=[N](N=C(S=1)S(=O)(=O)N)C,True,False,LEAK,valence too high,CC(=O)NC1=[N](N=C(S1)S(=O)(=O)N)C
+CcOC(=O)CC\CCCCCCCc(C)c1cCcccI,True,False,LEAK,syntax (ring closure / parens / token),CcOC(=O)CC\CCCCCCC(C)c1cCccc1I
+C[NH+]1CC[C@]23c4c5ccc(c4O[C@H]2C(=O)CC[C@]3([C@H]1C4)O)OC,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]1CC[C@]23c4c5ccc(c4O[C@H]2C(=O)CC[C@]3([C@H]1C5)O)OC
+C1CN8(CCC18N2C=CC=CC=C3NC2=O)CCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)1,True,False,LEAK,syntax (ring closure / parens / token),C1CN8(CCC18N2C=CC=CC=C3NC2=O)CCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)F
+CNC(=O)51=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F
+CFOC(=O)CCCCCCCCC(C)1ccccc1I,True,False,LEAK,valence too high,CCOC(=O)CCCCCCCCC(C)c1ccccc1I
+CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccc5cn4c5[nH]oc(=O)4nc)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4cccccn4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C
+CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccc=cc4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccccc4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C
+c1ccc(cc1)C(CCC[NH3+]2CCCCC2)(c3ccc9cc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(CCC[NH3+]2CCCCC2)(c3ccccc)O
+C1CC(C2=CC=CC=C2C1)C3=NCCNF3,True,False,LEAK,valence too high,C1CC(C2=CC=CC=C2C1)C3=NCCN3
+CCC[NH2+][C@H]1CCc2c(sc(n2)1N)C,True,False,LEAK,aromaticity / kekulization,CCC[NH2+][C@H]1CCc2c(sc(n2)N)C1
+CC(C4)c1cccc(c1OCOP(=O)([O-])[O-])C(C)C,True,False,LEAK,syntax (ring closure / parens / token),CC(C)c1cccc(c1OCOP(=O)([O-])[O-])C(C)C
+CCN1C=C(C(=O)C2=CC(=C(C=C21)N9H3CCNCC3)F)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CCN1C=C(C(=O)C2=CC(=C(C=C21)N3CCNCC3)F)C(=O)O
+c61ccn2c(c1)nn(c2=O)CCC[7NH+]3CCN(CC3)c4cccc(c4)Cl,True,False,LEAK,syntax (ring closure / parens / token),c61ccn2c(c1)nn(c2=O)CCC[NH+]3CCN(CC3)c4cccc(c4)Cl
+CN(C1=C(N=C(N=C1N)C2=NN(C3=C2C=CC=N3)C9C4=CC=4CC=CF)N)C(=O)OC,True,False,LEAK,syntax (ring closure / parens / token),CN(C1=C(N=C(N=C1N)C2=NN(C3=C2C=CC=N3)C9C4=CC=CC=C4F)N)C(=O)OC
+C1CN8(CCC18N2C=CC=CC=C3NC2=O)CCCC(C45=CC=C(C=C4)I)C5=CC=C(C=C5)F,True,False,LEAK,syntax (ring closure / parens / token),C1CN8(CCC18N2C=CC=CC=C3NC2=O)CCCC(C45=CC=C(C=C4)F)C5=CC=C(C=C5)F
+COCCOC11=C(C=C2C(=C1)C(=NC=N2)NC3=CC=CC(=C3)#C)OCCOC,True,False,LEAK,syntax (ring closure / parens / token),COCCOC1=C(C=C2C(=C1)C(=NC=N2)NC3=CC=CC(=C3)C#C)OCCOC
+cc=cc2c(c1)CCCC2C3=[NH+]CCN3,True,False,LEAK,syntax (ring closure / parens / token),c1ccc2c(c1)CCCC2C3=[NH+]CCN3
+C[C@@H](#C(=O)N1CC2=CC(=C(C=C2C[C@H]1C(=O)O)OC)OC)N[C@@H](CCC3=CC=CC=C3)C(=O)O,True,False,LEAK,valence too high,C[C@@H](C(=O)N1CC2=CC(=C(C=C2C[C@H]1C(=O)O)OC)OC)N[C@@H](CCC3=CC=CC=C3)C(=O)O
+CC(C(=O)c1cccc(c11)Cl)[NH2+]C(C)(C)C,True,False,LEAK,syntax (ring closure / parens / token),CC(C(=O)c1cccc(c1)Cl)[NH2+]C(C)(C)C
+c1nc2c(n1COCCO)[nH]c(nc=O)N,True,False,LEAK,syntax (ring closure / parens / token),c1nc2c(n1COCCO)[nH]c(nc2=O)N
+CC(O)(C)C(C=CC1=CC2=C(C=C1)O3CO2)C,True,False,LEAK,syntax (ring closure / parens / token),CC(C)(C)C(C=CC1=CC2=C(C=C1)O3CO2)O
+c1cc(ccc1c2ccc(o)/C=N/N3C/C(=O)N3=O)[N+](=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1c2ccc(o2)/C=N/N3C/C(=O)N3=O)[N+](=O)[O-]
+C1C2CC3CC1CC(C2)(O73)[NH3+],True,False,LEAK,syntax (ring closure / parens / token),C1C2CC3CC1CC(C2)(C3)[NH3+]
+CCC#CC(C)C16(C(=O)NC(=O)N(C1=O)C)CC=C,True,False,LEAK,syntax (ring closure / parens / token),CCC#CC(C)C1(C(=O)NC(=O)N(C1=O)C)CC=C
+CCCCC(=O)N(Cc1ccc(cc1)c2cccc2c3[n-]nOnn3)[C@@H](C(C)C)C(=O9)[O-],True,False,LEAK,syntax (ring closure / parens / token),CCCCC(=O)N(Cc1ccc(cc1)c2cccc2c3[n-]nnn3)[C@@H](C(C)C)C(=O9)[O-]
+C1=CC(=CC(=C81)I)CN=C(N)N,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC(=C1)I)CN=C(N)N
+Cc2,True,False,LEAK,syntax (ring closure / parens / token),Ccc2
+CC(C)OC(=O)C(C)(C)Occcc(cc)C(=O)cccc(cc2)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)OC(=O)C(C)(C)Oc1ccc(cc)C(=O)c2ccc(cc2)Cl
+CC1=C4N(C(=O)NC1=O)C2CC(C(O2)CO)O,True,False,LEAK,syntax (ring closure / parens / token),CC1=CN(C(=O)NC1=O)C2CC(C(O2)CO)O
+CCCC(C)C1(C(=O)NC(=[NH+]C1=O)S)=CCC,True,False,LEAK,valence too high,CCCC(C)C1(C(=O)NC(=[NH+]C1=O)S)CC=C
+CC1=NC=C(C=C1)C2=NC=C(C=C2C3=CC=C(C=C3)S(=O)(=O)7C)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC1=NC=C(C=C1)C2=NC=C(C=C2C3=CC=C(C=C3)S(=O)(=O)C)Cl
+C[NH+](C)CCn1c(nnn1)SCC2=C(N3[C@@H]([C@@H](C=O)NC(=O)Cc4csc(n4)N)SC)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CCn1c(nnn1)SCC2=C(N3[C@@H]([C@@H](C3=O)NC(=O)Cc4csc(n4)N)SC)C(=O)[O-]
+CCC2CC3=C2(C13(CCNCC=C(C)C)C)C=C(C=C3)O,True,False,LEAK,syntax (ring closure / parens / token),CCC2CC3=C(C13(CCN2CC=C(C)C)C)C=C(C=C3)O
+C[NH+](C)CCN(C9c1ccc(cc1)OC)c2ccccn,True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CCN(Cc1ccc(cc1)OC)c2ccccn2
+CC1=CC=CC=CC(=O)NC2=CC(=C(C=C2)C(=O)N3CCC(C4=C3C=CC(=C4)Cl)O)C,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC=CC=C1C(=O)NC2=CC(=C(C=C2)C(=O)N3CCCC(C4=C3C=CC(=C4)Cl)O)C
+CC[NH+](CS)7CCN1c2ccc(cc2C(=NCC1=O)c3ccccc3F)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC[NH+](CC)7CCN1c2ccc(cc2C(=NCC1=O)c3ccccc3F)Cl
+CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4csC(ccc4)C2=C)C,True,False,LEAK,syntax (ring closure / parens / token),CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4c3C(ccc4)C2=C1)C
+c1cccc2(c1)C(=[NH+]c3ccccc4S2)N4CC[NH+](CC4)CCOCCO,True,False,LEAK,syntax (ring closure / parens / token),c1ccc2c(c1)C(=[NH+]c3ccccc3S2)N4CC[NH+](CC4)CCOCCO
+C[NH2+]CCCN=1c2ccc,True,False,LEAK,syntax (ring closure / parens / token),C[NH2+]CCCN1c2ccccc2CCc3c1cccc3
+CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C4)8Cl)C=C1NC=CC=C(C=C5)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C4)Cl)C=C1NC=CC=C(C=C5)Cl
+CC1=CC=C5=C1S(=O)(=O)NC(=O)C2=CC(=C(C=C2)CC3=CN(C4=C3C=C(C=C4)N#C(=O)OC5CCCC5)C)OC,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC=CC=C1S(=O)(=O)NC(=O)C2=CC(=C(C=C2)CC3=CN(C4=C3C=C(C=C4)NC(=O)OC5CCCC5)C)OC
+c1cc(ccc1c2ccc(o2)/C=N/N3C3C(=O)NC3=OP)[N+](=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1c2ccc(o2)/C=N/N3C3C(=O)NC3=O)[N+](=O)[O-]
+C[N+]1(C3CC7C1)CC2=C,True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+CN1CC,True,False,LEAK,syntax (ring closure / parens / token),CN1CCN(CC1)CCC=C2C3=CC=CC=CSC4=C2C=C(C=C4)S(=O)(=O)N(C)C
+CCCC(=O)OC1(CCC2C1(CC(C3C2CCC4=CC(=O)CCC343C)O)C)C(=O)CO,True,False,LEAK,syntax (ring closure / parens / token),CCCC(=O)OC1(CCC2C1(CC(C3C2CCC4=CC(=O)CCC34C)O)C)C(=O)CO
+c[NH+](C)CC/C=C\1/c2c5cccC2Scc1cc(cc3)Cl,True,False,LEAK,syntax (ring closure / parens / token),c[NH+](C)CC/C=C\1/c2c5cccC2Sc3c1cc(cc3)Cl
+C1[C@@H]([C@H]([C@@H]([C@H]([C@@H]1[NH3+])O[C@H]#2[C@@H]([C@H]([C@@H]([C@H](O2)CO)O)[NH3+])O)O)O1[C@@H]3[C@@H]7(C[C@@H3]([C@H](O3)C[NH3+])O)[NH3+])[NH3+],True,False,LEAK,syntax (ring closure / parens / token),C1[C@@H]([C@H]([C@@H]([C@H]([C@@H]1[NH3+])O[C@H]#2[C@@H]([C@H]([C@@H]([C@H](O2)CO)O)[NH3+])O)O)O1[C@@H]3[C@@H](C[C@@H]([C@H](O3)C[NH3+])O)[NH3+])[NH3+]
+[H]/[NH+]=C(/C=CC(=O)nC(=C8C=c2Cc\c(=C([NH3+])N)cc2)/C=C1)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)nC(=C8C=c2cc\c(=C([NH3+])N)cc2)/C=C1)\N
+CCCC(=O)OC1(CCCC1(CC(C3C2CCC4=CC(=O)CCC34C)O)C)C(=O)CO,True,False,LEAK,syntax (ring closure / parens / token),CCCC(=O)OC1(CCC2C1(CC(C3C2CCC4=CC(=O)CCC34C)O)C)C(=O)CO
+Co(=O)S[C@@H]1CC2=CC(=O)CC[C@@]2([C@@H]3[C@@H]1[C@@H]4CC[C@]5([C@]4(CC3)C)CCC(=O)O5)C,True,False,LEAK,valence too high,CC(=O)S[C@@H]1CC2=CC(=O)CC[C@@]2([C@@H]3[C@@H]1[C@@H]4CC[C@]5([C@]4(CC3)C)CCC(=O)O5)C
+C[NH4+](C),True,False,LEAK,valence too high,C[NH+](C)CCCN1c2ccccc2CCc3c1cccc3
+C[N+]1(CCC7C1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOsC)C4=CSC(=N4)N)SC2)C(O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(CCC7C1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+CC=C(=O)OCC(=O)C1(CCC2C1(CC(C3C26CCC4=CC(=O)C=CC34C)O)C)OC(=O)OCC,True,False,LEAK,syntax (ring closure / parens / token),CCC(=O)OCC(=O)C1(CCC2C1(CC(C3C26CCC4=CC(=O)C=CC34C)O)C)OC(=O)OCC
+CC(O6)(C)C(C=CC1=CC2=C(C=C1)O3CO2)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC1=CC2=C(C=C1)O3CO2)C
+C(CC(C(C(C(O1)O)F)O)O)O,True,False,LEAK,syntax (ring closure / parens / token),C(C1C(C(C(C(O1)O)F)O)O)O
+CC(C)c1nc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2cc5ccc2)C[C@@H]([C@H](Cc3cc4ccc3)NC(=O)OCc4cncs4)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)c1nc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2ccccc2)C[C@@H]([C@H](Cc3ccccc3)NC(=O)OCc4cncs4)O
+CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccc5cn4c5[nH]oc(=O)4nc)C(=O)OCc6c(\c(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccc5cn4c5[nH]oc(=O)4nc)C(=O)OCc6c(oc(=O)o6)C
+CC(=O)Nc1c(c(c(c(c1I)C(=O)[O-])I)C(=O)N9C)I,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)Nc1c(c(c(c(c1I)C(=O)[O-])I)C(=O)NC)I
+Cc1c(cno1)C(=O)Nc2ccs(cc2)6(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),Cc1c(cno1)C(=O)Nc2ccc(cc2)C(F)(F)F
+C1C2CC3CC1CC(C=2)(O73)[NH3+],True,False,LEAK,syntax (ring closure / parens / token),C1C2CC3CC1CC(C2)(O73)[NH3+]
+Cc1cc(c(c(c1OC(=O)C2)C)C)OCC(C[NH2+]C(C)C)O,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc(c(c(c1OC(=O)C)C)C)OCC(C[NH2+]C(C)C)O
+CCCOC(=O)Cn1cc(c(=O)c(c)I)I,True,False,LEAK,syntax (ring closure / parens / token),CCCOC(=O)Cn1cc(c(=O)c(c1)I)I
+C(=O)NC1=[N](N=C(S=S)1(=O)(=O)N)C,True,False,LEAK,valence too high,C(=O)NC1=[N](N=C(S=1)S(=O)(=O)N)C
+c16nc2c(nc(nc2n1[C@H]3[C@H]([C@@H]([C@H](O3)CO)O)F5)Cl)N,True,False,LEAK,syntax (ring closure / parens / token),c1nc2c(nc(nc2n1[C@H]3[C@H]([C@@H]([C@H](O3)CO)O)F)Cl)N
+CC1=C(C(=C2CCC(OC2=C1C)(C)COC3=CC5=C(C=C3)CC4C(=O)NC(=O)7S4)C)O,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C(=C2CCC(OC2=C1C)(C)COC3=CC=C(C=C3)CC4C(=O)NC(=O)S4)C)O
+C1C2=CC=CC=C2N(C3=CC=CC9=C3C1=O)C(=O)N,True,False,LEAK,syntax (ring closure / parens / token),C1C2=CC=CC=C2N(C3=CC=CC=C3C1=O)C(=O)N
+C[N+](C)(CnCCCCCCCCC[N+]C)(C)C,True,False,LEAK,valence too high,C[N+](C)(C)nCCCCCCCCC[N+](C)(C)C
+C[C@@H](C(=O)N)1c(c(c(c(cI)C(=O)NC(COcCO)I)C(=O)NC(CO)CO)I)O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H](C(=O)Nc1c(c(c(c(cI)C(=O)NC(CO)CO)I)C(=O)NC(CO)CO)I)O
+CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)2F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F
+CN(C)CCN(CC1=C5C=C(C=C1)OC)C2=CCF=CC=N2,True,False,LEAK,syntax (ring closure / parens / token),CN(C)CCN(CC1=CC=C(C=C1)OC)C2=CC=CC=N2
+CC(CN1CC(=O))C(=ONC1)N2C5C(=O)NC(=O)C2,True,False,LEAK,syntax (ring closure / parens / token),CC(CN1CC(=O))C(=ONC1)N2CC(=O)NC(=O)C2
+C1COCC(=O)N1C2=CC=C(C=C2)N3CC(OC3=O)C8NC(=O)C4=CC=C(S4)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1COCC(=O)N1C2=CC=C(C=C2)N3CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl
+CC1=CN(C(=O)N16=O)C2CC(C(O2)CO)O,True,False,LEAK,syntax (ring closure / parens / token),CC1=CN(C(=O)NC1=O)C2CC(C(O2)CO)O
+CC1=C(C(=C2CCC(OC2=C1C)(C)CO5C3=CC5=C(C=C3)ICC4C(=O)NC(=O)7S4)C)O,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C(=C2CCC(OC2=C1C)(C)COC3=CC5=C(C=C3)CC4C(=O)NC(=O)7S4)C)O
+c1ccc(cc1)C(C6HC[NH3+]2CCCCC23)(c3ccccc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(CHC[NH3+]2CCCCC2)(c3ccccc)O
+CC(CN1CC(=O))C(=ONC1)N2C5C(=O)NC(=O)=C2,True,False,LEAK,syntax (ring closure / parens / token),CC(CN1CC(=O))C(=ONC1)N2C5C(=O)NC(=O)C2
+CC1=C2[C@H](C(=O)[C@@]3([C@H](C[C@@H]4[C@]([C@H]3[C@@H]([C@@](C2(C)C)(C[C@@H]1OC(=O)[C@@H]([C@H](c5ccccc5)NC(=O)OC(C)(C)C)O)O)OC(=O)c6ccccc6)(CO4)OC(=O)C)5OC)C)OC,True,False,LEAK,syntax (ring closure / parens / token),CC1=C2[C@H](C(=O)[C@@]3([C@H](C[C@@H]4[C@]([C@H]3[C@@H]([C@@](C2(C)C)(C[C@@H]1OC(=O)[C@@H]([C@H](c5ccccc5)NC(=O)OC(C)(C)C)O)O)OC(=O)c6ccccc6)(CO4)OC(=O)C)OC)C)OC
+C1CC(=ONC=O)C1N2C,True,False,LEAK,syntax (ring closure / parens / token),C1CC(=O)NC(=O)C1N2C
+Co(=OCS[C@@H]1CC2=CC(=O)CC[C@@]2([C@@H]3[C@@H]1[C@@H]4CC[C@]5([C@]4(CC3)C)C)C(=O)O5)C,True,False,LEAK,valence too high,Co(=O)S[C@@H]1CC2=CC(=O)CC[C@@]2([C@@H]3[C@@H]1[C@@H]4CC[C@]5([C@]4(CC3)C)CCC(=O)O5)C
+CN1CCN(CC1)CC/C=CC3=CC=CC=CSC4=C2C=C(C=C4)S(=O)(=O)N(C)C,True,False,LEAK,syntax (ring closure / parens / token),CN1CCN(CC1)CCC=C2C3=CC=CC=CSC4=C2C=C(C=C4)S(=O)(=O)N(C)C
+Cc16c(cno1)C(=O)Nc2ccc(cc2)C(F)(F7)F,True,False,LEAK,syntax (ring closure / parens / token),Cc1c(cno1)C(=O)Nc2ccc(cc2)C(F)(F)F
+CC(C)(C(=O)O)OC1=CC=C6(C=C1)CCNC(=O)C2=CC=C(C=C)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)(C(=O)O)OC1=CC=C(C=C1)CCNC(=O)C2=CC=C(C=C2)Cl
+c1ccc(cc1)C(=O)1c2cccc(c72N)CC(=O)N,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(=O)1c2cccc(c7N)CC(=O)N
+c1cccc(c1)C(=[NH+]c3ccccc4S2)N4CC[NH+](CC4)COCCO,True,False,LEAK,syntax (ring closure / parens / token),c1cccc2(c1)C(=[NH+]c3ccccc4S2)N4CC[NH+](CC4)CCOCCO
+CC1(C(=O)N(C(=O)N)c2ccc(c(c2)C(F)(F)F)[N+](=O)[O-])C,True,False,LEAK,syntax (ring closure / parens / token),CC1(C(=O)N(C(=O)N1)c2ccc(c(c2)C(F)(F)F)[N+](=O)[O-])C
+C=C#C(/CC=CCC(C(=O)O)N)N(CCCl)CCCl,True,False,LEAK,valence too high,C1=CC(/CC=CCC(C(=O)O)N)N(CCCl)CCCl
+CNS(=O)(=O)CCc1ccc2H(c1)c(c[nH])C3CC[NH+](CC3)C,True,False,LEAK,syntax (ring closure / parens / token),CNS(=O)(=O)CCc1ccc2c(c1)c(c[nH])C3CC[NH+](CC3)C
+c1ccc(cc51)C(=O)1c2cccc(c7N)CC(=O)N,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(=O)1c2cccc(c7N)CC(=O)N
+CC(C)NCC(COC11=CC=CC27=CC=CC=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NCC(COC1=CC=CC2=CC=CC=C2)O
+CFOC(=O)CCCCCCCCC4(C)1ccccN1I,True,False,LEAK,syntax (ring closure / parens / token),CFOC(=O)CCCCCCCCC(C)1ccccc1I
+C1C2=CC=CC=C2N(B3=CC=CC=C3C1=O)C(=O)N,True,False,LEAK,valence too high,C1C2=CC=CC=C2N(C3=CC=CC=C3C1=O)C(=O)N
+C1=C2C(=C1(=CCCl)S(=O)(=O)N)S(=O)(=O)N=CN2,True,False,LEAK,valence too high,C1=C2C(=CC(=C1Cl)S(=O)(=O)N)S(=O)(=O)N=CN2
+CNFC(=O)N2C=NC(=CN=N1)C(=O)N,True,False,LEAK,syntax (ring closure / parens / token),CN1C(=O)N2C=NC(=C2N=N1)C(=O)N
+CCOc1nc2ccc,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc2cccc(c2n1Cc3ccc(cc3)c4ccccc4c5[nH]oc(=O)n5)C(=O)OCc6c(oc(=O)o6)C
+CC1C2CC3=C(C1(CCN2CC=C(C)C)C)ClC(C=C3)O,True,False,LEAK,valence too high,CC1C2CC3=C(C1(CCN2CC=C(C)C)C)C=C(C=C3)O
+CC1=C(C=C(C=C1)C(=O)NC2=CC(=CC(=C2)NC=C(N=C3)C)C(F)(F2)F)NC4=NC=CC(=N4)C5=CN=CC=C5,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C=C(C=C1)C(=O)NC2=CC(=CC(=C2)N3C=C(N=C3)C)C(F)(F)F)NC4=NC=CC(=N4)C5=CN=CC=C5
+CCN1C(=O)C(NC1=5O)C=CC=CC=CN,True,False,LEAK,syntax (ring closure / parens / token),CCN1C(=O)C(NC1=O)C=CC=CC=C2
+C1CC(=O)NC2=C12C=CC(=C2)OCCCCN3CCN(CC3)C4=C(C(=CC=C4)Cl)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1CC(=O)NC2=C1C=CC(=C2)OCCCCN3CCN(CC3)C4=C(C(=CC=C4)Cl)Cl
+C[C@@H](C(=O)N)1c(c(c(c(cI)C(=O)=NC(COcCO)I)C(=O)NC(CO)CO)I)O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H](C(=O)N)1c(c(c(c(cI)C(=O)NC(COcCO)I)C(=O)NC(CO)CO)I)O
+CCOC(=O)C1(CC[NH+](CC1)C)cccccc2,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)C1(CC[NH+](CC1)C)c2ccccc2
+Cc1cc2c(cc1C(=C)c3cc(cc3)C(=O)[O-])C(CCC2(C)C)3(C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)C)3(C)C
+CCCCOc1cc(cc1)C(=O)CC[NH+]2CCCCC2,True,False,LEAK,aromaticity / kekulization,CCCCOc1ccc(cc1)C(=O)CC[NH+]2CCCCC2
+CC(C)OC(=O)C(C)(C2Oc1ccc(cc18)C(=O)c2ccc(cc))Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)OC(=O)C(C)(C)Oc1ccc(cc1)C(=O)c2ccc(cc2)Cl
+CCC#CC(C)C(C(=O)NC(=O)N(C1=O)C)CC=C,True,False,LEAK,syntax (ring closure / parens / token),CCC#CC(C)C1(C(=O)NC(=O)N(C1=O)C)CC=C
+C[NH+]1CCCCC1CCN2c3,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]1CCCCC1CCN2c3ccccc3Sc4c2cc(cc4)S(=O)C
+CCCCCOC1=CC=C(C=C1)C2=CC=C(C=C2)C3=CC=C(C=C3)C(=O)N[C@H]C[C@H]([C@H](NC(=O)[C@@H]5[C@H]([C@H](CN5C(=O)[C@@H](NC(=O)[C@@H](NC(=O)[C@@H]6C[C@H](CNC(=O)[C@@H](NC4=O)[C@@H](C)O)O)[C@@H]([C@H](C7=CC=C(C=C7)O)O)O)[C@@H](C)O)C)O)O)O,True,False,LEAK,syntax (ring closure / parens / token),CCCCCOC1=CC=C(C=C1)C2=CC=C(C=C2)C3=CC=C(C=C3)C(=O)N[C@H]4C[C@H]([C@H](NC(=O)[C@@H]5[C@H]([C@H](CN5C(=O)[C@@H](NC(=O)[C@@H](NC(=O)[C@@H]6C[C@H](CN6C(=O)[C@@H](NC4=O)[C@@H](C)O)O)[C@@H]([C@H](C7=CC=C(C=C7)O)O)O)[C@@H](C)O)C)O)O)O
+C1=CC(=CC=C1CC6(C(=O)O)N)N(CCl)CCCl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC=C1CC(C(=O)O)N)N(CCCl)CCCl
+CC(C)(C)C(C=C#C1=CC2=C(C=C1)OCO2)O,True,False,LEAK,valence too high,CC(C)(C)C(C=CC1=CC2=C(C=C1)OCO2)O
+c1cc(ccc1c2ccc(o)/C=N/N3CC(=O)N3=O)[N+](=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1c2ccc(o2)/C=N/N3CC(=O)N3=O)[N+](=O)[O-]
+c19cc(cnc1)C(=O)3[O-],True,False,LEAK,syntax (ring closure / parens / token),c1cc(cnc1)C(=O)[O-]
+CC(O)(C)C(C=CC1=C=2=C3(CCC1)O3CO2)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC1=CC2=C(C=C1)O3CO2)C
+CC(O)(C)C(C=CC1=CC2=C(C=C1)O34O2)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC1=CC2=C(C=C1)O3CO2)C
+CN2(C)CCCNC2=CC=CC=C2CCC3=CC=CC=C31,True,False,LEAK,syntax (ring closure / parens / token),CN(C)CCCN1C2=CC=CC=C2CCC3=CC=CC=C31
+CCNC4(=O)C(NC1=O)C=CC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),CCN1C(=O)C(NC1=O)C=CC=CC=C2
+C1=CC(=C(C=C1Cl)Cl)OC(CN2C=CN=C2)C=C(C=C(C=C3)Cl)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=C(C=C1Cl)Cl)COC(CN2C=CN=C2)C3=C(C=C(C=C3)Cl)Cl
+C1CCC8(C1)C(CC#N)NCC=C(C=N2)C=24C=CNC4=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1CCC(C1)C(CC#N)N2C=C(C=N2)C=C4C=CNC4=NC=N3
+CNCCC(C1=CC=CC=C1)OC2=CC=C(C=C2)C1(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNCCC(C1=CC=CC=C1)OC2=CC=C(C=C2)C(F)(F)F
+c1ccn2c(c1)nn(c2=O)CnCC[NH+]3CCN(CC3)c4cccc(c4)Cl,True,False,LEAK,aromaticity / kekulization,c1ccn2c(c1)nn(c2=O)CCC[NH+]3CCN(CC3)c4cccc(c4)Cl
+c1ncc(nc(nc2n1[C@H]3[C@H]([C@@H]([C@H](O3)CO)O)F)Cl)N,True,False,LEAK,syntax (ring closure / parens / token),c1nc2c(nc(nc2n1[C@H]3[C@H]([C@@H]([C@H](O3)CO)O)F)Cl)N
+c1c[5H]nc71CC[NH3+],True,False,LEAK,syntax (ring closure / parens / token),c1c[5H]nc1CC[NH3+]
+C1CCC(C1)C(C2#N)N2C=6C(C=NC)C3=C4C=CNC4=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1CCC(C1)C(CC#N)N2C=6C(C=N2)C3=C4C=CNC4=NC=N3
+c1nc(c2c(n1)n(cn2)[C@H]3[C@@H]([C@@H]([C@H](O3)C4O)O)OO)N,True,False,LEAK,syntax (ring closure / parens / token),c1nc(c2c(n1)n(cn2)[C@H]3[C@@H]([C@@H]([C@H](O3)CO)O)O)N
+c1cc(ccc=1c2ccc(o2)sC=N/N3C3C(=O)NC3=O)[N+](=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1c2ccc(o2)/C=N/N3C3C(=O)NC3=O)[N+](=O)[O-]
+Cc1cccc(c1)C[NH+]2CCN(CC2)C(c3ccccc3)cccc(cc4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc1cccc(c1)C[NH+]2CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl
+CC(CN1CC(=O))C(=ONC1)N2C5C(=O1)NC(=O)=C2,True,False,LEAK,syntax (ring closure / parens / token),CC(CN1CC(=O))C(=ONC1)N2C5C(=O)NC(=O)=C2
+c1ccc(cc1)C(CCC[NH3+]2CCCC2)(ccccccc)O,True,False,LEAK,valence too high,c1ccc(cc1)C(CCC[NH3+]2CCCCC2)(c3ccccc)O
+CNC(=O)51=3C=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)51=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F
+c1ccc2c(c1)C(=[NH+]c3cccc3S2)N4CC[NH+](CC4)CCOCCO,True,False,LEAK,aromaticity / kekulization,c1ccc2c(c1)C(=[NH+]c3ccccc3S2)N4CC[NH+](CC4)CCOCCO
+s/[As],True,False,LEAK,aromaticity / kekulization,[As]
+C[2H+]1CCC(=C2c3ccccc3CCc4c2nccc)CC1,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]1CCC(=C2c3ccccc3CCc4c2nccc4)CC1
+C1CCC8(C1)C(CC#oN)NCC=C(C=N2)C=24C=CNC,True,False,LEAK,syntax (ring closure / parens / token),C1CCC8(C1)C(CC#N)NCC=C(C=N2)C=24C=CNC4=NC=N3
+COC1=C(C=CC(=C1)N5(=O)(=O)C)NC2=C3C=CC=CC3=NC4=CC=CC=C42,True,False,LEAK,syntax (ring closure / parens / token),COC1=C(C=CC(=C1)NS(=O)(=O)C)NC2=C3C=CC=CC3=NC4=CC=CC=C42
+C[C@@H](#C(=O)NCCs=CC(=C(C=C2C[C@H]1C(=O)O)OC)OC)N[C@@H](CCC3=CC=CC=C3)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H](#C(=O)N1CC2=CC(=C(C=C2C[C@H]1C(=O)O)OC)OC)N[C@@H](CCC3=CC=CC=C3)C(=O)O
+C1CCC8(C)C(CC#oN)NCC=C(C=N2)C=24C=CNC,True,False,LEAK,syntax (ring closure / parens / token),C1CCC8(C1)C(CC#oN)NCC=C(C=N2)C=24C=CNC
+CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4cc(ccc4)C2=C1)C,True,False,LEAK,syntax (ring closure / parens / token),CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4c3c(ccc4)C2=C1)C
+C[NH+](C)CC/C=C\1/c2ccccc2Sc3ccc(cc)Cl,True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CC/C=C\1/c2ccccc2Sc3c1cc(cc3)Cl
+c1ccc(cc1)C(CCC[NH3+]24CCCCC2)(c3ccccc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(CCC[NH3+]2CCCCC2)(c3ccccc)O
+C1CN(CCC1N2C3=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=2C(C=C5)F,True,False,LEAK,syntax (ring closure / parens / token),C1CN(CCC1N2C3=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)F
+C(CN(CC(=O)O=CC(=O)O)N(CC(=O)O)C1C=O)O,True,False,LEAK,syntax (ring closure / parens / token),C(CN(CC(=O)O=CC(=O)O)N(CC(=O)O)CC=O)O
+CC1([C@@H](N2[C@H](S1)[Cs@@H](C2=O)NC(=O)[C@@H](c3ccc(cc3)O)[NH3+])C(=O)[O-])C,True,False,LEAK,valence too high,CC1([C@@H](N2[C@H](S1)[C@@H](C2=O)NC(=O)[C@@H](c3ccc(cc3)O)[NH3+])C(=O)[O-])C
+CCCCCN(C)CCC(O)(P(=O)(O)O)P(=O)(O)6,True,False,LEAK,syntax (ring closure / parens / token),CCCCCN(C)CCC(O)(P(=O)(O)O)P(=O)(O)O
+CC1(OC2CC3C4C8C5=CC(=O)CCC5(C4(C(CC3(C(O1)C(=O)CCl)C)O)F)C)C,True,False,LEAK,syntax (ring closure / parens / token),CC1(OC2CC3C4CCC5=CC(=O)CCC5(C4(C(CC3(C2(O1)C(=O)CCl)C)O)F)C)C
+CC(C)(C(=O)O)OC1=CC=C(C=C1)\CCNC(=O)C2=CC=C(C=C2)=Cl,True,False,LEAK,valence too high,CC(C)(C(=O)O)OC1=CC=C(C=C1)CCNC(=O)C2=CC=C(C=C2)Cl
+C1[C@@H]([C@H]([C@@H]([C@H]([C@@H]1[NH3+])O[C@@H]2[C@@H]([C@H]([C@@H]([C@H](O)CO)O)[NH3+])O)O)O[C@@H]3[C@@H](C[C@@H]([C@H](O3)C[NH3+])O)[NH3+])[NH3+],True,False,LEAK,syntax (ring closure / parens / token),C1[C@@H]([C@H]([C@@H]([C@H]([C@@H]1[NH3+])O[C@@H]2[C@@H]([C@H]([C@@H]([C@H](O2)CO)O)[NH3+])O)O)O[C@@H]3[C@@H](C[C@@H]([C@H](O3)C[NH3+])O)[NH3+])[NH3+]
+c15c(ccc1(=O3)CC(=O)[O-])N,True,False,LEAK,syntax (ring closure / parens / token),c15cc(ccc1C(=O3)CC(=O)[O-])N
+[H]/[NH+]=C(/C=CC(=O)/C(=C\C=c2ccc(=C([NH3+])N)cc2)/C=C1)\6N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)/C(=C\C=c2ccc(=C([NH3+])N)cc2)/C=C1)\N
+Cc1ccc6c(c1)C[NH+]2CCN(CC2)C(c3ccccc33)c4ccc(cc4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc1ccc6c(c1)C[NH+]2CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl
+c1cnc25s3c(cc2n1)[C@@H3]4C[C@H]3C[NH2+]C4,True,False,LEAK,syntax (ring closure / parens / token),c1cnc25c3c(cc2n1)[C@@H]4C[C@H]3C[NH2+]C4
+CC(O)(C)C(C=CC51=CC2=C(C=C1)O3CO2)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC1=CC2=C(C=C1)O3CO2)C
+CC(CN1CC(=O))C(=ONC1)N2C5C(=O)\NcC(=O)C2,True,False,LEAK,syntax (ring closure / parens / token),CC(CN1CC(=O))C(=ONC1)N2C5C(=O)NC(=O)C2
+C1[C@@H]([C@H]([C@@H]([C@H]([C@@H]1[NH3+])PO[C@H]#2[C@@H]([C@H]([C@@H]([C@H](O2)CO)O)[NH3+])O)O)O[C@@H]3[C@@H](C[C@@H]([C@H](O3)C[NH3+])O)[NH3+])[NH3+],True,False,LEAK,valence too high,C1[C@@H]([C@H]([C@@H]([C@H]([C@@H]1[NH3+])O[C@H]#2[C@@H]([C@H]([C@@H]([C@H](O2)CO)O)[NH3+])O)O)O[C@@H]3[C@@H](C[C@@H]([C@H](O3)C[NH3+])O)[NH3+])[NH3+]
+c1cc(cccC[C@@H](C(=O3)[O-])[NH3+]5)O,True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1C[C@@H](C(=O3)[O-])[NH3+]5)O
+C1CCC,True,False,LEAK,syntax (ring closure / parens / token),C1CCC8(C1)C(CC#oN)NCC=C(C=N2)C=24C=CNC
+CSOc1nc2ccc,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc2ccc
+CC[NH+](CCCC(C)-Nc1cc\[nH+]cc1ccc(c2)Cl)2CO,True,False,LEAK,valence too high,CC[NH+](CCCC(C)Nc1cc[nH+]cc1ccc(c2)Cl)2CO
+COC(=O)NC1=NC2=C(N1)C=C(C=C2)C(=O)C3=CC1=CCCC3,True,False,LEAK,syntax (ring closure / parens / token),COC(=O)NC1=NC2=C(N1)C=C(C=C2)C(=O)C3=CC=CC=C3
+C3NS(=O)(=O)CCc1ccc2c(c1)(c[nH]2)H3CC[NH+](CC3)C,True,False,LEAK,syntax (ring closure / parens / token),CNS(=O)(=O)CCc1ccc2c(c1)(c[nH]2)C3CC[NH+](CC3)C
+CC(C5)(C)NCC(COC1=CC=CC=C1C2CCCC2)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)(C)NCC(COC1=CC=CC=C1C2CCCC2)O
+C11nCC(=CC=C1C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N,True,False,LEAK,syntax (ring closure / parens / token),C11=CC(=CC=C1C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N3
+CC(C)CC(C(=O)NC(CCCN=C(N)N)C(=O)N1CCCC1C(=O)NCC(=O)N)NC(=O)CNC(=O)C(CC2=CC=C2(C=C2)O)NC(=O)C(CO)NC(=O)C(CC3=CNC4=CC=CC=C3)NC(=O)C(CC5=CN=CN5)NC(=O)C6CCC(=O)N6,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CC(C(=O)NC(CCCN=C(N)N)C(=O)N1CCCC1C(=O)NCC(=O)N)NC(=O)CNC(=O)C(CC2=CC=C(C=C2)O)NC(=O)C(CO)NC(=O)C(CC3=CNC4=CC=CC=C43)NC(=O)C(CC5=CN=CN5)NC(=O)C6CCC(=O)N6
+C[NH+](C)CCN(Cc1ccc(cc1)#OC)c2ccccn2,True,False,LEAK,valence too high,C[NH+](C)CCN(Cc1ccc(cc1)OC)c2ccccn2
+CC(C)c1nc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2cc5ccc2)4[C@@H]([C@H](Cc3cc4ccc3)NC(=O)OCcCcncs4)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)c1nc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2cc5ccc2)C[C@@H]([C@H](Cc3cc4ccc3)NC(=O)OCc4cncs4)O
+c1cn,True,False,LEAK,syntax (ring closure / parens / token),c1cnc25c3c(cc2n1)[C@@H]4C[C@H]3C[NH2+]C4
+CCCCC(=O)N(Cc1ccc(cc1)c2cccc2c3[n-]nOnn3)[C@@H](C(C)Cs)C(=O9)[O-],True,False,LEAK,syntax (ring closure / parens / token),CCCCC(=O)N(Cc1ccc(cc1)c2cccc2c3[n-]nOnn3)[C@@H](C(C)C)C(=O9)[O-]
+CC(C)C(C)C=CC(C)C1CCC2C1(CCCC2=CC=C3CC(CC(C=C)O)O)C,True,False,LEAK,syntax (ring closure / parens / token),CC(C)C(C)C=CC(C)C1CCC2C1(CCCC2=CC=C3CC(CC(C3=C)O)O)C
+CC(C)(C)C(C=C#C1=CC2=C(C=C1)OCO2)3O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)(C)C(C=C#C1=CC2=C(C=C1)OCO2)O
+c1cnc(nc1)[N-]S(=O)(=ONc2ccc(cc2)),True,False,LEAK,valence too high,c1cnc(nc1)[N-]S(=O)(=O)c2ccc(cc2)N
+c12cc(ccO1N)S(=O)(=c)c2ccc(cc2)N,True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1N)S(=O)(=O)c2ccc(cc2)N
+CCN1C=C(C(=O)C2=CC(=C(C=C219)N3CCNCC)F)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CCN1C=C(C(=O)C2=CC(=C(C=C219)N3CCNCC3)F)C(=O)O
+c61ccn2c(c1)nn(c2=O)CCC[7NH+]3CCN(CC3)c4cccc(c)Cl,True,False,LEAK,syntax (ring closure / parens / token),c61ccn2c(c1)nn(c2=O)CCC[7NH+]3CCN(CC3)c4cccc(c4)Cl
+CCOC(=O)C(CC61=CC=CC=C1)NC(C)C(s=O)N2CC3=CC=CC=C3CC2C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)C(CCC1=CC=CC=C1)NC(C)C(=O)N2CC3=CC=CC=C3CC2C(=O)O
+CC(CN1C=NC2=C1N=CN=CN)OC/P(=O)(O)O,True,False,LEAK,syntax (ring closure / parens / token),CC(CN1C=NC2=C1N=CN=C2N)OCP(=O)(O)O
+cNS(=O)(=O)CCc1ccc2c(c1)(c\[nH]2)C3CC[NH+9](CC3)C,True,False,LEAK,aromaticity / kekulization,cNS(=O)(=O)CCc1ccc2c(c1)(c[nH]2)C3CC[NH+](CC3)C
+CCOC(=O)CCCCCCCCC(C)cccccc1I,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)CCCCCCCCC(C)c1ccccc1I
+CC(C)NCC(COC11=CC=CC27=CC=C=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NCC(COC11=CC=CC27=CC=CC=C2)O
+CCOc1nc26ccc(c2n1C5c3ccc(cc3)c4ccc=cc4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccc=cc4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C
+CN1CCN(CC1)CCCOC2=C(C=C3C(=C2)N=CC(=C3NC4=CC(=C(C=C4Cl)Cl)OC)C#N)cC,True,False,LEAK,aromaticity / kekulization,CN1CCN(CC1)CCCOC2=C(C=C3C(=C2)N=CC(=C3NC4=CC(=C(C=C4Cl)Cl)OC)C#N)OC
+CC=C(C(CCC1)(C)C)/C=C/C(=C/C=C/C(=C\C(=O)[O-])/C)/C,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C(CCC1)(C)C)/C=C/C(=C/C=C/C(=C\C(=O)[O-])/C)/C
+CC[NH+](CC)C(C)CNc2ccccc2Sc3c1cccc3,True,False,LEAK,syntax (ring closure / parens / token),CC[NH+](CC)C(C)CN1c2ccccc2Sc3c1cccc3
+C3C(C4)c1cccc(c1OCOP(=O)([O-])[O-])C(C)C,True,False,LEAK,syntax (ring closure / parens / token),CC(C4)c1cccc(c1OCOP(=O)([O-])[O-])C(C)C
+C1CN8(CCC1NC=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)F,True,False,LEAK,syntax (ring closure / parens / token),C1CN8(CCC1N2C=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)F
+C[C@@H]1C[C@@H]([C@H]([C@@H](O1)O[C@H]2[C@H](C[C@@]3(CO3)C(=O)[C@@H]([C@H]([C@H]([C@H](OC(=O)[C@@H]([C@H]([C@@H]2C)O[C@H]4C[C@@H]([C@H]([C@@H](O4)C)OC(=O)C)OC)C)C)#C)OC(=O)C)C)C)OC(=O)C)[NH+](C)C,True,False,LEAK,valence too high,C[C@@H]1C[C@@H]([C@H]([C@@H](O1)O[C@H]2[C@H](C[C@@]3(CO3)C(=O)[C@@H]([C@H]([C@H]([C@H](OC(=O)[C@@H]([C@H]([C@@H]2C)O[C@H]4C[C@@H]([C@H]([C@@H](O4)C)OC(=O)C)OC)C)C)C)OC(=O)C)C)C)OC(=O)C)[NH+](C)C
+CC(C)CN(C[C@H]([C@H](Cc1cHcccc1)NC(=O)O[C@H]/CO[C@@H][C@H]2CCO3)2O)S(=O)(=O)c54ccc,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CN(C[C@H]([C@H](Cc1cHcccc1)NC(=O)O[C@H]/CO[C@@H]3[C@H]2CCO3)2O)S(=O)(=O)c4ccc
+CN1CCC3C4C1CC5=C2C(=C(C=C5)O)OC3C(C=C4)O,True,False,LEAK,syntax (ring closure / parens / token),CN1CCC23C4C1CC5=C2C(=C(C=C5)O)OC3C(C=C4)O
+CCCC(=O)OC1(CCC2C1(CC(C3C2CCC4=CC(=O)CCC33C)O)C)C(=O)CO,True,False,LEAK,syntax (ring closure / parens / token),CCCC(=O)OC1(CCC2C1(CC(C3C2CCC4=CC(=O)CCC343C)O)C)C(=O)CO
+CC[NH+](CC)C3CN19c2ccc(cc2C(=NCC1=O)c3ccccc3F)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC[NH+](CC)CCN1c2ccc(cc2C(=NCC1=O)c3ccccc3F)Cl
+CC(C4)NC(=O)C1=CC=C(C=C1)CNN2,True,False,LEAK,syntax (ring closure / parens / token),CC(C4)NC(=O)C1=CC=C(C=C1)CNNC
+CC(C)NCC(COC1=CC=CCo7=CC=CC=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NCC(COC11=CC=CC27=CC=CC=C2)O
+CC(C=SCC=9C(COC1)C(=O)C2=CC=CS2)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C=SCC=9C(C=C1)C(=O)C2=CC=CS2)C(=O)O
+C[C@H](C(=O)N)NC(=O)[C@@H]1CCCN1C(=O)[C@H](CCCC[NH2+]C(C)C)NC(=O)[C@H](CC(C)C)NC(=O)[C@@H](CC(=O)N)NC(=O)[C@H](Cc2ccc(cc2)O)N(C)C(=O)[C@H](CO)NC(=O)[C@@H](Cc3cccnc3)NC(=O)[C@@H](Cc4ccc(cc)Cl)NC(=O)[C@@H](Cc5ccc6ccccc6c5)NC(=O)C,True,False,LEAK,syntax (ring closure / parens / token),C[C@H](C(=O)N)NC(=O)[C@@H]1CCCN1C(=O)[C@H](CCCC[NH2+]C(C)C)NC(=O)[C@H](CC(C)C)NC(=O)[C@@H](CC(=O)N)NC(=O)[C@H](Cc2ccc(cc2)O)N(C)C(=O)[C@H](CO)NC(=O)[C@@H](Cc3cccnc3)NC(=O)[C@@H](Cc4ccc(cc4)Cl)NC(=O)[C@@H](Cc5ccc6ccccc6c5)NC(=O)C
+c1ccc(cc1)C(C6HC[NH3+]2CCCCC23)(cccccc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(C6HC[NH3+]2CCCCC23)(c3ccccc)O
+c,True,False,LEAK,aromaticity / kekulization,c12ccc(cc1)C(=O8)c2ccc2c(c2N)CC(=O)N
+CCCCC(=O)OCC(=O)[C@@]1(Cc2c(c(c3c(c2[O-])C(=O)c4c#ccc(c4C3=O)OC1)[O-])[C@H](C1)OC5CC(C(C(O5)C)O)NC(=O)C(F)(F)F)O,True,False,LEAK,syntax (ring closure / parens / token),CCCCC(=O)OCC(=O)[C@@]1(Cc2c(c(c3c(c2[O-])C(=O)c4cccc(c4C3=O)OC)[O-])[C@H](C1)OC5CC(C(C(O5)C)O)NC(=O)C(F)(F)F)O
+CC(C)(C(=O)O)OC1=CC=C46(C=C1)CCNC(=O)C2=CC=C(C=C)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)(C(=O)O)OC1=CC=C6(C=C1)CCNC(=O)C2=CC=C(C=C)Cl
+COc1ccc(c(c1)O)C(=O)c22ccccc2,True,False,LEAK,syntax (ring closure / parens / token),COc1ccc(c(c1)O)C(=O)c2ccccc2
+c61ccnc(c1)nn(c2=O)CCC[NH+]3CCN(CC3)c4cccc(c4)Cl,True,False,LEAK,syntax (ring closure / parens / token),c61ccn2c(c1)nn(c2=O)CCC[NH+]3CCN(CC3)c4cccc(c4)Cl
+CFOC(=O)CCCCCCCCC(C)ccccc1I,True,False,LEAK,syntax (ring closure / parens / token),CFOC(=O)CCCCCCCCC(C)1ccccc1I
+C[N+]1(CCC7C1),True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(CCC7C1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOsC)C4=CSC(=N4)N)SC2)C(O)[O-]
+C[N+]1(C3CC7C)CC2=C(N3C(C(C3=O)NC(=O)C(=nNOC)C4=CSC(=N4)N)SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+CCC1=NN(C(=O)N1CCOC2=CC=CC=C2)CCCN3CCN(CC3)C4=CC(=CC=C8)Cl,True,False,LEAK,syntax (ring closure / parens / token),CCC1=NN(C(=O)N1CCOC2=CC=CC=C2)CCCN3CCN(CC3)C4=CC(=CC=C4)Cl
+C2NC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F
+CC1=CC=CC=C1S(=O)(=O)NC(=O)C2=CC(=SC(C=C2)CC3=CN(C4=C3C=C(C=C4)NC(=O)OC5CCCC)C)OC,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC=CC=C1S(=O)(=O)NC(=O)C2=CC(=C(C=C2)CC3=CN(C4=C3C=C(C=C4)NC(=O)OC5CCCC5)C)OC
+ccc(ccc1C(=O)NCC(=O)[O-])N,True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1C(=O)NCC(=O)[O-])N
+c1cnc25s3c(cc2C1)[n@@H3]4C[C@H]3C[NH2+]C4,True,False,LEAK,syntax (ring closure / parens / token),c1cnc25s3c(cc2n1)[C@@H3]4C[C@H]3C[NH2+]C4
+c11c[nH]nc1CC[NH3+],True,False,LEAK,syntax (ring closure / parens / token),c1c[nH]nc1CC[NH3+]
+CCC2CC=3=C(C13(CCN2CC=C(C)C)C)C=C(C=C3)O,True,False,LEAK,syntax (ring closure / parens / token),CCC2CC3=C(C13(CCN2CC=C(C)C)C)C=C(C=C3)O
+[H]/[NH+]=C(/C=CC(=O)/C(=C\C=c2ccc(=C([NH+])N)cc2)/C=C1)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C1=CC(=O)/C(=C\C=c2ccc(=C([NH3+])N)cc2)/C=C1)\N
+CN1CCC23C4C1CC5=C2C(=C(C=2C5)O)OC3C(C=C4)O,True,False,LEAK,syntax (ring closure / parens / token),CN1CCC23C4C1CC5=C2C(=C(C=C5)O)OC3C(C=C4)O
+CCN(CC)C1=CC=C(C=C1)C(=C2C=CC(=[N+](CC)CC)C=C2)C3=6C(C=CC(=C3)S(=O)(=O)O)S(=O)(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CCN(CC)C1=CC=C(C=C1)C(=C2C=CC(=[N+](CC)CC)C=C2)C3=C(C=CC(=C3)S(=O)(=O)O)S(=O)(=O)O
+C1=CC(=C2C(=CNCCNCCO)C(=O)C3=C(C=CC(=C3C2=O)O)O)NHCCNCCO,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=C2C(=CNCCNCCO)C(=O)C3=C(C=CC(=C3C2=O)O)O)NCCNCCO
+CNS(=O)(=O)CCc1ccc2c(c1)c(c[nH]2)CCC[7NH+](CC3)C,True,False,LEAK,syntax (ring closure / parens / token),CNS(=O)(=O)CCc1ccc2c(c1)c(c[nH]2)C3CC[NH+](CC3)C
+[H]/[NH+]=C(/C=CC(=O)n-C(=C8C=ccc\c(=C([NH3+])N)cc2)/C=C1)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)n-C(=C8C=c2cc\c(=C([NH3+])N)cc2)/C=C1)\N
+C1COCC(=O)N1C2=CC=C(C=C2)N9CC(OC23=O)CNC(=O)C4=CC=CO(S4)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1COCC(=O)N1C2=CC=C(C=C2)N9CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl
+CNC(=O)51=C=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)51=3C=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F
+CNC(=O)c491cc(ccn1)Oc2ccc(cc2)NC(=O)Nc3ccc(c(c3)C(F)(F)F)Cl,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)c1cc(ccn1)Oc2ccc(cc2)NC(=O)Nc3ccc(c(c3)C(F)(F)F)Cl
+c1cc(ccc1c2cNc(o2)/C=N/c3CC(=O)NC3=O)[N+](=O)[O-],True,False,LEAK,aromaticity / kekulization,c1cc(ccc1c2ccc(o2)/C=N/N3CC(=O)NC3=O)[N+](=O)[O-]
+c1ccc(cc1)C(SHC[NH4+]2CCCCC2)(c3ccccc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(CHC[NH3+]2CCCCC2)(c3ccccc)O
+C=NC2=C(N1CCC(CO)CO)NC(NC2=O)N,True,False,LEAK,syntax (ring closure / parens / token),C1=NC2=C(N1CCC(CO)CO)NC(=NC2=O)N
+COC9COC(=O)NCCCC[n@@H](C(=O)NCCCCCCCOP(=O)(C)O)NC(=O)OCCOC,True,False,LEAK,syntax (ring closure / parens / token),COC9COC(=O)NCCCC[C@@H](C(=O)NCCCCCCCOP(=O)(C)O)NC(=O)OCCOC
+c1cc(ccc1c2c(c3ccc(c3s2)O)C(=Oo)c4ccc(cc4)OCC[NH+]5CCCCC5)O,True,False,LEAK,valence too high,c1cc(ccc1c2c(c3ccc(cc3s2)O)C(=O)c4ccc(cc4)OCC[NH+]5CCCCC5)O
+CC(C)(C)C(C=CC1=C2=C(C=C1)OCO2)O,True,False,LEAK,valence too high,CC(C)(C)C(C=CC1=CC2=C(C=C1)OCO2)O
+CC(=O)N3c1c(c(c(c(c91I)NC(=O)C)I)C(=O)[O-])I,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)Nc1c(c(c(c(c1I)NC(=O)C)I)C(=O)[O-])I
+C[C@@H]1[C@H]([C@@H]([C@@H](C(O1)OC2CC3C(C(CC(O3)(CC(CC(CC(CC(=O)CCCC(=O)CC(=O4)OC(C(C=CC=CC=CC=CC=CC=CC=C2)C)C(C)CC(C)C(CC(=O)c4ccc(cc4)N)O)O)O)O)O)O)C(=O)[O-])O)[NH3+])O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H]1[C@H]([C@@H]([C@@H](C(O1)OC2CC3C(C(CC(O3)(CC(CC(CC(CC(=O)CCCC(=O)CC(=O)OC(C(C=CC=CC=CC=CC=CC=CC=C2)C)C(C)CC(C)C(CC(=O)c4ccc(cc4)N)O)O)O)O)O)O)C(=O)[O-])O)[NH3+])O
+COC(=O)NC=NC2=C(N1)C=C(C=C2)(=O)C3=CC=CC=C3,True,False,LEAK,syntax (ring closure / parens / token),COC(=O)NC=NC2=C(N1)C=C(C=C2)C(=O)C3=CC=CC=C3
+C[NH2+3]/C(=C\[N+](=O)[9O-])/N,True,False,LEAK,valence too high,C[NH2+3]/C(=C\[N+](=O)[O-])/NCCSCc1ccc(o1)C[NH+](C)C
+CCC1=NN(C(=O)N1CCOC2=CS=CC=C2)CCCN3CCN(CC3)C4=CC(=CC=C8)Cl,True,False,LEAK,syntax (ring closure / parens / token),CCC1=NN(C(=O)N1CCOC2=CC=CC=C2)CCCN3CCN(CC3)C4=CC(=CC=C8)Cl
+C1=CC(=CC=C1C#N)C(C2=7CC=C4(C=C2)3#N)N3C=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC=C1C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N3
+C[C@@H](#C(=O)NCCs=CC(=C(C=C2C[C@H]1C(=O)O)OC)OCn)N[C@@H](CCC3=CC=CC=C3)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H](#C(=O)NCCs=CC(=C(C=C2C[C@H]1C(=O)O)OC)OC)N[C@@H](CCC3=CC=CC=C3)C(=O)O
+CC[NH+](CCCC(C)-N5c1cc\[nH+]cc1ccc(c2)Cl)2CO,True,False,LEAK,syntax (ring closure / parens / token),CC[NH+](CCCC(C)-Nc1cc\[nH+]cc1ccc(c2)Cl)2CO
+c1cnSc25s3c(cc2n1)[I@@H3]4C[C@H]3C[NH2+]C4,True,False,LEAK,syntax (ring closure / parens / token),c1cnc25s3c(cc2n1)[C@@H3]4C[C@H]3C[NH2+]C4
+CNS(=O)(=O)CCc1ccc2H(c1)c(c[nH])C3CC[NH+](CC93)C,True,False,LEAK,syntax (ring closure / parens / token),CNS(=O)(=O)CCc1ccc2H(c1)c(c[nH])C3CC[NH+](CC3)C
+C1C4(=O)NC2=C12C=CC(=C2)OCCCCN3CCN(CC3)C4=C(C(=CC=C4)Cl)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1CC(=O)NC2=C12C=CC(=C2)OCCCCN3CCN(CC3)C4=C(C(=CC=C4)Cl)Cl
+CCCCC\N(C)CCC(O)(P(=O)(O)O)P(=O)(O)6,True,False,LEAK,syntax (ring closure / parens / token),CCCCCN(C)CCC(O)(P(=O)(O)O)P(=O)(O)6
+CCC5COc1cc(cccN)C(=O)OCC[NH+]2(CC)CC,True,False,LEAK,syntax (ring closure / parens / token),CCCCOc1cc(ccc1N)C(=O)OCC[NH+]2(CC)CC
+CN1C=NC=C1[C@@](C=CC=C(C=C2)Cl)(C3=CC4=C(C=C3)N(C(=O)C=C4C5=CC(=CC=C5)Cl)C)N,True,False,LEAK,syntax (ring closure / parens / token),CN1C=NC=C1[C@@](C2=CC=C(C=C2)Cl)(C3=CC4=C(C=C3)N(C(=O)C=C4C5=CC(=CC=C5)Cl)C)N
+CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4csC(ccc4)2=C)C,True,False,LEAK,syntax (ring closure / parens / token),CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4csC(ccc4)C2=C)C
+C5(=O)Nc/1c(c(c(c(c1I)NC(=O)C)I)C(=O)[O-])I,True,False,LEAK,syntax (ring closure / parens / token),C5(=O)Nc1c(c(c(c(c1I)NC(=O)C)I)C(=O)[O-])I
+Cc1cccc(c1)C[NH+]2CCN(CC2)c(c3cCccc3)cccc(cc4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc1cccc(c1)C[NH+]2CCN(CC2)C(c3ccccc3)cccc(cc4)Cl
+CC5,True,False,LEAK,syntax (ring closure / parens / token),CCN1C(=O)C(NC1=O)C=CC=CC=C2
+C[NH2+]CCCN=1cccc,True,False,LEAK,syntax (ring closure / parens / token),C[NH2+]CCCN=1c2ccc
+CC(C)=C9(=O)C1=CC=3C(CNC1)CNNC,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NC(=O)C1=CC=3C(C=C1)CNNC
+CC(CN1CC(=O))C(=ONC1)N2C25-C(=O)NC(=O)=C2,True,False,LEAK,syntax (ring closure / parens / token),CC(CN1CC(=O))C(=ONC1)N2C5C(=O)NC(=O)=C2
+CC1(#OC2CC3C4C8C5=CC(=O)CCC5(C4(C(CC3(C(O1)C(=O)CCl)C)O)F)C)C,True,False,LEAK,syntax (ring closure / parens / token),CC1(OC2CC3C4C8C5=CC(=O)CCC5(C4(C(CC3(C(O1)C(=O)CCl)C)O)F)C)C
+C3NS(=O)(=O4)CCc1ccc2F(c1)(c[nH]2)H3CC[NH+](CC3)C,True,False,LEAK,syntax (ring closure / parens / token),C3NS(=O)(=O)CCc1ccc2c(c1)(c[nH]2)H3CC[NH+](CC3)C
+C1CCC(C1)8C(C2#N)N2C=6C(C=NC)C3=C4C=CNC4=NC=3,True,False,LEAK,syntax (ring closure / parens / token),C1CCC(C1)C(C2#N)N2C=6C(C=NC)C3=C4C=CNC4=NC=N3
+CN1C=NC=C1[C@@](C=CC=C(C=C2)Cl)(C3=CC4=C(C=C3)N(C(=O)C=C45=CC(=CC=C)Cl)C)N,True,False,LEAK,syntax (ring closure / parens / token),CN1C=NC=C1[C@@](C=CC=C(C=C2)Cl)(C3=CC4=C(C=C3)N(C(=O)C=C4C5=CC(=CC=C5)Cl)C)N
+CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C94)Cl)C=C1N=CC=C(C=C)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C94)Cl)C=C1N=CC=C(C=C5)Cl
+CC(C)CN(C[C@H]([C@H](Cc1ccccc1)NC(=O)O[C@H]2CO[C@@H]3[C@H]2CCO3)O)S(=O)(=O)1c4ccc(cc4)N,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CN(C[C@H]([C@H](Cc1ccccc1)NC(=O)O[C@H]2CO[C@@H]3[C@H]2CCO3)O)S(=O)(=O)c4ccc(cc4)N
+C1CN8(CCC8N2C=CC=CC=C3NC2=O)CCCC(C45=CC=C(C=C4)F)C=CC=C(C=C5)F,True,False,LEAK,syntax (ring closure / parens / token),C1CN8(CCC18N2C=CC=CC=C3NC2=O)CCCC(C45=CC=C(C=C4)F)C5=CC=C(C=C5)F
+CCOC(=O)C1(CC[NH+](CC1)6C)c2ccccc2,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)C1(CC[NH+](CC1)C)c2ccccc2
+C[N+]1(C3CC7C1)CC=C,True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C1)CC2=C
+CCC[NH2+][C@H]CCc2c(sc(n2)1N)C,True,False,LEAK,syntax (ring closure / parens / token),CCC[NH2+][C@H]1CCc2c(sc(n2)1N)C
+CC16C(C(=C(C2=C1COC2=O)O)C/C=1(\C)/CCC(=O)OCCN3CCOCC3)OC,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C(=C(C2=C1COC2=O)O)C/C=C(\C)/CCC(=O)OCCN3CCOCC3)OC
+C1CCC8(C)C(CC#oN)NCC=C(C=N2)C=24C=CN,True,False,LEAK,syntax (ring closure / parens / token),C1CCC8(C)C(CC#oN)NCC=C(C=N2)C=24C=CNC
+CNC(=O)S1cc(ccn1)Oc2ccc(cc2)NC(=O)Nc3ccc(c(c3)C(F)(F)F)Cl,True,False,LEAK,aromaticity / kekulization,CNC(=O)c1cc(ccn1)Oc2ccc(cc2)NC(=O)Nc3ccc(c(c3)C(F)(F)F)Cl
+c1cccc2(c1)C(=[NH+]c3ccccc4S2)N4CC[NH+](CC)CCOCCO,True,False,LEAK,syntax (ring closure / parens / token),c1cccc2(c1)C(=[NH+]c3ccccc4S2)N4CC[NH+](CC4)CCOCCO
+Cc1cccc(c\1)C[NH+]2CCN(CC2)c(c3-cCccc3)cccc(cc4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc1cccc(c1)C[NH+]2CCN(CC2)c(c3cCccc3)cccc(cc4)Cl
+CC(=O)/N=c\1/n(nc(s11)s(=O)(=O)N)C,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)/N=c\1/n(nc(s1)s(=O)(=O)N)C
+CC(C)CC(C(=O)NC(CCCN=C(N)N)C(=O)N1CCCC1C(=O)NCC(=O)N)NC(=O)CNC(=O)C(CC2=CC=C2(C=C2)O)NC(=O)C(CO)NC(=O)C(CC3=CNC4=CC=CC=C3)NC(=O)C(CC5=CN=CN5)NC(=O)CCCC(=O)N6,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CC(C(=O)NC(CCCN=C(N)N)C(=O)N1CCCC1C(=O)NCC(=O)N)NC(=O)CNC(=O)C(CC2=CC=C2(C=C2)O)NC(=O)C(CO)NC(=O)C(CC3=CNC4=CC=CC=C3)NC(=O)C(CC5=CN=CN5)NC(=O)C6CCC(=O)N6
+CN(C)NN=CC(=NC=No16)C(=S)N,True,False,LEAK,syntax (ring closure / parens / token),CN(C)NN=CC(=NC=No16)C(=O)N
+c1ccc2(c1)C(=[NH+]c3ccccc4S2)N4CC[NH+](CC4)CCOCCO,True,False,LEAK,syntax (ring closure / parens / token),c1cccc2(c1)C(=[NH+]c3ccccc4S2)N4CC[NH+](CC4)CCOCCO
+CC(C)cnc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2cc5ccc2)4[C@@H]([C@H](Cc3cc4ccc3)NC(=O)OCcCcncs4)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)c1nc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2cc5ccc2)4[C@@H]([C@H](Cc3cc4ccc3)NC(=O)OCcCcncs4)O
+C122CC3CC1CC(CC)(C3)[NH3+],True,False,LEAK,syntax (ring closure / parens / token),C1C2CC3CC1CC(C2)(C3)[NH3+]
+C[N+](C5)(C)CCCCCCCCCC[N+](C)(C)C,True,False,LEAK,syntax (ring closure / parens / token),C[N+](C)(C)CCCCCCCCCC[N+](C)(C)C
+C(#N)[Fe-2](C#N)(C#N)5(C#N)(C#N)N=O,True,False,LEAK,syntax (ring closure / parens / token),C(#N)[Fe-2](C#N)(C#N)(C#N)(C#N)N=O
+CC5COc1cc(cccN)C(=O)OCC[NH+]2(CC)CC,True,False,LEAK,syntax (ring closure / parens / token),CCC5COc1cc(cccN)C(=O)OCC[NH+]2(CC)CC
+CC(O)(C)C(C=CC1=CC2=C(C=C1)O3CO)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC1=CC2=C(C=C1)O3CO2)C
+CC1=C(C=C(C=C1)N2C(=O)C(=C(N2)C)N/N=C/3\C=CC=C(C3=O)C4=CC(=C3C=C4)C(=O)O)C,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C=C(C=C1)N2C(=O)C(=C(N2)C)N/N=C/3\C=CC=C(C3=O)C4=CC(=CC=C4)C(=O)O)C
+CCOc1Pnc2ccc,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc2ccc
+CC(=O)/N=c\1/n(nc(s1)s(=OC(=O)N)),True,False,LEAK,valence too high,CC(=O)/N=c\1/n(nc(s1)s(=O)(=O)N)C
+CCN(PCC)C1=CC=C(C=C1)C(=C2C=CC(=[N+](CC)CC)C=C2)C3=6C(C=CC(=C3)S(=O)(=cO)O)S(=O)(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CCN(CC)C1=CC=C(C=C1)C(=C2C=CC(=[N+](CC)CC)C=C2)C3=6C(C=CC(=C3)S(=O)(=O)O)S(=O)(=O)O
+C[NH+]1CC(=C2cccccc3CCc4c2nccc)CC1,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]1CCC(=C2cccccc3CCc4c2nccc)CC1
+CC1([C@@H](N2[C@H](S1)[C@@H](C2=O)4N3C(=O)[C@H]([NH2+]C3(C)C)c4ccccc4)C(=O)[O-])C,True,False,LEAK,syntax (ring closure / parens / token),CC1([C@@H](N2[C@H](S1)[C@@H](C2=O)N3C(=O)[C@H]([NH2+]C3(C)C)c4ccccc4)C(=O)[O-])C
+CC[NH+](CC)C(C)CN1c2ccccc2Sc3c31cccc3,True,False,LEAK,syntax (ring closure / parens / token),CC[NH+](CC)C(C)CN1c2ccccc2Sc3c1cccc3
+C1CCC8(C)C(CC#o7)NCC=C(C=N2)C=24/C=CN,True,False,LEAK,syntax (ring closure / parens / token),C1CCC8(C)C(CC#oN)NCC=C(C=N2)C=24C=CN
+C[NH+](C)CCN(Cc1ccc(cc1)OC)c2ccc6cn2,True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CCN(Cc1ccc(cc1)OC)c2ccccn2
+CC1=C(C(=C2CCC(OC2=C1C)(C)COC3=CC5=C(C=C3)CC4C(=O)NC(=O)77S4)C)O,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C(=C2CCC(OC2=C1C)(C)COC3=CC5=C(C=C3)CC4C(=O)NC(=O)7S4)C)O
+CCCC1=NC(=C(N1CCl2=CC=C(C=C2)C3=CC=CC=C3C4=NNN=N4)C(=O)O)C(C)(C)O,True,False,LEAK,valence too high,CCCC1=NC(=C(N1CC2=CC=C(C=C2)C3=CC=CC=C3C4=NNN=N4)C(=O)O)C(C)(C)O
+cn1c[1H]nc1CC[NH3+],True,False,LEAK,valence too high,cnc[1H]nc1CC[NH3+]
+c1ccc(cc1)C(CCC[NH3+]2CCCCC2)(ccccccc6)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(CCC[NH3+]2CCCC2)(ccccccc)O
+c1cn2c(c1)nn(c2=O)CnCC[NH+]3CCN(CC3)c4cccc(c4)Cl,True,False,LEAK,aromaticity / kekulization,c1ccn2c(c1)nn(c2=O)CnCC[NH+]3CCN(CC3)c4cccc(c4)Cl
+c1cnc2cc3c(cc2n1)[C@@H7]4C[C@H]3C[NH2+]C,True,False,LEAK,syntax (ring closure / parens / token),c1cnc2cc3c(cc2n1)[C@@H]4C[C@H]3C[NH2+]C4
+CNC(=O)c1cc(ccn1)Oc32ccc(cc2)NC(=O)Nc3ccc(c(c3)C(F)(F)F)Cl,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)c1cc(ccn1)Oc2ccc(cc2)NC(=O)Nc3ccc(c(c3)C(F)(F)F)Cl
+CC1=C(C(CCC1)(C)C)8/C=C/C(=C/C=C/C(=C\C(=O)[O-])/C)/C,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C(CCC1)(C)C)/C=C/C(=C/C=C/C(=C\C(=O)[O-])/C)/C
+CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccc5cn4c5[nH]oc(=O)nc)C(=O)OCc6c(\c(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccc5cn4c5[nH]oc(=O)4nc)C(=O)OCc6c(\c(=O)o6)C
+CCN1C=C(C(=O)C2=CC(=C(C=2C219)H3CCNCC3)F)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CCN1C=C(C(=O)C2=CC(=C(C=C219)N3CCNCC3)F)C(=O)O
+c1ccc2c(c1)CCCC2C=[NH+]CCN3,True,False,LEAK,syntax (ring closure / parens / token),c1ccc2c(c1)CCCC2C3=[NH+]CCN3
+CC(C4)NC(=O)C1=CC=8C(C=C1)CNNC,True,False,LEAK,syntax (ring closure / parens / token),CC(C4)NC(=O)C1=CC=C(C=C1)CNNC
+CN1C(S(=O)(=O)9CCC#1=O)c2ccc(cc2)Cl,True,False,LEAK,syntax (ring closure / parens / token),CN1C(S(=O)(=O)CCC1=O)c2ccc(cc2)Cl
+CC1C2CC3=C(C1(CCN2CC=C(C)C)C)C=C(C=C)O,True,False,LEAK,syntax (ring closure / parens / token),CC1C2CC3=C(C1(CCN2CC=C(C)C)C)C=C(C=C3)O
+C1=CC(=CC(=C81)I)CN=C(N)4N,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC(=C81)I)CN=C(N)N
+C[n+]1ccc(c1)OC(=O)N(C)C,True,False,LEAK,aromaticity / kekulization,C[n+]1cccc(c1)OC(=O)N(C)C
+Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-]BCCCC2(C)C)(C)C,True,False,LEAK,valence too high,Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)C)(C)C
+c1cnc(nc1)[N-]S(=O)(=ONc2cc4c(cc2)),True,False,LEAK,syntax (ring closure / parens / token),c1cnc(nc1)[N-]S(=O)(=ONc2ccc(cc2))
+Cc1cc2c(cc81C(=C)c3ccc(cc3)C(=O)[O-]4)C(CCC2(C)C)(C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)C)(C)C
+c12cc(cc9O15)S(=O)(=c)c2ccc(cc2)N,True,False,LEAK,syntax (ring closure / parens / token),c12cc(ccO1N)S(=O)(=c)c2ccc(cc2)N
+C[C@@H]1[C@H]([C@@H]([C@@H](C(O1)OC2CC3C(C(CC(O3)(CC(CC(CC(CC(=O)CCCC(=O)CC(=O4)OC(C(C=CC=CC=CC=CC=CC=CC=C2)C)C(C)8CC(C)C(CC(=O)c4ccc(cc4)N)O)O)O)O)O)O)C(=O)[O-])O)[NH3+])O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H]1[C@H]([C@@H]([C@@H](C(O1)OC2CC3C(C(CC(O3)(CC(CC(CC(CC(=O)CCCC(=O)CC(=O4)OC(C(C=CC=CC=CC=CC=CC=CC=C2)C)C(C)CC(C)C(CC(=O)c4ccc(cc4)N)O)O)O)O)O)O)C(=O)[O-])O)[NH3+])O
+Cc/cccc(c1)C[NH+]2CCN(CCs2)C(c3ccccc3)c4ccc(cc4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc/cccc(c1)C[NH+]2CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl
+c1ccn2c(c1)nn(c2=O)CCC[NH+]3CCN(CC93)c4cccc(c4)Cl,True,False,LEAK,syntax (ring closure / parens / token),c1ccn2c(c1)nn(c2=O)CCC[NH+]3CCN(CC3)c4cccc(c4)Cl
+ccc(ccc1c2c(c3ccc(cc3s2)O)C(O)c4ccc(cc4)OCC[NH+]5CCCC5)O,True,False,LEAK,syntax (ring closure / parens / token),ccc(ccc1c2c(c3ccc(cc3s2)O)C(O)c4ccc(cc4)OCC[NH+]5CCCCC5)O
+CCOcnc26ccc(c2n1Cc3ccc(c93)c4ccc=cc4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccc=cc4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C
+c1ccc(c(c1)C2=NCC(=O)Ncc2cc(cc3)[N+](=O)[O-])Cl,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(c(c1)C2=NCC(=O)Nc3c2cc(cc3)[N+](=O)[O-])Cl
+Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)I)3(C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)C)3(C)C
+Cc1c(ccncCS(=O)c2[nH]c3ccccc3n2)OCCCOC,True,False,LEAK,syntax (ring closure / parens / token),Cc1c(ccnc1CS(=O)c2[nH]c3ccccc3n2)OCCCOC
+S1=CC(=C(C=C1)O)C(CCN(C(C)C)C(C)C)CN=CC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=C(C=C1)O)C(CCN(C(C)C)C(C)C)CN=CC=CC=C2
+CCCC(C)(COC(=O)N)oCOC(=O)N,True,False,LEAK,aromaticity / kekulization,CCCC(C)(COC(=O)N)COC(=O)N
+C[C@@H](C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](C)C(=O)N[C@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc1c[nH]c2c1cccc2)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc3c[nH]c4c3cccc4)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc5c[nH]cc5cccc6)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc7c[nH]c8c7cccc8)C(=O)NCCO)NC(=O)CNC(=O)[C@H](C(C)C)NC=O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H](C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](C)C(=O)N[C@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc1c[nH]c2c1cccc2)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc3c[nH]c4c3cccc4)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc5c[nH]c6c5cccc6)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc7c[nH]c8c7cccc8)C(=O)NCCO)NC(=O)CNC(=O)[C@H](C(C)C)NC=O
+C1=CC(=CCcC1CC6(C(=O)O)N)N(CCl)CCCl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC=C1CC6(C(=O)O)N)N(CCl)CCCl
+C1=CC=C(C(=C1)C2=NC(C(=O)NCr=C2C=C(C=63)Cl)O)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C(=C1)C2=NC(C(=O)NC3=C2C=C(C=C3)Cl)O)Cl
+CN(C)NN=CC(=NC=No6)C(=S)N,True,False,LEAK,syntax (ring closure / parens / token),CN(C)NN=CC(=NC=No16)C(=S)N
+CNC(=O)5=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)51=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F
+CC1(F(=C)N(C2=CC=CCC21)CCCCCC(=O)O)C,True,False,LEAK,valence too high,CC1(C(=C)N(C2=CC=CC=C21)CCCCCC(=O)O)C
+[H]/[NH+]=C(/C=CC(=O)nC(=CC=c2Cc\c(=C([NH+])N)cc2)/C=C1)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)nC(=C8C=c2Cc\c(=C([NH3+])N)cc2)/C=C1)\N
+C1CN(CCC1N2C3=CC=CC=CNC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=2C(C=C5)F,True,False,LEAK,syntax (ring closure / parens / token),C1CN(CCC1N2C3=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=2C(C=C5)F
+CCC1=C(CN(C1=O)C(=O)NCCc=2cc3c(cc2)S(=O)(=O)[N-]C(=O)NC3CCC(CC3)C)C,True,False,LEAK,syntax (ring closure / parens / token),CCC1=C(CN(C1=O)C(=O)NCCc2ccc(cc2)S(=O)(=O)[N-]C(=O)NC3CCC(CC3)C)C
+C/CC1=NN(C(=O)N1CCOC2=CC=CC=C2)CCCN3CCN(CC3)C4=CC(=CC=C8)Cl,True,False,LEAK,syntax (ring closure / parens / token),CCC1=NN(C(=O)N1CCOC2=CC=CC=C2)CCCN3CCN(CC3)C4=CC(=CC=C8)Cl
+C[NH+]1CC[C@]23c4c5ccc(c4O[C@H]1C(=O)CC[C@]3([C@H]C5)O)O4C,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]1CC[C@]23c4c5ccc(c4O[C@H]1C(=O)CC[C@]3([C@H]1C5)O)OC
+CCC1=NN(C(=O)N1CCOC2=CC=CC=C2)CCCN3CCN(CC)C4=CC(=CC=C8)Cl,True,False,LEAK,syntax (ring closure / parens / token),CCC1=NN(C(=O)N1CCOC2=CC=CC=C2)CCCN3CCN(CC3)C4=CC(=CC=C8)Cl
+c1ccc82(c1)C(=[NH+]c3ccccc42)N4CC[NH+](CC4)CCOCCO,True,False,LEAK,syntax (ring closure / parens / token),c1ccc2(c1)C(=[NH+]c3ccccc4S2)N4CC[NH+](CC4)CCOCCO
+C[N+]1(C9CC7C1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOsC)C4=CSC(=N4)N)SC2)C(O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(CCC7C1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOsC)C4=CSC(=N4)N)SC2)C(O)[O-]
+CCCCCN(C)CCC(O)(P(=O)(O)O4)P(=O)(O)O,True,False,LEAK,syntax (ring closure / parens / token),CCCCCN(C)CCC(O)(P(=O)(O)O)P(=O)(O)O
+C[N+]1(CCC7C1)C1C2=C(N3C(C(C3=O)NC(=O)C(=NOsC)C4=CSC(=N4)N)SC2)C(O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(CCC7C1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOsC)C4=CSC(=N4)N)SC2)C(O)[O-]
+CC(C)(C)CC(C)(C)5cccc(cc)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)(C)CC(C)(C)cccc(cc)O
+C8=C#CC(C)C(C(=O)NC(=O)N(C1CO)C)CC=C,True,False,LEAK,syntax (ring closure / parens / token),C8CC#CC(C)C1(C(=O)NC(=O)N(C1=O)C)CC=C
+c1cnc(Pc1)[N-]S(=O)(=n)c2ccc(cc2)N,True,False,LEAK,aromaticity / kekulization,c1cnc(nc1)[N-]S(=O)(=O)c2ccc(cc2)N
+CCC1=NN(C(=O6)N1CCOC2=CC=CC=C2)CCCN3CCN(CC3)C4=CC(=C=C8)Cl,True,False,LEAK,syntax (ring closure / parens / token),CCC1=NN(C(=O)N1CCOC2=CC=CC=C2)CCCN3CCN(CC3)C4=CC(=CC=C8)Cl
+C1=CC(=C(C=C1)O)C(CCN(C(C)C)C(C7)C)CNICC=C#C=C2,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=C(C=C1)O)C(CCN(C(C)C)C(C7)C)CNICC=CC=C2
+CC(=O)Ncc(c(c(c(csI)NC(=O)C)I)C(=O)[O-])I,True,False,LEAK,aromaticity / kekulization,CC(=O)Nc1c(c(c(c(c1I)NC(=O)C)I)C(=O)[O-])I
+C[C@]12CC[C@H]3[C@H]([C@@H]1CC[C@@H]2C(=O)NC4=C(C=CC(=C4)C(F)(F)F)C(F)(F)F)CC[C@@H][C@@]3(C=CC(=O)N5)C,True,False,LEAK,syntax (ring closure / parens / token),C[C@]12CC[C@H]3[C@H]([C@@H]1CC[C@@H]2C(=O)NC4=C(C=CC(=C4)C(F)(F)F)C(F)(F)F)CC[C@@H]5[C@@]3(C=CC(=O)N5)C
+CC(C)NC(=O)C1=CC=C(C=C)CNNC,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NC(=O)C1=CC=C(C=C1)CNNC
+C(CN(\C(=O)O=CC9(=O)O)N(CC(=O)O)CC=O)O,True,False,LEAK,syntax (ring closure / parens / token),C(CN(CC(=O)O=CC(=O)O)N(CC(=O)O)CC=O)O
+CCOC(=O)C1(CC[NH+](CC1)6C)cccccc,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)C1(CC[NH+](CC1)6C)c2ccccc2
+C/CC1=NN(C(=O)NCCOC2=CC=CC=C2)CCCN3CCN(CC3)C=CC(=CC=C8)Cl,True,False,LEAK,syntax (ring closure / parens / token),C/CC1=NN(C(=O)N1CCOC2=CC=CC=C2)CCCN3CCN(CC3)C4=CC(=CC=C8)Cl
+C(#N)[Fe-2](C#N)(C#N)5(CN)(C#N)N=O,True,False,LEAK,syntax (ring closure / parens / token),C(#N)[Fe-2](C#N)(C#N)5(C#N)(C#N)N=O
+CNC(=O)S1cc(ccn1)Oc2ccc(coc2)NC(=O)Nc3ccc(c(c3)C(F)(F)F)Cl,True,False,LEAK,aromaticity / kekulization,CNC(=O)S1cc(ccn1)Oc2ccc(cc2)NC(=O)Nc3ccc(c(c3)C(F)(F)F)Cl
+cn1c[H]nc1CC[NH3+],True,False,LEAK,valence too high,cn1c[1H]nc1CC[NH3+]
+CC(C)NC(=O)C1=CC=37C(C=C1)CNNC,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NC(=O)C1=CC=3C(C=C1)CNNC
+CC1(C(=O)N2C(C(=O)N3CCCC38C2(O1)O)CC4=CC=CC=C4)NC(=O)C5CC6C(CC7=CNC8=CC=CC6=C78)N(C5)C,True,False,LEAK,syntax (ring closure / parens / token),CC1(C(=O)N2C(C(=O)N3CCCC3C2(O1)O)CC4=CC=CC=C4)NC(=O)C5CC6C(CC7=CNC8=CC=CC6=C78)N(C5)C
+CC1CI2CC3=C(C31(CCN2CC=C(C)C)C)ClC(C=C3)O,True,False,LEAK,syntax (ring closure / parens / token),CC1C2CC3=C(C1(CCN2CC=C(C)C)C)ClC(C=C3)O
+CC1=C(C=C(C=8C1)C(=O)NC2=CC(=CC(=C2)NC=C(N=C3)C)C(F)(F2)F)NC4=NC=CC(=N4)C5=CN=CC=C5,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C=C(C=C1)C(=O)NC2=CC(=CC(=C2)NC=C(N=C3)C)C(F)(F2)F)NC4=NC=CC(=N4)C5=CN=CC=C5
+C1=CC(=CC=C1C#N)C(C2=CC=C1(C=C2)C#N)N3C=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC=C1C#N)C(C2=CC=C(C=C2)C#N)N3C=NC=N3
+CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC4(=C(C=C3)Cl)C(F)(F)2F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)2F
+[H]/[NH+]=C(/C=CC(=O)/C3(=C\C=c2ccc(=C([NH+])N)cc2)/C=CP)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)/C(=C\C=c2ccc(=C([NH+])N)cc2)/C=C1)\N
+C1COCC(=O)N1C2=CC=C(C=C)N9CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1COCC(=O)N1C2=CC=C(C=C2)N9CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl
+C[N+]1(.C3CC7C)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C=CSC(=N4)N)SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+CNC(=O)c1cc(ccn1)Oc2ccc(cc2)NC(=O)Nc3ccc(c(c)C(F)(F)F)Cl,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)c1cc(ccn1)Oc2ccc(cc2)NC(=O)Nc3ccc(c(c3)C(F)(F)F)Cl
+C[N+3](C)(C)CCCCCCCCCC[N+](C)(C)C,True,False,LEAK,valence too high,C[N+](C)(C)CCCCCCCCCC[N+](C)(C)C
+CCP[NH+](CCCC(C)Nccc[nH+]c2c1ccc(c2)Cl)CCO,True,False,LEAK,syntax (ring closure / parens / token),CC[NH+](CCCC(C)Nc1cc[nH+]c2c1ccc(c2)Cl)CCO
+CC7N(CC)C(=O)/7C(=C/c1cc(c(c(c1)O)[1O-])[N+](=O)[O-])/C#N,True,False,LEAK,valence too high,CCN(CC)C(=O)/7C(=C/c1cc(c(c(c1)O)[O-])[N+](=O)[O-])/C#N
+CC[NH+](CC)Cc1cc(ccc1O)Nc2ccncc2ccc(c3)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC[NH+](CC)Cc1cc(ccc1O)Nc2ccnc3c2ccc(c3)Cl
+Cc1cccc(c1#NC(=O)c2cnc(s2)Nc3cc(nc(n3)C)N4CC[NH+](CC4)CCO)Cl,True,False,LEAK,valence too high,Cc1cccc(c1NC(=O)c2cnc(s2)Nc3cc(nc(n3)C)N4CC[NH+](CC4)CCO)Cl
+CNS(=O)(=O7)CCc1ccc2H(c1)c(c[nH])C93CC[NH+](CC3)C,True,False,LEAK,syntax (ring closure / parens / token),CNS(=O)(=O)CCc1ccc2H(c1)c(c[nH])C3CC[NH+](CC3)C
+C(CN(CC(=O)O=CC(=O)O)N(CPC(=N)O)CC=O)O,True,False,LEAK,valence too high,C(CN(CC(=O)O=CC(=O)O)N(CPC(=O)O)CC=O)O
+C[N+]1(C3CC7C)CC2=C(N3C(C(C=O)NC(=O)C(=nNOC)C4=CSC(=N4)N)SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C)CC2=C(N3C(C(C3=O)NC(=O)C(=nNOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+CNC(=O)C1=N3C=CC(=C1)OC2=CC=C(C=C)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F
+Cc1cc2c(cc1C(=C)ccc(cc3)C(O)[O-])C(CCC2(C)C)3(C)C,True,False,LEAK,valence too high,Cc1cc2c(cc1C(=C)c3cc(cc3)C(=O)[O-])C(CCC2(C)C)3(C)C
+c1ccn2c(c1)nn(c2=O)CC[NH+]3CCN(CC3)c74cccc(c4)Cl,True,False,LEAK,syntax (ring closure / parens / token),c1ccn2c(c1)nn(c2=O)CCC[NH+]3CCN(CC3)c4cccc(c4)Cl
+C(CNOCC(=O)(=CC(=O)O)N(CC(=O)O)CC=O)\O,True,False,LEAK,valence too high,C(CN(CC(=O)O=CC(=O)O)N(CC(=O)O)CC=O)O
+C1CCC(C1)C(#CC#N)N2C=C(C=N2)C=C4C=CNC4=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1CCC(C1)C(CC#N)N2C=C(C=N2)C=C4C=CNC4=NC=N3
+C1=CC=C(C=s)C(=C(C2=CC=CC=C2)C3=CC=C(C=C)OCCO)CCCl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=C1)C(=C(C2=CC=CC=C2)C3=CC=C(C=C)OCCO)CCCl
+CCOC(=O)CC(C(=O)OCC)SP8(=S)(OC)OC,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)CC(C(=O)OCC)SP(=S)(OC)OC
+CC1=C(C(C(=C(N1)C)C(=O)OC(C)(C)CN(C)CCC(C=CC=CC=C2)C3=CC=CC=C3)C4=CC6(=CC=C)[N+](=O)[O-])C(=O)OC,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C(C(=C(N1)C)C(=O)OC(C)(C)CN(C)CCC(C2=CC=CC=C2)C3=CC=CC=C3)C4=CC6(=CC=C4)[N+](=O)[O-])C(=O)OC
+C(=O)Nc51c(c(c(c(c1I)NC(=O)C)I)C(=O)[O-])I,True,False,LEAK,syntax (ring closure / parens / token),C5(=O)Nc1c(c(c(c(c1I)NC(=O)C)I)C(=O)[O-])I
+C1C4(=O)NC2=C12C1=CC(=C2)OCCCCN3CCN(CC3=C4=C(C(=CC)C4)Cl)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1C4(=O)NC2=C12C=CC(=C2)OCCCCN3CCN(CC3)C4=C(C(=CC=C4)Cl)Cl
+CC19(C(=O)N2C(C(=O)N3CCCC38C2(O1)O)CC4=CC=CC=C4)NC(=O)C5CC6C(CC7=CNC8=CC=CC6=C78)N(C5)C,True,False,LEAK,syntax (ring closure / parens / token),CC1(C(=O)N2C(C(=O)N3CCCC38C2(O1)O)CC4=CC=CC=C4)NC(=O)C5CC6C(CC7=CNC8=CC=CC6=C78)N(C5)C
+C[NH+]1CC[C@]2324c5ccc(c4O[C@H]2C(=O)CC[C@]3([C@H]1Cr5)O)OC,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]1CC[C@]23c4c5ccc(c4O[C@H]2C(=O)CC[C@]3([C@H]1C5)O)OC
+CCC\C(C6)C1(C(=O)NC(=[NH+]C1=O)S)CC=C,True,False,LEAK,syntax (ring closure / parens / token),CCCC(C6)C1(C(=O)NC(=[NH+]C1=O)S)CC=C
+CC/[N+](C)(C7C)CCOC(=O)C1c2ccccc2Oc3c1cccc3,True,False,LEAK,syntax (ring closure / parens / token),CC[N+](C)(CC)CCOC(=O)C1c2ccccc2Oc3c1cccc3
+c1cc(ccc1c2ccc(o2)/C=N/N3C3C(=O)NH3=OP)[N+](=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1c2ccc(o2)/C=N/N3C3C(=O)NC3=OP)[N+](=O)[O-]
+c1cc(ccc1C[C@@H](C(=O83)[O-])[NH3+]5)O,True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1C[C@@H](C(=O3)[O-])[NH3+]5)O
+COC1=C(C=C2C(=C)N=5N=C2NC3=9CC(=C(C=C3)F)Cl)OCCCN4CCOCC4,True,False,LEAK,syntax (ring closure / parens / token),COC1=C(C=C2C(=C1)N=5N=C2NC3=9CC(=C(C=C3)F)Cl)OCCCN4CCOCC4
+C1=CC(=C(=C1)O)C(CCN(C(C)C)C(C7)C)CNICC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=C(C=C1)O)C(CCN(C(C)C)C(C7)C)CNICC=CC=C2
+C1=CC=C2C(=C1)C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C2C(=C1)C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3C=CC(=C5)O
+Cc16c(cno1)C(=O)N42ccc,True,False,LEAK,syntax (ring closure / parens / token),Cc16c(cno1)C(=O)Nc2ccc(cc2)C(F)(F7)F
+c11c[9nH]nc1CC[NH3+],True,False,LEAK,syntax (ring closure / parens / token),c11c[nH]nc1CC[NH3+]
+CC7N(CC)C(=O)/7C(=C/c1Scc(c(c(c1)O)[1O-])[N+](=O)[O-])/C#N,True,False,LEAK,valence too high,CC7N(CC)C(=O)/7C(=C/c1cc(c(c(c1)O)[1O-])[N+](=O)[O-])/C#N
+C[NH+](C)CCN(C9cccc(cc1)OC2)c2ccccn,True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CCN(C9c1ccc(cc1)OC)c2ccccn
+C1=CC=C(C=s)C(=C8(C2=CC=CC=C)C3=CC=C(C=C)OCCO)CCCl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=s)C(=C(C2=CC=CC=C2)C3=CC=C(C=C)OCCO)CCCl
+c#ccc(cc1)C(C6HC[NH3+]2CCC2CC23)(c3ccccc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(C6HC[NH3+]2CCCCC23)(c3ccccc)O
+CCCC(=O)OC1(CCCC1(CC(C3C2CC4=CC(=O9)CCC34C)O)C)C(=O)CO,True,False,LEAK,syntax (ring closure / parens / token),CCCC(=O)OC1(CCCC1(CC(C3C2CCC4=CC(=O)CCC34C)O)C)C(=O)CO
+C[C@]12C[C@@H]([C@H]C[C@H]([C@@H]1CC[C@@]2(C(=O)COC(=O)CC(C)(C)C)O)CCC4=CFC(=O)C=C[C@]4C)O,True,False,LEAK,valence too high,C[C@]12C[C@@H]([C@H]C[C@H]([C@@H]1CC[C@@]2(C(=O)COC(=O)CC(C)(C)C)O)CCC4=CFC(=O)C=C[C@]34C)O
+CCN1I(O)C(NC1=O)C=CC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),CCN1I(=O)C(NC1=O)C=CC=CC=C2
+C1=CC=C(C=C1)C2(C(=O)NC(=O)N2)C3=CC=CC=C,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=C1)C2(C(=O)NC(=O)N2)C3=CC=CC=C3
+[H]/[NH+]=C(/C=CC(=O)n-C(=C8C=ccc\c(=C([NH3+])N)cc)/C=C1)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)n-C(=C8C=ccc\c(=C([NH3+])N)cc2)/C=C1)\N
+CC=NC=C(C=C1)C2=NC=C(C=C2C3=CC=C(C=C3)S(=O)(=O)C)9Cl,True,False,LEAK,syntax (ring closure / parens / token),CC1=NC=C(C=C1)C2=NC=C(C=C2C3=CC=C(C=C3)S(=O)(=O)C)Cl
+CCCCCOC1=CC=C(C=C1)C2=CC=C(C=C2)C3=CC=C(C=C3)C(=O)N[C@H][C@H]([CoH](NC(=O)[C@@H]5[C@H]([C@H](CN5C(=O)[C@@H](NC(=O)[C@@H](NC(=O)[C@@H]6C[C@H](CNC(=O)[C@@H](NC4=O)[C@@H](C)O)O)[C@@H]([C@H](C7=CC=C(C=C7)O)O)O)[C@@H](C)O)C)O)O)O,True,False,LEAK,syntax (ring closure / parens / token),CCCCCOC1=CC=C(C=C1)C2=CC=C(C=C2)C3=CC=C(C=C3)C(=O)N[C@H]C[C@H]([C@H](NC(=O)[C@@H]5[C@H]([C@H](CN5C(=O)[C@@H](NC(=O)[C@@H](NC(=O)[C@@H]6C[C@H](CNC(=O)[C@@H](NC4=O)[C@@H](C)O)O)[C@@H]([C@H](C7=CC=C(C=C7)O)O)O)[C@@H](C)O)C)O)O)O
+CCOC(=O)C(CC-61=CC=CC=C1)NC(C)C(s=O)N2CC3=CC=CC=C3CC2C(=O1)O,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)C(CC61=CC=CC=C1)NC(C)C(s=O)N2CC3=CC=CC=C3CC2C(=O)O
+CC(O)(C)C(C=CC1=CC2=C(C=C1)/3CO2)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC1=CC2=C(C=C1)O3CO2)C
+CC1=CC=C5=C1(=O)(=O)NC(=O)C2=CC(=C(C=C2)CC3=CN(C4=C3C=C(C=C4)N#C(=O)OC5CCCC5)C)OC,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC=C5=C1S(=O)(=O)NC(=O)C2=CC(=C(C=C2)CC3=CN(C4=C3C=C(C=C4)N#C(=O)OC5CCCC5)C)OC
+C1CC(C28=3CC=CC=C2C1)C3=NCCN3,True,False,LEAK,syntax (ring closure / parens / token),C1CC(C2=CC=CC=C2C1)C3=NCCN3
+C1=CC=C2C(=C1)C(=O)OC23C4=C(C=C(C=C4)O)OC5=C,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C2C(=C1)C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3
+CCOcnc26ccc(c2n1Cc3ccc(c93)c4c5c=cc4cc[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOcnc26ccc(c2n1Cc3ccc(c93)c4ccc=cc4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C
+CC(C(=O)c1cccc(c11)Cl)[NH2+]C(C3)(C)C,True,False,LEAK,syntax (ring closure / parens / token),CC(C(=O)c1cccc(c11)Cl)[NH2+]C(C)(C)C
+CC(C)CC1(C(=O)NC(=O)N6C14=O)CC=C,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CC1(C(=O)NC(=O)NC1=O)CC=C
+c[NH+](C)CC/C=C\1/c2c5cccC2Sc3c1cc(cBc3)Cl,True,False,LEAK,syntax (ring closure / parens / token),c[NH+](C)CC/C=C\1/c2c5cccC2Sc3c1cc(cc3)Cl
+CC[NH+](CC)C3CN19c2ccc(cc2C(=NCC1=O)c32Icccc3F)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC[NH+](CC)C3CN19c2ccc(cc2C(=NCC1=O)c3ccccc3F)Cl
+Cc1c(ccncCS(=O)c2[nH]c3cccccn2)OCCCOC,True,False,LEAK,syntax (ring closure / parens / token),Cc1c(ccncCS(=O)c2[nH]c3ccccc3n2)OCCCOC
+CN1(C)NN=CC(=NC=No6)C(=S),True,False,LEAK,syntax (ring closure / parens / token),CN(C)NN=CC(=NC=No6)C(=S)N
+CCNC4(=O)C(NC1=O)C=CC=C=C72,True,False,LEAK,syntax (ring closure / parens / token),CCNC4(=O)C(NC1=O)C=CC=CC=C2
+cccn2c(c)nn(c2=O)CnCC[NH+]3CCN(CC3)c4cccc(c4)Cl,True,False,LEAK,aromaticity / kekulization,c1ccn2c(c1)nn(c2=O)CnCC[NH+]3CCN(CC3)c4cccc(c4)Cl
+c1ccn2c(c1)nn(c2=O)CC[NH+2]3CCN(CC3)c74cccc(c4)Cl,True,False,LEAK,syntax (ring closure / parens / token),c1ccn2c(c1)nn(c2=O)CC[NH+]3CCN(CC3)c74cccc(c4)Cl
+C1=CC=C(CCs)C(=C(C2=CC=CC=C2)=3=CC=C(C=C)OCCO)CBCCl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=s)C(=C(C2=CC=CC=C2)C3=CC=C(C=C)OCCO)CCCl
+CC(=O)FC1C(SC2=CC=CC=C2N(C1=O)CC[NH+](C)C)C3=CC=C(C=C3)OC,True,False,LEAK,valence too high,CC(=O)OC1C(SC2=CC=CC=C2N(C1=O)CC[NH+](C)C)C3=CC=C(C=C3)OC
+c1ccn2c(c1)nn(c2=O)CCC[NH+]3CCN(CC93)c4cccc3(c4)Cl,True,False,LEAK,syntax (ring closure / parens / token),c1ccn2c(c1)nn(c2=O)CCC[NH+]3CCN(CC93)c4cccc(c4)Cl
+C[NH+]CCCCC1CCN2c3c\cc9cc3Sc4c2cc(cc4)S(=O)C,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]CCCCC1CCN2c3ccc9cc3Sc4c2cc(cc4)S(=O)C
+CCC2CC3=C(C13(CCNCC=C(C)C)C)C1=C(C=C3)O,True,False,LEAK,syntax (ring closure / parens / token),CCC2CC3=C(C13(CCN2CC=C(C)C)C)C=C(C=C3)O
+CC7(C)cnc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2cc5ccc2)4[C@@H]([C@H](Cc3cc4cc3)NC(=O)OCcCcncs4)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)cnc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2cc5ccc2)4[C@@H]([C@H](Cc3cc4ccc3)NC(=O)OCcCcncs4)O
+C1COCC(=O)N1C2=CC=C(C=C2)N3CC(OC3=O)C8NC(=O)C=CC=C(S42)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1COCC(=O)N1C2=CC=C(C=C2)N3CC(OC3=O)C8NC(=O)C4=CC=C(S4)Cl
+CC1=CC(=C(C=C1)O)C(CCN(C7(C)C)C(C)C)C2=CC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC(=C(C=C1)O)C(CCN(C(C)C)C(C)C)C2=CC=CC=C2
+C411=CC(=CC=C1C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C11=CC(=CC=C1C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N3
+CCC(c1nc(c2cSn1)(nn2)[C@@H]3C[C@@H]([C@H]([C@H]3O)O)OCCO)N[C@@H]4C[C@H]4c5ccc(c(cN5)F)F,True,False,LEAK,aromaticity / kekulization,CCCSc1nc(c2c(n1)(nn2)[C@@H]3C[C@@H]([C@H]([C@H]3O)O)OCCO)N[C@@H]4C[C@H]4c5ccc(c(c5)F)F
+C1=CC=C(C=C1)N2C=C(C=C(C3=O)C3=CC=CC=C3C#N)C4=CC=CC=N4,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=C1)N2C=C(C=C(C2=O)C3=CC=CC=C3C#N)C4=CC=CC=N4
+CC(C)NCC(COC1=CC=CCH27=CC=CC=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NCC(COC11=CC=CC27=CC=CC=C2)O
+CC[NH+](CC)C3CN19c2ccc(cc2C(=NCC1=O2)c3ccccc3F)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC[NH+](CC)C3CN19c2ccc(cc2C(=NCC1=O)c3ccccc3F)Cl
+COC(=O)NC=NC=C(N1)C=C(C=C2)C(=O)C3=CC=C8C=C3,True,False,LEAK,syntax (ring closure / parens / token),COC(=O)NC=NC2=C(N1)C=C(C=C2)C(=O)C3=CC=CC=C3
+C[N+]1(C3CC7881)CC=C,True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C1)CC=C
+c12cc(cc9O1c)S(=O)(=c)c2cc(cc2)N,True,False,LEAK,syntax (ring closure / parens / token),c12cc(cc9O15)S(=O)(=c)c2ccc(cc2)N
+CC(O)(C)C(C=CC51=CC2=C(C=C1)O3C/O2)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC51=CC2=C(C=C1)O3CO2)C
+CN1CC[C@@]23C=C[C@@H](C[C@@H]2OC4=C(C=CC(=C34)C)4OC)O,True,False,LEAK,syntax (ring closure / parens / token),CN1CC[C@@]23C=C[C@@H](C[C@@H]2OC4=C(C=CC(=C34)C)OC)O
+CNC(=O)S1cc(ccn1)O=2ccc(cc2)NC(=O)Nc3ccc(c(c3)C(F)(F)F)Cl,True,False,LEAK,valence too high,CNC(=O)S1cc(ccn1)Oc2ccc(cc2)NC(=O)Nc3ccc(c(c3)C(F)(F)F)Cl
+C1COCC(=O)N1C2=CC=C(C=C)N9CC(OC3=O)=CNC(=O)C4=CC=C(S)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1COCC(=O)N1C2=CC=C(C=C)N9CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl
+cNS(=O)(=O)CC,True,False,LEAK,aromaticity / kekulization,cNS(=O)(=O)CCc1ccc2c(c1)(c\[nH]2)C3CC[NH+9](CC3)C
+C1=CC=C(C=C1)C(=C(C2=CC=CC=C2)C=CC=C(C=C3)OCCO)CCCl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=C1)C(=C(C2=CC=CC=C2)C3=CC=C(C=C3)OCCO)CCCl
+CFOC(=O)C\CCCCCCC(C)31ccccc1I,True,False,LEAK,syntax (ring closure / parens / token),CFOC(=O)CCCCCCCCC(C)1ccccc1I
+C(CN(\C(=O)O=CC9(=O)O)3N6(CC(=O)O)CC=O)O,True,False,LEAK,syntax (ring closure / parens / token),C(CN(\C(=O)O=CC9(=O)O)N(CC(=O)O)CC=O)O
+CC1=CC=CC=CC(=O)NC2=CC(=C(C=C2)C(=O)N3CCC(C4=C3C=3CC(=C4)Cl)O)C,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC=CC=CC(=O)NC2=CC(=C(C=C2)C(=O)N3CCC(C4=C3C=CC(=C4)Cl)O)C
+CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccccc4c5[nH]-oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccccc4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C
+c12ccc(cc1)C(=O8)4c2-ccc2c(c2N)CC(=O)N,True,False,LEAK,syntax (ring closure / parens / token),c12ccc(cc1)C(=O8)c2ccc2c(c2N)CC(=O)N
+CCNC(=O)51=3C=CC(=C1)1OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)51=3C=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F
+CC1C(C(=O)NS(=O)(=O)O)NC(=O)C(=NOC(C)(C)C(=O))C2=CSC(=N2)N,True,False,LEAK,syntax (ring closure / parens / token),CC1C(C(=O)N1S(=O)(=O)O)NC(=O)C(=NOC(C)(C)C(=O)O)C2=CSC(=N2)N
+c1cNc(cc1)C(=O)c2cccc(c2c)CC(=O)N,True,False,LEAK,aromaticity / kekulization,c1ccc(cc1)C(=O)c2cccc(c2N)CC(=O)N
+c1ccc(cc7)C(CCC[NH3+]2CCCC2)(ccccccc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(CCC[NH3+]2CCCC2)(ccccccc)O
+CC(C)NCC(COC11=C4C=CC27=CC=C=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NCC(COC11=CC=CC27=CC=C=C2)O
+CC1=NC=C(C=C1)C2=NC=C(C=C2#C=CC=C(C=C3)S(=O)(=O)7C)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC1=NC=C(C=C1)C2=NC=C(C=C2C3=CC=C(C=C3)S(=O)(=O)7C)Cl
+c1ccc2c(c1)C(=[NH+]c3cccc3S2)N4CC[NH+]7(CC4)CCOCCO,True,False,LEAK,syntax (ring closure / parens / token),c1ccc2c(c1)C(=[NH+]c3cccc3S2)N4CC[NH+](CC4)CCOCCO
+Cc1c(cno1)C(=O)Nc2ccc(cc2)7C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),Cc1c(cno1)C(=O)Nc2ccc(cc2)C(F)(F)F
+CC1=C(C(C(=C(N1)C)C(=O)OCC9[NH+](C)Cc2ccccc2)c93cccc(c3)[N+](=O)[O-])C(=O)OC,True,False,LEAK,aromaticity / kekulization,CC1=C(C(C(=C(N1)C)C(=O)OCC[NH+](C)Cc2ccccc2)c3cccc(c3)[N+](=O)[O-])C(=O)OC
+CC1=C2[C@H](C(=O)[C@@]3([C@H](C[C@@H]4[C@]([C@H]3[C@@H]([C@@](C2(C)C)(C[C@@H]1OC(=O)[C@@H]([C@H](c5ccccc5)NC(=O)OC(C)(C)C)O)O)OC(=O)c6ccccc6)(Cc4)OC(=O)C)5OC)C)OC,True,False,LEAK,syntax (ring closure / parens / token),CC1=C2[C@H](C(=O)[C@@]3([C@H](C[C@@H]4[C@]([C@H]3[C@@H]([C@@](C2(C)C)(C[C@@H]1OC(=O)[C@@H]([C@H](c5ccccc5)NC(=O)OC(C)(C)C)O)O)OC(=O)c6ccccc6)(CO4)OC(=O)C)5OC)C)OC
+C1CC(C\28=3CC=CC=C2C1)C3=N7CCN3,True,False,LEAK,syntax (ring closure / parens / token),C1CC(C28=3CC=CC=C2C1)C3=NCCN3
+Ccocc2c(cc1C(=C)c3cc(cc3)C(=O)[O-])C(CCC2(C)C)(C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)c3cc(cc3)C(=O)[O-])C(CCC2(C)C)3(C)C
+Co(=O)S[C@@H]1CC2=CC(=O)CC[C@@]2([C@@H]3[C@@H]1[C@@H]4CC[C@]5([C@]4CC3)C)CCC(=O)O5,True,False,LEAK,valence too high,Co(=O)S[C@@H]1CC2=CC(=O)CC[C@@]2([C@@H]3[C@@H]1[C@@H]4CC[C@]5([C@]4(CC3)C)CCC(=O)O5)C
+cNS(=O)(=O)C7Cc1ccc2c(c1)(c[nH]2)C3CC[NH+](CC3)C,True,False,LEAK,syntax (ring closure / parens / token),cNS(=O)(=O)CCc1ccc2c(c1)(c[nH]2)C3CC[NH+](CC3)C
+C1=CC2=C(o=C1OC(F)(F)F)SC(=N2)N,True,False,LEAK,valence too high,C1=CC2=C(C=C1OC(F)(F)F)SC(=N2)N
+CCC1(C(=O)C(CNC=O)C)CC,True,False,LEAK,syntax (ring closure / parens / token),CCC1(C(=O)C(CNC1=O)C)CC
+C[C@@H](C(=O)N)1c(c(c(c(cI)C(=O)NC(C6OcO)I)C(=O)NC(CO)CO)I)O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H](C(=O)N)1c(c(c(c(cI)C(=O)NC(COcCO)I)C(=O)NC(CO)CO)I)O
+CC(O)(C)C(C=CC8=C=2=C3(CCC1)O3CO2)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC1=C=2=C3(CCC1)O3CO2)C
+c1ccc(c(c)C2=NCC(=O)Nc3c2cc(cc3)[N+](=O)[O-])Cl,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(c(c1)C2=NCC(=O)Nc3c2cc(cc3)[N+](=O)[O-])Cl
+C[C@H](C(=O)N)NC(=O)[C@@H]1CCCN1C(=O)[C@H](CCCC[NH2+]C(C)C)NC(=O)[C@H](CC(C)C)N1C(=O)[C@@H](CC(=O)N)NC(=O)[C@H](Cc2ccc(cc2)O)N(C)C(=O)[C@H](CO)NC(=O)[C@@H](Cc3cccnc3)NC(=O)[C@@H](Cc4ccc(cc)Cl)NC(=O)[C@@H](Cc5ccc6ccccc6c5)NC(=O)C,True,False,LEAK,syntax (ring closure / parens / token),C[C@H](C(=O)N)NC(=O)[C@@H]1CCCN1C(=O)[C@H](CCCC[NH2+]C(C)C)NC(=O)[C@H](CC(C)C)NC(=O)[C@@H](CC(=O)N)NC(=O)[C@H](Cc2ccc(cc2)O)N(C)C(=O)[C@H](CO)NC(=O)[C@@H](Cc3cccnc3)NC(=O)[C@@H](Cc4ccc(cc)Cl)NC(=O)[C@@H](Cc5ccc6ccccc6c5)NC(=O)C
+C[NH+](C)CC3N(Cccc(cc1)OC)c2cc\ccn2,True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CC3N(Ccccc(cc1)OC)c2ccccn2
+CC1([C@@H](N2[C@H](S1)[C@@H](C=O)N3C(=O)[C@H]([NH2+]C3(C)C)c4ccccc4)C(=O)[O-])C,True,False,LEAK,syntax (ring closure / parens / token),CC1([C@@H](N2[C@H](S1)[C@@H](C2=O)N3C(=O)[C@H]([NH2+]C3(C)C)c4ccccc4)C(=O)[O-])C
+C1CCC86(C1)C(CC#oN)NCC=C(C=N2)C=4C=CNC,True,False,LEAK,syntax (ring closure / parens / token),C1CCC8(C1)C(CC#oN)NCC=C(C=N2)C=24C=CNC
+COc1ccc(c(c1)O)C(=O)c222ccccc2,True,False,LEAK,syntax (ring closure / parens / token),COc1ccc(c(c1)O)C(=O)c22ccccc2
+c1ccc2c(c1)C(=[NH+]c3cccc3S2)N4CC[NH+](CC4)COCCO,True,False,LEAK,aromaticity / kekulization,c1ccc2c(c1)C(=[NH+]c3cccc3S2)N4CC[NH+](CC4)CCOCCO
+CC1(OC2CC3C4C8C5=CC(=O)CCC5(CF(C(CC3(C(O1)C(=O)CCl)C)O)F)C)5C,True,False,LEAK,syntax (ring closure / parens / token),CC1(OC2CC3C4C8C5=CC(=O)CCC5(C4(C(CC3(C(O1)C(=O)CCl)C)O)F)C)C
+CCN1I(=O)C(NC1=O)C=CC=CC3=C2,True,False,LEAK,syntax (ring closure / parens / token),CCN1I(=O)C(NC1=O)C=CC=CC=C2
+CC(C4)NC(=O)C1=CC=C(C2=C1)CNNC,True,False,LEAK,syntax (ring closure / parens / token),CC(C4)NC(=O)C1=CC=C(C=C1)CNNC
+CCCSc1nc(c2c(n1)n(nn2)[C@@H]3C[C@@H]([C@H]([C@H]3O)O)OCCO)N[C@@H]4C[C@H]4c5ccc(c(c53)F)F,True,False,LEAK,syntax (ring closure / parens / token),CCCSc1nc(c2c(n1)n(nn2)[C@@H]3C[C@@H]([C@H]([C@H]3O)O)OCCO)N[C@@H]4C[C@H]4c5ccc(c(c5)F)F
+Cc1ccc6c(c1)C[NH+]2CCN(CC92)C(c3ccccc3)c4ccc(cc4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc1ccc6c(c1)C[NH+]2CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl
+C1=C6(=CC=C1C#N)C(C2=CC=C1(C=C2)C#N)N3C=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC=C1C#N)C(C2=CC=C1(C=C2)C#N)N3C=NC=N3
+CNC(=C[N](=O)[O-])NCCSCC1=CSC(=N1)CN(C)C,True,False,LEAK,valence too high,CNC(=C[N](=O)[O-])NCC5SCC1=CSC(=N1)CN(C)C
+CC(C)OC(=O)C(C)(C2Oc1ccc(cc18)C(=O)c2ccc(c6c))Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)OC(=O)C(C)(C2Oc1ccc(cc18)C(=O)c2ccc(cc))Cl
+CC(C=SCC=9C(C=C1)C(=O)c2=CC=CS2)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C=SCC=9C(C=C1)C(=O)C2=CC=CS2)C(=O)O
+C1=CC=C(C=C1)N2C=C(C=C(C3=O)C3=CCn=CC=C3C#N)C4=CC1=CC=N4,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=C1)N2C=C(C=C(C3=O)C3=CC=CC=C3C#N)C4=CC=CC=N4
+c1cc(ccc1c2ccc(o2)/C=N/NCC(=O)N3=O)[N+](=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1c2ccc(o2)/C=N/N3CC(=O)N3=O)[N+](=O)[O-]
+c1cc(ccc1C(=O)NCC(=O)=[O-])N,True,False,LEAK,valence too high,c1cc(ccc1C(=O)NCC(=O)[O-])N
+CC(C)cnc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2cc5ccc2)4[C@@H]([C@H](Cc3cc4ccc3)NC(=O)OCcCcncs)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)cnc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2cc5ccc2)4[C@@H]([C@H](Cc3cc4ccc3)NC(=O)OCcCcncs4)O
+C[C@@H]1CC[C@H]2C[C@@H](/C(=C/C=C/C=C/[C@H](C[C@H](C(=O)[C@@H]([C@@H](/C(=C/[C@H](C(=O)C[C@H](OC(=O)[C@@H]3CCCCN3C(=O)C(=O)[C@@]1(O2)8O)[C@H](C)C[C@@H]4CC[C@H]([C@@H](C4)OC)O)C)/C)O)OC)C)C)/C)OC,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H]1CC[C@H]2C[C@@H](/C(=C/C=C/C=C/[C@H](C[C@H](C(=O)[C@@H]([C@@H](/C(=C/[C@H](C(=O)C[C@H](OC(=O)[C@@H]3CCCCN3C(=O)C(=O)[C@@]1(O2)O)[C@H](C)C[C@@H]4CC[C@H]([C@@H](C4)OC)O)C)/C)O)OC)C)C)/C)OC
+c1cc(ccc1C[C@@H](C9(=O)[O-])[NH3+])O,True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1C[C@@H](C(=O)[O-])[NH3+])O
+CNCCC(C1=CC=CC=1)OC2=CC=C(C=C2)C(F)(F)F,True,False,LEAK,valence too high,CNCCC(C1=CC=CC=C1)OC2=CC=C(C=C2)C(F)(F)F
+c1ccc(cc1)C(CFC[NH3+]-2CCCC2)(ccccccc)O,True,False,LEAK,valence too high,c1ccc(cc1)C(CCC[NH3+]2CCCC2)(ccccccc)O
+CCOC(=O)C1(CC[NH+](CC1)C)cFccccc2,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)C1(CC[NH+](CC1)C)cccccc2
+c61ccn2c(c1)nn(c2=O)CCC[7NH+]3CCN(CC3)c4cccc(c4)5Cl,True,False,LEAK,syntax (ring closure / parens / token),c61ccn2c(c1)nn(c2=O)CCC[7NH+]3CCN(CC3)c4cccc(c4)Cl
+cNS(=O)(=O)C7Cc1ccc2c(c1)(c[nH]2)C93CC[NH+](CC3)C,True,False,LEAK,syntax (ring closure / parens / token),cNS(=O)(=O)C7Cc1ccc2c(c1)(c[nH]2)C3CC[NH+](CC3)C
+C1CCC(C1)C(CC#N)N2C=C(C=N2)C=C9C=CNC4=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1CCC(C1)C(CC#N)N2C=C(C=N2)C=C4C=CNC4=NC=N3
+CC(=O)/N=4c\1/n(=nc(s61)S(=O)(=O)N)C,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)/N=4c\1/n(=nc(s1)S(=O)(=O)N)C
+CCCNCC(COC19=CC=CC=C1C(=O)CC2C2=CC=CC=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CCCNCC(COC1=CC=CC=C1C(=O)CCC2=CC=CC=C2)O
+CC(C)NCC(C2OC=CC=C(C=C1)CCOC)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NCC(COC1=CC=C(C=C1)CCOC)O
+CC(C)CN7(C[C@H]([C@H](Cc1cHcccc1)NC(=O)O[C@H]/CO[C@@H]3[C@H]2CCO3)2O)S(=O)(=O)c4ccc,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CN(C[C@H]([C@H](Cc1cHcccc1)NC(=O)O[C@H]/CO[C@@H]3[C@H]2CCO3)2O)S(=O)(=O)c4ccc
+C[N+]1(C3CC7C1)CC2=C(N3C(C(C3=O)N5C(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+CNC(=O)C[NH+](CCN(CCN(C=C(=O)NC)CC(=O)[O-])CC(=O)[O-])CC(=O)[O-],True,False,LEAK,valence too high,CNC(=O)C[NH+](CCN(CCN(CC(=O)NC)CC(=O)[O-])CC(=O)[O-])CC(=O)[O-]
+CC(C)CC1(C(=O)NC(=O)NC21=O)CC=C,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CC1(C(=O)NC(=O)NC1=O)CC=C
+c1cnSc25s3c(cO2n1)[I@@H3]4C[C@H]3C[NH2+]C4,True,False,LEAK,syntax (ring closure / parens / token),c1cnSc25s3c(cc2n1)[I@@H3]4C[C@H]3C[NH2+]C4
+c1ccc2c(c1)C(=[NH+]c3cc\cc3S2)N4CC[NH+](CC4)CCOCCO,True,False,LEAK,aromaticity / kekulization,c1ccc2c(c1)C(=[NH+]c3ccccc3S2)N4CC[NH+](CC4)CCOCCO
+C[N+]1(C9CC7C1)CC=1C(N3C(C(C3=O)NC(=O)C(=NOsC)C4=CSC(=N4)N)SC2)C(O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C9CC7C1)CC2=C(N3C(C(C3=O)NC(=O)C(=NOsC)C4=CSC(=N4)N)SC2)C(O)[O-]
+C1CCC(C1)8C(C2#N)N2C=6C(C=NC)C36=C4C=CNC4=NC=3,True,False,LEAK,syntax (ring closure / parens / token),C1CCC(C1)8C(C2#N)N2C=6C(C=NC)C3=C4C=CNC4=NC=3
+CCOcn1nc26ccc(c2n1Cc3ccc(cc3)c4c5cc5cn4c5[nH]oc(=O)4nc)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccc5cn4c5[nH]oc(=O)4nc)C(=O)OCc6c(oc(=O)o6)C
+c12cc(cc9O1c)S(=O)(=c)ccc(cc2)N,True,False,LEAK,syntax (ring closure / parens / token),c12cc(cc9O1c)S(=O)(=c)c2cc(cc2)N
+CN2CN3CN1CN(C2)C3,True,False,LEAK,syntax (ring closure / parens / token),C1N2CN3CN1CN(C2)C3
+CC1CC2CF3CCC4=CC(=O)C=CC4(C3(C(CC2(C1C(=O)CO)C)O)F)C,True,False,LEAK,valence too high,CC1CC2C3CCC4=CC(=O)C=CC4(C3(C(CC2(C1C(=O)CO)C)O)F)C
+c1ccc(cc1)C(CFC[NH3+]-2CCCC)(ccccccc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(CFC[NH3+]-2CCCC2)(ccccccc)O
+Cccc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)C)(C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)C)(C)C
+CC(C)NCC(COC161=C4C=CC27=CCC=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NCC(COC11=C4C=CC27=CC=C=C2)O
+C[C@@H](C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](C)C(=O)N[C@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc1c[nH]cc1cccc2)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc3c[nH]c4c3cccc4)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc5c[nH]cc5cccc6)C(=O)N[C@H](CC(C)C)3C(=O)N[C@@H](Cc7c[nH]c8c7cccc8)C(=O)NCCO)NC(=O)CNC(=O)[C@H](C(C)C)NC=O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H](C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](C)C(=O)N[C@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc1c[nH]c2c1cccc2)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc3c[nH]c4c3cccc4)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc5c[nH]cc5cccc6)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc7c[nH]c8c7cccc8)C(=O)NCCO)NC(=O)CNC(=O)[C@H](C(C)C)NC=O
+CNC(=O)C=NC=CC(=C-1)OC2=CC=C(C7=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C=NC=CC(=C1)OC2=CC=C(C7=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F
+C[C@@H](C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](C)C(=O)N[C@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc1c[nH]c2c1cccc2)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc3c[nH]c4c3cccc4)C(=O)N[C@H](CC6(C)C)C(=O)N[C@@H](Cc5c[nH]c6c5cccc6)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc7c[nH]c8c7cccc8)C(=O)NCCO)NC(=O)CNC(=O)[C@H](C(C)C)NC=O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H](C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](C)C(=O)N[C@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc1c[nH]c2c1cccc2)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc3c[nH]c4c3cccc4)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc5c[nH]c6c5cccc6)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc7c[nH]c8c7cccc8)C(=O)NCCO)NC(=O)CNC(=O)[C@H](C(C)C)NC=O
+C1COC(=O)N1C2=CC=C(C=C2)N3CC(OC53=O)CNC(=O)C4=CC=C(S4)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1COCC(=O)N1C2=CC=C(C=C2)N3CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl
+Cc1c(ccncCS(=O)c2[nH]ccccccn2)OCCCOC,True,False,LEAK,syntax (ring closure / parens / token),Cc1c(ccncCS(=O)c2[nH]c3cccccn2)OCCCOC
+COcccc(c(c1)O)C(=O)cccccc2,True,False,LEAK,syntax (ring closure / parens / token),COc1ccc(c(c1)O)C(=O)c2ccccc2
+CC1=CC(C(C=C1)O)C(CC5(C(C)C)C(C)C)C2=CC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC(=C(C=C1)O)C(CCN(C(C)C)C(C)C)C2=CC=CC=C2
+CCCC(C)C1(C(=O)NC(=O2)NC1=O)CC,True,False,LEAK,syntax (ring closure / parens / token),CCCC(C)C1(C(=O)NC(=O)NC1=O)CC
+C1CN8(CCC1N2C=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5sC9C=C(C=C5)F,True,False,LEAK,syntax (ring closure / parens / token),C1CN8(CCC1N2C=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)F
+C1=CC=C(C=C1)N2C=6C(C=C(C3=O)C3=CCn=CC=C3C#N)C4=CC1=CC=N4,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=C1)N2C=C(C=C(C3=O)C3=CCn=CC=C3C#N)C4=CC1=CC=N4
+C(#N)[Fe-2](C#N)(C#N)(C#N)(C#N1)N=O,True,False,LEAK,syntax (ring closure / parens / token),C(#N)[Fe-2](C#N)(C#N)(C#N)(C#N)N=O
+CCO1nc26ccc(c2n1Cc3ccc(cc3)c4cccccn4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4cccccn4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C
+C1C2=CC=CC=C2N(B3=CC=CC=C3C=O)B(=O)N,True,False,LEAK,syntax (ring closure / parens / token),C1C2=CC=CC=C2N(B3=CC=CC=C3C1=O)C(=O)N
+[H]/[NH+]=C(/C=CC(=O)/C3(=C\C=c2ccc(=C([NH+])o)cc2)/C=CP)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)/C3(=C\C=c2ccc(=C([NH+])N)cc2)/C=CP)\N
+CC(C)CC(C(=O)NC(CCCN=C(N)N)C(=O)N1CCCC1C(=O)NCC(=O)N)NC(=O)CNC(=O)C(CC2=CC=C(C=C2)O)NC(=O)C(CO)NC(=O)C(CC3=CNC4=CC=CC=4C43)NC(=O)C(CC5=CN=CN5)NC(=O)C6CCC(=O)N6,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CC(C(=O)NC(CCCN=C(N)N)C(=O)N1CCCC1C(=O)NCC(=O)N)NC(=O)CNC(=O)C(CC2=CC=C(C=C2)O)NC(=O)C(CO)NC(=O)C(CC3=CNC4=CC=CC=C43)NC(=O)C(CC5=CN=CN5)NC(=O)C6CCC(=O)N6
+CC(Co4)NC(=O)C1=CC=8C(C=C1)CNNC,True,False,LEAK,syntax (ring closure / parens / token),CC(C4)NC(=O)C1=CC=8C(C=C1)CNNC
+CSOc1c2ccc,True,False,LEAK,syntax (ring closure / parens / token),CSOc1nc2ccc
+Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)5C)(C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)C)(C)C
+C1=CC=C(C=C1)C2(C(=O)NC(=O)N)C3=CC=CC=C,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=C1)C2(C(=O)NC(=O)N2)C3=CC=CC=C
+CC1=C[C@@H]2[C@H](CC[C@]3([ClH]2CC[C@@]3(C(=O)C)OC(=O)C)C)[C@@]49(C1=CC(=O)CC4)C,True,False,LEAK,syntax (ring closure / parens / token),CC1=C[C@@H]2[C@H](CC[C@]3([ClH]2CC[C@@]3(C(=O)C)OC(=O)C)C)[C@@]4(C1=CC(=O)CC4)C
+CCOcnc\26ccc(c2n1Cc3ccc(c93)c4c5c=cc4cc[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOcnc26ccc(c2n1Cc3ccc(c93)c4c5c=cc4cc[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C
+CC(C)=C9(=O)C1=CC=3C(CN3C1)CNNC,True,False,LEAK,syntax (ring closure / parens / token),CC(C)=C9(=O)C1=CC=3C(CNC1)CNNC
+CC(=O)S[C@@H]1CC2=CC(=O)CC[C@@]2([C@@H]3[C@@H]1[C@@H]4CC[C@]58([C@]4(CC3)C)CCC(=O)O5)C,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)S[C@@H]1CC2=CC(=O)CC[C@@]2([C@@H]3[C@@H]1[C@@H]4CC[C@]5([C@]4(CC3)C)CCC(=O)O5)C
+CCCC(=O)OC1(CC2C2C1(CC(C3C2CCC4=CC(=O)CCC3c43C)O)C)C(=O)CO,True,False,LEAK,syntax (ring closure / parens / token),CCCC(=O)OC1(CCC2C1(CC(C3C2CCC4=CC(=O)CCC343C)O)C)C(=O)CO
+CCOSC(=O)CCCCCCCCC(C)cccccc1I,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)CCCCCCCCC(C)cccccc1I
+C6C[C@H](CO)NC4(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4c3c(ccc4)C2=C1)C,True,False,LEAK,syntax (ring closure / parens / token),C6C[C@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4c3c(ccc4)C2=C1)C
+C1=CC=CC(=C1)C=CC3=CC=CC=C3N2C(=O)N,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C2C(=C1)C=CC3=CC=CC=C3N2C(=O)N
+CCCC8(C)C1(C(=O)NC(=[NH+]C1=O)S)=CCC,True,False,LEAK,syntax (ring closure / parens / token),CCCC(C)C1(C(=O)NC(=[NH+]C1=O)S)=CCC
+CC(C)[NH2+]C[C@H](COc1cc(cc1)CCOCC2CC2)O,True,False,LEAK,aromaticity / kekulization,CC(C)[NH2+]C[C@@H](COc1ccc(cc1)CCOCC2CC2)O
+CC(C(C=CC=CC=C1)O)N,True,False,LEAK,syntax (ring closure / parens / token),CC(C(C1=CC=CC=C1)O)N
+CC1=C(C(C(=C(N1)C)C(=O)OCC9-[NH+](C)Cc2ccccc2)c93cccc(c3)[N+](=O)[O-])C(=O)OC,True,False,LEAK,aromaticity / kekulization,CC1=C(C(C(=C(N1)C)C(=O)OCC9[NH+](C)Cc2ccccc2)c93cccc(c3)[N+](=O)[O-])C(=O)OC
+Co(=OCS[C@@H]1CC2=CC(=O)CC[C@@]2([Cs@H]3[C@@H]1[C@@H]4CC[C@]5([C@]4(CC3)C)C)C(=O)O5)C,True,False,LEAK,valence too high,Co(=OCS[C@@H]1CC2=CC(=O)CC[C@@]2([C@@H]3[C@@H]1[C@@H]4CC[C@]5([C@]4(CC3)C)C)C(=O)O5)C
+CC[C@H](C)[C@@H](C(=O)N[C@@H](CCC(=O)O)C(#O)N[C@@H](CC1=CNC2=CC=CC=C21)C(=O)N[C@@H](CC(C)C)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](CC(=O)N)C(=O)NCC(=O)NCC(=O)N3CCC[C@H]3C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)NCC(=O)N[C@@H](C)C(=O)N4CCC[C@H]4C(=O)N5CCC[C@H]5C(=O)N[C@@H](CO)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](CCCCN)C(=O)N)NC(=O)[C@H](CC6=CC=CC=C6)NC(=O)[C@H](CC(C)C)NC(=O)[C@H](CCCNC(=N)N)NC(=O)[C@H](C(C)C)NC(=O)[C@H](C)NC(=O)[C@H](CCC(=O)O)NC(=O)[C@H](CCC(=O)O)NC(=O)[C@H](CCC(=O)O)NC(=O)[C@H](CCSC)NC(=O)[C@H](CCC(=O)N)NC(=O)[C@H](CCCCN)NC(=O)[C@H](CO)NC(=O)[C@H](CC(C)C)NC(=O)[C@H](CC(=O)O)NC(=O)[C@H](CO)NC(=O)[C@H]([C@@H](C)O)NC(=O)[C@H](CC7=CC=CC=C7)NC(=O)[C@H]([C@@H](Cr)O)NC(=O)CNC(=O)[C@H](CCC(=O)O)NC(=O)CNC(=O)[C@H](CC8=CN=CN8)N,True,False,LEAK,syntax (ring closure / parens / token),CC[C@H](C)[C@@H](C(=O)N[C@@H](CCC(=O)O)C(=O)N[C@@H](CC1=CNC2=CC=CC=C21)C(=O)N[C@@H](CC(C)C)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](CC(=O)N)C(=O)NCC(=O)NCC(=O)N3CCC[C@H]3C(=O)N[C@@H](CO)C(=O)N[C@@H](CO)C(=O)NCC(=O)N[C@@H](C)C(=O)N4CCC[C@H]4C(=O)N5CCC[C@H]5C(=O)N[C@@H](CO)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](CCCCN)C(=O)N)NC(=O)[C@H](CC6=CC=CC=C6)NC(=O)[C@H](CC(C)C)NC(=O)[C@H](CCCNC(=N)N)NC(=O)[C@H](C(C)C)NC(=O)[C@H](C)NC(=O)[C@H](CCC(=O)O)NC(=O)[C@H](CCC(=O)O)NC(=O)[C@H](CCC(=O)O)NC(=O)[C@H](CCSC)NC(=O)[C@H](CCC(=O)N)NC(=O)[C@H](CCCCN)NC(=O)[C@H](CO)NC(=O)[C@H](CC(C)C)NC(=O)[C@H](CC(=O)O)NC(=O)[C@H](CO)NC(=O)[C@H]([C@@H](C)O)NC(=O)[C@H](CC7=CC=CC=C7)NC(=O)[C@H]([C@@H](C)O)NC(=O)CNC(=O)[C@H](CCC(=O)O)NC(=O)CNC(=O)[C@H](CC8=CN=CN8)N
+Cc1c(ccncCS(=O)8c2[nH]c3ccccc3n2)O3CCCOC,True,False,LEAK,syntax (ring closure / parens / token),Cc1c(ccncCS(=O)c2[nH]c3ccccc3n2)OCCCOC
+C8C(=O)CC(C1=CC=CC=C1)C2=C(OC3=CC=CC=C3C2NO)[O-],True,False,LEAK,syntax (ring closure / parens / token),CC(=O)CC(C1=CC=CC=C1)C2=C(OC3=CC=CC=C3C2=O)[O-]
+Co(=O)S[C@@H]1CC2=CC(=O)CC[C@@]2([C@@H]3[C@@H]1[C@@H]4CC[C@]65([C@]4(CC3)C)CCC(=O)O5)C,True,False,LEAK,syntax (ring closure / parens / token),Co(=O)S[C@@H]1CC2=CC(=O)CC[C@@]2([C@@H]3[C@@H]1[C@@H]4CC[C@]5([C@]4(CC3)C)CCC(=O)O5)C
+[H]/[NH+]=C(/C=CC(=O)/C(=C\C=cccc(=C([NH3+])N)cc2)/C=C1)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)/C(=C\C=c2ccc(=C([NH3+])N)cc2)/C=C1)\N
+C1=C(N=C(S)N=C(N)N)CSCCC(=NS(=O)(=O)N)N,True,False,LEAK,syntax (ring closure / parens / token),C1=C(N=C(S1)N=C(N)N)CSCCC(=NS(=O)(=O)N)N
+C1COCC(=O)N1C2=CC=C(C=C)N9CC(OC3=O)CNC=OC4=CC=C(S4)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1COCC(=O)N1C2=CC=C(C=C)N9CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl
+CCOc1Pc2ccc,True,False,LEAK,syntax (ring closure / parens / token),CCOc1Pnc2ccc
+CC(=O)Ncc(c(c(c(csI)NC(=O)C)I)C2(=O)[O-])I,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)Ncc(c(c(c(csI)NC(=O)C)I)C(=O)[O-])I
+CCO1nc26ccc(c2n1Cc3ccc(cc3)c4cccccn4c5[nH]oc(=O)4n5)C(=O)OCc68c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCO1nc26ccc(c2n1Cc3ccc(cc3)c4cccccn4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C
+C(CN(CC=O)O=CC(=O)ON(CC(=O)O)CC=O)O,True,False,LEAK,valence too high,C(CN(CC(=O)O=CC(=O)O)N(CC(=O)O)CC=O)O
+c1c[H]nc17CC[NH3+],True,False,LEAK,syntax (ring closure / parens / token),c1c[nH]nc1CC[NH3+]
+C\1=C(C(=C2CCC(OC2=C1C)(C)COC3=CC5=C(C=C3)CC4C(=O)NC(=O)77S4)C)O,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C(=C2CCC(OC2=C1C)(C)COC3=CC5=C(C=C3)CC4C(=O)NC(=O)77S4)C)O
+CC(O)(C)C(C=CC51=CC2=C(C/C1)O3CO2)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC51=CC2=C(C=C1)O3CO2)C
+C\1=C(C(=C2CC(OC2=C1C)(C)COC3=CC5=C(C=C3)CC4C(=O)NC(=O)77S4)C)O,True,False,LEAK,syntax (ring closure / parens / token),C\1=C(C(=C2CCC(OC2=C1C)(C)COC3=CC5=C(C=C3)CC4C(=O)NC(=O)77S4)C)O
+c1cc(ccc1CCc2c[nH]c3c2c(/O)nc([nH]3)N)C(=O)N[C@@H](CCC(=O)[O-])C(=O)[O-],True,False,LEAK,aromaticity / kekulization,c1cc(ccc1CCc2c[nH]c3c2c(=O)nc([nH]3)N)C(=O)N[C@@H](CCC(=O)[O-])C(=O)[O-]
+ccc(ccc1c2c4(c3ccc(cc3s2)O)C(O)c4ccc(cc4H)OCC[NH+]5CCCCC5)O,True,False,LEAK,syntax (ring closure / parens / token),ccc(ccc1c2c(c3ccc(cc3s2)O)C(O)c4ccc(cc4)OCC[NH+]5CCCCC5)O
+CC[C@@H](CO)NC(=O)[C@H]1,True,False,LEAK,syntax (ring closure / parens / token),CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4c3C(ccc4)C2=C1)C
+CCCSc1nc(c2c(n1)n(.n2)[C@@H]3C[1C@@H]([C@H]([C@H]3O)O)OCCO)N[C@@H]4C[C@H]4c5ccc(c(c5)F)F,True,False,LEAK,syntax (ring closure / parens / token),CCCSc1nc(c2c(n1)n(nn2)[C@@H]3C[C@@H]([C@H]([C@H]3O)O)OCCO)N[C@@H]4C[C@H]4c5ccc(c(c5)F)F
+CC(C)[C@@H](C(=O)NCC(=O)N[C@H](CCCCN)C(=O)N[C@H](CCCCN)C(=O)N[C@H](CCCNC(=N)N)C(=O)N[C@H](CCCNC(=N)N)C(=OON1CCC[C@H]1C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](CC2=CC=C(C=C2)O)C(=O)N3CCC[C@H]3C(=O)O)NC(=O)[C@@H]4CCCN4C(=O)[C@H](CCCCN)NC(=O)CNC(=O)[C@H](CC5=CNC6=CC=CC=C675)NC(=O)[C@H](CCCNC(=N)N)NC(=O)[C@H](CC7=CC=CC=C7)NC(=O)[C@H](CC8=CNC=N8)NC(=O)[C@H](CCC(=O)O)NC(=O)[C@H](CCSC)NC(=O)[C@H](CO)NC(=O)[C@H](CC9=CC=C(C=C9)))NC(=O)C(CO)N,True,False,LEAK,syntax (ring closure / parens / token),CC(C)[C@@H](C(=O)NCC(=O)N[C@H](CCCCN)C(=O)N[C@H](CCCCN)C(=O)N[C@H](CCCNC(=N)N)C(=O)N[C@H](CCCNC(=N)N)C(=O)N1CCC[C@H]1C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](CC2=CC=C(C=C2)O)C(=O)N3CCC[C@H]3C(=O)O)NC(=O)[C@@H]4CCCN4C(=O)[C@H](CCCCN)NC(=O)CNC(=O)[C@H](CC5=CNC6=CC=CC=C65)NC(=O)[C@H](CCCNC(=N)N)NC(=O)[C@H](CC7=CC=CC=C7)NC(=O)[C@H](CC8=CNC=N8)NC(=O)[C@H](CCC(=O)O)NC(=O)[C@H](CCSC)NC(=O)[C@H](CO)NC(=O)[C@H](CC9=CC=C(C=C9)O)NC(=O)C(CO)N
+CCOC(=O)CCCcCCCCC(C)cCccccI,True,False,LEAK,aromaticity / kekulization,CCOC(=O)CCCCCCCCC(C)cccccc1I
+CCOc=1Pnc2ccc,True,False,LEAK,syntax (ring closure / parens / token),CCOc1Pnc2ccc
+CC1=C(C=C(C=C1)C(=O)NC2=CC(=CC(=C2)NC=C(N=C3)C)C(F)(F2)F)NC4=NC=CC(=N4)C=CN=CC=C5,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C=C(C=C1)C(=O)NC2=CC(=CC(=C2)NC=C(N=C3)C)C(F)(F2)F)NC4=NC=CC(=N4)C5=CN=CC=C5
+CCC(C)C(C)(COC(=O)N)COCc(=O)N,True,False,LEAK,aromaticity / kekulization,CCC(C)C(C)(COC(=O)N)COC(=O)N
+C1CCC(C1)C(C2#N)N2C=66C(C=NC)3C3=C4C=CNC4=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1CCC(C1)C(C2#N)N2C=6C(C=NC)C3=C4C=CNC4=NC=N3
+CC(=O)Occcccc1C(=O)Nc2ncc(s)[N+](=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),CC(=O)Oc1ccccc1C(=O)Nc2ncc(s2)[N+](=O)[O-]
+CCC#7CC(C)C16(C(O)NC(=O)N(C1=O)C)CC=C,True,False,LEAK,syntax (ring closure / parens / token),CCC#CC(C)C16(C(=O)NC(=O)N(C1=O)C)CC=C
+COC(=O)Nc,True,False,LEAK,aromaticity / kekulization,CC(=O)Nc1c(c(c(c(c1I)C(=O)[O-])I)C(=O)N9C)I
+CC1(C(=O)N2C(C(=O)N3CCCC3C2(O1)O)CC4=CC=CC=C4)1NC(=O)C5CC6C(CC7=CNC8=CC=CC6=C78),True,False,LEAK,syntax (ring closure / parens / token),CC1(C(=O)N2C(C(=O)N3CCCC3C2(O1)O)CC4=CC=CC=C4)NC(=O)C5CC6C(CC7=CNC8=CC=CC6=C78)N(C5)C
+CC[N](C)(CC)CCOC(=O)C1c2ccccc2Oc3c1cc,True,False,LEAK,syntax (ring closure / parens / token),CC[N+](C)(CC)CCOC(=O)C1c2ccccc2Oc3c1cccc3
+CC1CC2C3CCC4=CC(=O)C=CC4(C3(C(CC(C1C(=O)CO)C)O)F)C,True,False,LEAK,syntax (ring closure / parens / token),CC1CC2C3CCC4=CC(=O)C=CC4(C3(C(CC2(C1C(=O)CO)C)O)F)C
+CC(=O)OC1C(SC2=CC=CC=CN(C1=O)CC[NH+](C)C)C3=CC=C(C=C3)OC,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)OC1C(SC2=CC=CC=C2N(C1=O)CC[NH+](C)C)C3=CC=C(C=C3)OC
+C1=CC=C(C=C1)N2C=6C(C=C(C3=O)C63=CCn=CC=C3C#N)C4=CC1=CC=N4,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=C1)N2C=6C(C=C(C3=O)C3=CCn=CC=C3C#N)C4=CC1=CC=N4
+CC7N(CC)C(=O)/7C(=C/c1Scc(c(c(c1)O)[1O-])[N+](=O)[O-])P/C#N,True,False,LEAK,valence too high,CC7N(CC)C(=O)/7C(=C/c1Scc(c(c(c1)O)[1O-])[N+](=O)[O-])/C#N
+C81CCC8(C)C(CC#oN)NCC=C(C=N2)C=24C=CN,True,False,LEAK,syntax (ring closure / parens / token),C1CCC8(C)C(CC#oN)NCC=C(C=N2)C=24C=CN
+CCOC(=O)/C=C(\C)/C=C/C=C(\C)/C=C/cc(cc(c(c1C)C)OC)C,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)/C=C(\C)/C=C/C=C(\C)/C=C/c1c(cc(c(c1C)C)OC)C
+CC7(C)cnc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2cc5ccc2)[C@@H]([C@H](Cc3cc4cc3)N(=O)OCcCcncs4)O,True,False,LEAK,syntax (ring closure / parens / token),CC7(C)cnc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2cc5ccc2)4[C@@H]([C@H](Cc3cc4cc3)NC(=O)OCcCcncs4)O
+COC(=O)NC=NC2=C(N1)C=C(C=C2)C(=O)C3=CC=CC,True,False,LEAK,syntax (ring closure / parens / token),COC(=O)NC=NC2=C(N1)C=C(C=C2)C(=O)C3=CC=CC=C3
+CNC(=C[N](=O)[O-])NCCSCC=CSC(=N)CN(C)C,True,False,LEAK,valence too high,CNC(=C[N](=O)[O-])NCCSCC1=CSC(=N1)CN(C)C
+C[C@]12CC[C@H]3[C@H]([C@@H]CC[C@]2(C#C)O)CCC4=Cc5c(cno5)C[C@]34C,True,False,LEAK,syntax (ring closure / parens / token),C[C@]12CC[C@H]3[C@H]([C@@H]1CC[C@]2(C#C)O)CCC4=Cc5c(cno5)C[C@]34C
+CC1=CC=C5=5C1(=O)(=O)NC(=O)C=CC(=C(C=C2)CC3=CN(C4=C3C=C(C=C4)N#C(=O)OC5CCCC5)C)OC,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC=C5=C1(=O)(=O)NC(=O)C2=CC(=C(C=C2)CC3=CN(C4=C3C=C(C=C4)N#C(=O)OC5CCCC5)C)OC
+C1=CC=C(C=C)C(=C(C2=CC=CC=C2)C=CC=C(C=C3)OCCO)CCCl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=C1)C(=C(C2=CC=CC=C2)C=CC=C(C=C3)OCCO)CCCl
+CCC[NH2+][C@H]1CCc2c(s7c(n2)1N)C,True,False,LEAK,syntax (ring closure / parens / token),CCC[NH2+][C@H]1CCc2c(sc(n2)1N)C
+Cc,True,False,LEAK,aromaticity / kekulization,Cc2
+c1cc(ccc1C[C@@H](C9(=O)[O-])[NH+])O,True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1C[C@@H](C9(=O)[O-])[NH3+])O
+c[NH+](C)CC/C=C\1/c2c5cccC2c3c1cc(cc3)Cl,True,False,LEAK,syntax (ring closure / parens / token),c[NH+](C)CC/C=C\1/c2c5cccC2Sc3c1cc(cc3)Cl
+CCOC(=O)C(CC61=CC=8CC=C1)NC(C)C(s=O)N2CC3=CC=CC=C3CC2C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)C(CC61=CC=CC=C1)NC(C)C(s=O)N2CC3=CC=CC=C3CC2C(=O)O
+CC(=O)OCC(=O)[C@H]1CC[C@@H]2[C@@]1(CC[C@H]3[C@H]2CCC14=CC(=O)CC[C@]34C)C,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)OCC(=O)[C@H]1CC[C@@H]2[C@@]1(CC[C@H]3[C@H]2CCC4=CC(=O)CC[C@]34C)C
+CN(=O)C=NC=CC(=C1)OC2=CC=C(C7=C2)NC(=O)NC36=CC(=C(C=C3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C=NC=CC(=C1)OC2=CC=C(C7=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F
+Cc1c(c5cnc1CS(=O)c2[nH]c3ccccc3n2)OCCCOC,True,False,LEAK,syntax (ring closure / parens / token),Cc1c(ccnc1CS(=O)c2[nH]c3ccccc3n2)OCCCOC
+CC(O)(C)C(C=CC=C=2C3(CCC1)O3CO2)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC1=C=2=C3(CCC1)O3CO2)C
+CNS(=O)(=O)CCc1ccc2H(c)c(c[nH])C3CC[NH+](CC3)C,True,False,LEAK,syntax (ring closure / parens / token),CNS(=O)(=O)CCc1ccc2H(c1)c(c[nH])C3CC[NH+](CC3)C
+CCCSc1nc(c2c(n1)n(.n2)[C@@H]3C[1C@@H]([C@H]([C@H]3O)O)OCCO)N[C@@H]4C[C@H]4c5c2c(c(c5)F)F,True,False,LEAK,syntax (ring closure / parens / token),CCCSc1nc(c2c(n1)n(.n2)[C@@H]3C[1C@@H]([C@H]([C@H]3O)O)OCCO)N[C@@H]4C[C@H]4c5ccc(c(c5)F)F
+c#71nc2c(n1COCCO)[nH]c(nc2=O)N,True,False,LEAK,syntax (ring closure / parens / token),c1nc2c(n1COCCO)[nH]c(nc2=O)N
+CC1=C[C@@H]2[C@H](CC[C@]3([ClH]2CC[C@@]3(C(=O)C)O3C(=O)C)C)[C@@]49(C1=CC(=O)CC4)C,True,False,LEAK,syntax (ring closure / parens / token),CC1=C[C@@H]2[C@H](CC[C@]3([ClH]2CC[C@@]3(C(=O)C)OC(=O)C)C)[C@@]49(C1=CC(=O)CC4)C
+C1C2=CC=CC=C21N(B3=CC=CC=C3C1=O)C(=O)N,True,False,LEAK,syntax (ring closure / parens / token),C1C2=CC=CC=C2N(B3=CC=CC=C3C1=O)C(=O)N
+C[NH+]1CCC(=C2c3cccc3CCcc2nccc4)CC1,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]1CCC(=C2c3ccccc3CCc4c2nccc4)CC1
+CFOC(=O)C,True,False,LEAK,valence too high,CFOC(=O)CCCCCCCCC(C)1ccccc1I
+CC(C)c1nc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](C5c2ccccc2)C[C@@H]([C@H](Cc3ccccc3)NC(=O)OCc4cncs4)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)c1nc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2ccccc2)C[C@@H]([C@H](Cc3ccccc3)NC(=O)OCc4cncs4)O
+C[NH+](C)CC3N(Ccccc(cO1)OC)c2ccccn2,True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CC3N(Ccccc(cc1)OC)c2ccccn2
+sC(O)(C)C(C=CC1=C=2=C3(CCC1)O3CO2)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC1=C=2=C3(CCC1)O3CO2)C
+C[NH2+3]/C(=C\[N+](=O)[O-])/NCCSCc1ccc(o1)C[NH](C)C,True,False,LEAK,valence too high,C[NH2+3]/C(=C\[N+](=O)[O-])/NCCSCc1ccc(o1)C[NH+](C)C
+CC1,True,False,LEAK,syntax (ring closure / parens / token),CC1(C(=C)N(C2=CC=CC=C21)CCCCCC(=O)O)C
+Cc1ccc6c(c1)C[NH+]2CCS(CC2)C(c39ccccc33)c4ccc(cc4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc1ccc6c(c1)C[NH+]2CCN(CC2)C(c3ccccc33)c4ccc(cc4)Cl
+CC12CCC(=O)C,True,False,LEAK,syntax (ring closure / parens / token),CC12CCC(=O)C=C1CCC3C2(C(CC4(C3CCC4(C)O)C)O)F
+COC(=O)NC=NC2=C(N1)C=C(C=C2)C(=O)C=CC=CC,True,False,LEAK,syntax (ring closure / parens / token),COC(=O)NC=NC2=C(N1)C=C(C=C2)C(=O)C3=CC=CC
+CC1([C@@H]2[C@H]1[C@H](N(C2)C(=O)[C@H](C(C)(C)C)NC(=O)NC(C)(C)C)C(=O)NC(CC3CCC3)C(=O)C(#O)N)C,True,False,LEAK,valence too high,CC1([C@@H]2[C@H]1[C@H](N(C2)C(=O)[C@H](C(C)(C)C)NC(=O)NC(C)(C)C)C(=O)NC(CC3CCC3)C(=O)C(=O)N)C
+C=CC=C(F=s)C(=C8(C2=CC=CC=C)C3=CC=C(C=C)OCCO)CCCl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=s)C(=C8(C2=CC=CC=C)C3=CC=C(C=C)OCCO)CCCl
+C[C@@H]1[C@H]([C@@H]([C@@H](C(O1)OC2CC3C(C(CC(O3)(CC(CC(CC(CC(=O)CC9CC(=O)CC(=O)OC(C(C=CC=CC=CC=CC=CC=CC=C2)C)C(C)CC(C)C(CC(=O)c4ccc(cc4)N)O)O)O)O)O)O)C(=O)[O-])O)[NH3+])O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H]1[C@H]([C@@H]([C@@H](C(O1)OC2CC3C(C(CC(O3)(CC(CC(CC(CC(=O)CCCC(=O)CC(=O)OC(C(C=CC=CC=CC=CC=CC=CC=C2)C)C(C)CC(C)C(CC(=O)c4ccc(cc4)N)O)O)O)O)O)O)C(=O)[O-])O)[NH3+])O
+c71cc(cc\1C(=O)NCC(=O)[O-])N,True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1C(=O)NCC(=O)[O-])N
+Cc1cc(c(c(c1OC(=O7)C)C)C)OCC(C[NH2+]C(C)C)O,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc(c(c(c1OC(=O)C)C)C)OCC(C[NH2+]C(C)C)O
+C1=CC2=C(C=COC(F)(F)F)SC(=N2)N,True,False,LEAK,syntax (ring closure / parens / token),C1=CC2=C(C=C1OC(F)(F)F)SC(=N2)N
+C(#N)[Fe-](C#N)(C#N)5(CN)(C#N)N=O,True,False,LEAK,syntax (ring closure / parens / token),C(#N)[Fe-2](C#N)(C#N)5(CN)(C#N)N=O
+CCOC(O)CCCCCCCCC(C)c1cccccI,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)CCCCCCCCC(C)c1ccccc1I
+c1cnc(nc1C)[N-]S(=O)(=ONc2ccc(cc2)),True,False,LEAK,valence too high,c1cnc(nc1)[N-]S(=O)(=ONc2ccc(cc2))
+C[N+]1(C3C67C)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])1(CCC2(C)5C)(C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)5C)(C)C
+C1=CC=C(C=C1)NC=C(C=C(C3=O)C3=CC=CC=C3C#N)C4=CC=CC=N4,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=C1)N2C=C(C=C(C3=O)C3=CC=CC=C3C#N)C4=CC=CC=N4
+CCC3c1nc(c2c(n1)n(.n2)[C@@H]SC[1C@@H]([C@H]([C@H]3O)O)OCCO)N[C@@H]4C[C@H]4c5c2c(c(c5)F)F,True,False,LEAK,syntax (ring closure / parens / token),CCCSc1nc(c2c(n1)n(.n2)[C@@H]3C[1C@@H]([C@H]([C@H]3O)O)OCCO)N[C@@H]4C[C@H]4c5c2c(c(c5)F)F
+CCCCCOC1=CC=C(C=C1)C2=CC=C(C=C2)C3=CC=C(C=C3)C(=O)N[C@H]C[C@H]([C@H](NC(=O)[C@@H]5[C@H]([C@H](CN5C(=O)[C@@H](NC(=O)[C@@](NC(=O)[C@@H]6C[C@H](CNC(=O)[C@@H](NC4=O)[C@@H](C)O)O)[C@@H]([C@H](C7=CC=C(C=C7)O)O)O)[C@@H](C)O)C)O)O)O,True,False,LEAK,syntax (ring closure / parens / token),CCCCCOC1=CC=C(C=C1)C2=CC=C(C=C2)C3=CC=C(C=C3)C(=O)N[C@H]C[C@H]([C@H](NC(=O)[C@@H]5[C@H]([C@H](CN5C(=O)[C@@H](NC(=O)[C@@H](NC(=O)[C@@H]6C[C@H](CNC(=O)[C@@H](NC4=O)[C@@H](C)O)O)[C@@H]([C@H](C7=CC=C(C=C7)O)O)O)[C@@H](C)O)C)O)O)O
+c1ccc(cc1)C(CCC[NH3+]24CCCCC2)(c3cccIc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(CCC[NH3+]24CCCCC2)(c3ccccc)O
+CCOC(=O)C1(CC[NH+](CC1)IC)cccccc,True,False,LEAK,aromaticity / kekulization,CCOC(=O)C1(CC[NH+](CC1)6C)cccccc
+c[NH+](C)CC/C=C\1/c2c5cccC2c3c1cc7(cc3)Cl,True,False,LEAK,syntax (ring closure / parens / token),c[NH+](C)CC/C=C\1/c2c5cccC2c3c1cc(cc3)Cl
+[H]/[NH+]=C(/C=CC(=O)/C(=C\C=cccc(=C([NH3+])N)ccS2)\C=C1)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)/C(=C\C=cccc(=C([NH3+])N)cc2)/C=C1)\N
+CC(C)6OC(=O)C(C)(C)Occcc(cc)C(=O)c2ccc(cc2)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)6OC(=O)C(C)(C)Oc1ccc(cc)C(=O)c2ccc(cc2)Cl
+CCOc1nc26ccc(c2nCc3ccc(cc3)c4cccccn4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4cccccn4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C
+CCN(CC)C1=CC=C(C=C1)C(=C2C=CC(=[N+](CC)CC)C=C2)C3=C(C=CC(=C)S(=O)(=O)O)S(=O)(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CCN(CC)C1=CC=C(C=C1)C(=C2C=CC(=[N+](CC)CC)C=C2)C3=C(C=CC(=C3)S(=O)(=O)O)S(=O)(=O)O
+c1cc(ccc1c25ccc(o2)/C=N/N3C3C(=O)NH3=OP)[N+](=O)/[O-],True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1c2ccc(o2)/C=N/N3C3C(=O)NH3=OP)[N+](=O)[O-]
+CC1=C(C=C(C=C1)C(=O)NC2=CC(=CC(=C2)NC=C(N=C3)C)C(F)(F2)F)NC4=NC=CC(=N4)9C=CN=CC=C5,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C=C(C=C1)C(=O)NC2=CC(=CC(=C2)NC=C(N=C3)C)C(F)(F2)F)NC4=NC=CC(=N4)C=CN=CC=C5
+CC(O)(C)C(C=CC1=CC2=C(C=C1)O34O)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC1=CC2=C(C=C1)O34O2)C
+CCOC(=O)CCCCCCC8C(C)cccccc1I,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)CCCCCCCCC(C)cccccc1I
+C8COC(=O)(CCC1=CC=CC=C1)NC(C)C(=O)N2CC3=CC=CC=C3CC2C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)C(CCC1=CC=CC=C1)NC(C)C(=O)N2CC3=CC=CC=C3CC2C(=O)O
+CCCC(C)(C=C(=O)N)COC(OO)N,True,False,LEAK,valence too high,CCCC(C)(COC(=O)N)COC(=O)N
+CCOC(=O)C1(CC[NH+](=CC1)C)cccccc2,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)C1(CC[NH+](CC1)C)cccccc2
+C1=CC(=C(C(=C1)Cl)3CC(=O)N=C(N)4N)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=C(C(=C1)Cl)CC(=O)N=C(N)N)Cl
+C18=CC(=CC=C1C#N)C(C2=7CC=C4(C=C2)3#N)N3C=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC=C1C#N)C(C2=7CC=C4(C=C2)3#N)N3C=NC=N3
+CC(C)6OC(=O)C(C)(C)O/c1ccc(cc)C(=O)c2ccc(cc9)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)6OC(=O)C(C)(C)Oc1ccc(cc)C(=O)c2ccc(cc2)Cl
+C1=CC(C(C(=C1)Cl)CC(=O)N7C(N1)N)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(C(C(=C1)Cl)CC(=O)N7C(N)N)Cl
+CCOC(=O)CCCCCCC8C(C)cccccc1CI,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)CCCCCCC8C(C)cccccc1I
+Cc1ccc4c(c61)C[NH+]2CCN(CC2)C(c3ccccc3)c4cc(cc4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc1ccc4c(c1)C[NH+]2CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl
+CC1(F(=C)N(C2=CC=CCC21)CCCCC(=O)O)C,True,False,LEAK,valence too high,CC1(F(=C)N(C2=CC=CCC21)CCCCCC(=O)O)C
+CCCNCC(COC19=CC=CC=C1C(=O)CCC2=CC=CC=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CCCNCC(COC19=CC=CC=C1C(=O)CC2C2=CC=CC=C2)O
+C1=C(=CC=C1C#N)C(C52=CC=C(C=C2)#N)N3C=NC=3,True,False,LEAK,syntax (ring closure / parens / token),C1=C(=CC=C1C#N)C(C2=CC=C(C=C2)#N)N3C=NC=N3
+CC12CCC(=O)C=CHCCC3C2(C(CC4(C3CCC4(C)O)C)O)F,True,False,LEAK,syntax (ring closure / parens / token),CC12CCC(=O)C=C1CCC3C2(C(CC4(C3CCC4(C)O)C)O)F
+CCOc1nc26ccc(c(n1Cc3ccc(cc3)c4cccccn4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc2=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4cccccn4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C
+CC1=CC(C(CC1)O)C(CC5(C(C)C)C(C)C)C2=CC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC(C(C=C1)O)C(CC5(C(C)C)C(C)C)C2=CC=CC=C2
+CC[N](C)(CC)CCOC(=O)C1c2ccccc2Oc3c21cc,True,False,LEAK,syntax (ring closure / parens / token),CC[N](C)(CC)CCOC(=O)C1c2ccccc2Oc3c1cc
+C[NH+](C)CCn1c(nn1)SCC2=C(N3[C@@H]([C@@H](C3=O)NC(=O)Cc4csc(n4)N)SC)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CCn1c(nnn1)SCC2=C(N3[C@@H]([C@@H](C3=O)NC(=O)Cc4csc(n4)N)SC)C(=O)[O-]
+C[N+](C)(C)CCCCCCCC4CC[N+](C)(C)C,True,False,LEAK,syntax (ring closure / parens / token),C[N+](C)(C)CCCCCCCCCC[N+](C)(C)C
+c1cnc(nc1)[N-]S(=O)(=O)c/ccc(cc2)N,True,False,LEAK,syntax (ring closure / parens / token),c1cnc(nc1)[N-]S(=O)(=O)c2ccc(cc2)N
+CCC(C)C1C(=O)NC(C(=O)NC(C(=O)NC(CSSCC(C(=O)NC(C(=O)N)CC=CC=C(C=C2)O)N)C(=O)N3CCCC3C(=O)NC(CC(C)C)C(=O)NCC(=O)N)CC(=O)N)C(C)O,True,False,LEAK,syntax (ring closure / parens / token),CCC(C)C1C(=O)NC(C(=O)NC(C(=O)NC(CSSCC(C(=O)NC(C(=O)N1)CC=CC=C(C=C2)O)N)C(=O)N3CCCC3C(=O)NC(CC(C)C)C(=O)NCC(=O)N)CC(=O)N)C(C)O
+COC(=O)NC1=NC2=C(N1)C=C(C=C),True,False,LEAK,syntax (ring closure / parens / token),COC(=O)NC1=NC2=C(N1)C=C(C=C2)C(=O)C3=CC1=CCCC3
+cNS(=O)(=O)C7Cc1cc2c(c1)(c[nH]2)C93CC[NH+](C3)C,True,False,LEAK,syntax (ring closure / parens / token),cNS(=O)(=O)C7Cc1ccc2c(c1)(c[nH]2)C93CC[NH+](CC3)C
+CCCCC(=O)N(Cc1ccc(cc1))c2cccc2c3[n-]nnn3[C@@H](C(C)C)C(=O9)[O-],True,False,LEAK,syntax (ring closure / parens / token),CCCCC(=O)N(Cc1ccc(cc1)c2cccc2c3[n-]nnn3)[C@@H](C(C)C)C(=O9)[O-]
+CC(C)F1nc(c=1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2ccccc2)C[C@@H]([C@H](Cc3ccccc3)NC(=O)OCc4cncs4)O,True,False,LEAK,valence too high,CC(C)c1nc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2ccccc2)C[C@@H]([C@H](Cc3ccccc3)NC(=O)OCc4cncs4)O
+Cc1cccc(c1)C[NH+]2CCN(CC2)c(c3cCccc3)cccc(cc94)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc1cccc(c1)C[NH+]2CCN(CC2)c(c3cCccc3)cccc(cc4)Cl
+CCCCC(=O)OCC(=O)[C@@]1(Cc2c(c(c3c(c2[O-])C(=O)4c)cc(c4C3=O)OC)[O-])[C@H](C1)OC5CC(C(C(O5cC)O)NC(=O)C(F)(F)F)O,True,False,LEAK,valence too high,CCCCC(=O)OCC(=O)[C@@]1(Cc2c(c(c3c(c2[O-])C(=O)c4cccc(c4C3=O)OC)[O-])[C@H](C1)OC5CC(C(C(O5)C)O)NC(=O)C(F)(F)F)O
+c1cccc(c1)C(=[NH+]c3ccccc4S2)N4CC[NH+8](CC4)CCOCCO,True,False,LEAK,syntax (ring closure / parens / token),c1cccc2(c1)C(=[NH+]c3ccccc4S2)N4CC[NH+](CC4)CCOCCO
+C[C@@H](C7(=O)Nc1c(c(c(c(cI)C(=O)NC(CO)CO)I)C(=O)NC(CO)CO)I)O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H](C(=O)Nc1c(c(c(c(cI)C(=O)NC(CO)CO)I)C(=O)NC(CO)CO)I)O
+CN1CCN(CC1)CCCOC2=C(C=C3C(=C2)N=CC(=C3NC4=CC(=C(C=C4Cl)C8)OC)C#N)cC,True,False,LEAK,syntax (ring closure / parens / token),CN1CCN(CC1)CCCOC2=C(C=C3C(=C2)N=CC(=C3NC4=CC(=C(C=C4Cl)Cl)OC)C#N)cC
+c91cn,True,False,LEAK,syntax (ring closure / parens / token),c1cn
+c1cc(cccC(=O)CCC[NH+]CCC(CC2)(c3ccc(cc3)Cl)O)F,True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1C(=O)CCC[NH+]2CCC(CC2)(c3ccc(cc3)Cl)O)F
+CC(C)6OC8(=O)C(C)(C)Oc1ccc(cc)C(=O)c2ccc(cc2)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)6OC(=O)C(C)(C)Oc1ccc(cc)C(=O)c2ccc(cc2)Cl
+COC(=O)NC1=NC2=C(N1)C=C(C=C)C(=O)C3=CC1=CCCF3,True,False,LEAK,syntax (ring closure / parens / token),COC(=O)NC1=NC2=C(N1)C=C(C=C2)C(=O)C3=CC1=CCCC3
+C[C@@H]1CC[C@H]2C[C@@H](/C(=C/C=C/C=C/[C@H](C[C@H](C(=O)[C@@H]([C@@H](/C(=C/[C@H](C(=O)C[C@H](OC(=O)[C@@H]3CCCCN3C(=O)C(=O)[C@@]1(O2)8O)[C@H](C)C[C@@H]CC[C@H]([C@@H](C4)OC)O)C)/C)O)OC)C)C)/C)OC,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H]1CC[C@H]2C[C@@H](/C(=C/C=C/C=C/[C@H](C[C@H](C(=O)[C@@H]([C@@H](/C(=C/[C@H](C(=O)C[C@H](OC(=O)[C@@H]3CCCCN3C(=O)C(=O)[C@@]1(O2)8O)[C@H](C)C[C@@H]4CC[C@H]([C@@H](C4)OC)O)C)/C)O)OC)C)C)/C)OC
+CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C94)Cl)C=C1N8=CC=C(C=C5)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C94)Cl)C=C1N=CC=C(C=C5)Cl
+C1N2CN34CN1CN(C2)C3,True,False,LEAK,syntax (ring closure / parens / token),C1N2CN3CN1CN(C2)C3
+C1C6C(=ONC=O)C1N2C,True,False,LEAK,syntax (ring closure / parens / token),C1CC(=ONC=O)C1N2C
+CNCCC(C1=CC=CC=1)OC2=CC=C(CnC2)C(F)(F)F,True,False,LEAK,valence too high,CNCCC(C1=CC=CC=1)OC2=CC=C(C=C2)C(F)(F)F
+CCCNCC(COC31=CC=CC=C1C6(=O)CCC2=CC=CC=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CCCNCC(COC1=CC=CC=C1C6(=O)CCC2=CC=CC=C2)O
+CCOc=1P5nc2ccc,True,False,LEAK,syntax (ring closure / parens / token),CCOc=1Pnc2ccc
+CC(C)cnc(csS1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc22cc5ccc2)4[C@@H]([C@H](Cc3cc4ccc3)NC(=O)OCcCcncs)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)cnc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2cc5ccc2)4[C@@H]([C@H](Cc3cc4ccc3)NC(=O)OCcCcncs)O
+CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C94)Cl)7=C1N=CC=C(C=C5)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C94)Cl)C=C1N=CC=C(C=C5)Cl
+CC(C)c1nc(cs1)4CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2ccccc2)C[C@@H]([C@H](Cc3ccccc3)NC(=O)OCc4cncs4)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)c1nc(cs1)CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2ccccc2)C[C@@H]([C@H](Cc3ccccc3)NC(=O)OCc4cncs4)O
+CNC(=O)5=C=CC(=C1)OC2,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)51=C=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)F
+CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4cC(ccc4)C2=C1)C,True,False,LEAK,syntax (ring closure / parens / token),CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4c3C(ccc4)C2=C1)C
+CNCCC(C1=CC=CC=C1)OC=CC=C(C=C2)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNCCC(C1=CC=CC=C1)OC2=CC=C(C=C2)C(F)(F)F
+CCOC(O)CCCCCCCCC(C)c1ccccnI,True,False,LEAK,syntax (ring closure / parens / token),CCOC(O)CCCCCCCCC(C)c1cccccI
+CCCNCC(COC/31=CC=CC=C1C6(=O)CC4C2=CC=CC=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CCCNCC(COC31=CC=CC=C1C6(=O)CCC2=CC=CC=C2)O
+CC(=O)/N=4c\1/n(=nc(s1)S(=O)(=O))C,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)/N=4c\1/n(=nc(s1)S(=O)(=O)N)C
+CCCC7c1c(c2cc(ccc2o1)NS(=O)(=O)C)C(=O)c3ccc(cc3)OCCC[NH+](CCCC)CCCC,True,False,LEAK,syntax (ring closure / parens / token),CCCCc1c(c2cc(ccc2o1)NS(=O)(=O)C)C(=O)c3ccc(cc3)OCCC[NH+](CCCC)CCCC
+CC(C)Cc1cc3c(cc1)C(C)(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),CC(C)Cc1ccc(cc1)C(C)C(=O)[O-]
+c[NH+](C)CC/C=C\1/c2c5cccC2Scccc(cc3)Cl,True,False,LEAK,syntax (ring closure / parens / token),c[NH+](C)CC/C=C\1/c2c5cccC2Scc1cc(cc3)Cl
+C[NH+]1CCCCC13CCN2c3,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]1CCCCC1CCN2c3
+CCOc=1Pnc-ccc,True,False,LEAK,syntax (ring closure / parens / token),CCOc=1Pnc2ccc
+CCCC(C6)C1(C(=O)NC(=[NH+]Cc1=O)S)CC=C,True,False,LEAK,syntax (ring closure / parens / token),CCCC(C6)C1(C(=O)NC(=[NH+]C1=O)S)CC=C
+CC(C)N=C1C=C2C(=NC3=CC=Cn=C3N2C4=CC=C(C=C94)Cl)C=C1N=CC=C(C=C)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C94)Cl)C=C1N=CC=C(C=C)Cl
+CC(=O)C1CCC2C1(CCC3C2CCC4=CC(=O)CCC3OC)C,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)C1CCC2C1(CCC3C2CCC4=CC(=O)CCC34C)C
+CC1(OC2CC3C4C8C5=CC(=O)CCC5(CF(C(CC3(C(O1)C(=O)CCl)C)O)F8)C)5C,True,False,LEAK,syntax (ring closure / parens / token),CC1(OC2CC3C4C8C5=CC(=O)CCC5(CF(C(CC3(C(O1)C(=O)CCl)C)O)F)C)5C
+CC1=NC=4C(C=C1)C2=NC=C(C=C2C3=CC=C(C=C3)S(=O)(=O)7C)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC1=NC=C(C=C1)C2=NC=C(C=C2C3=CC=C(C=C3)S(=O)(=O)7C)Cl
+ccc(ccc1c2c(c3ccc(cc3s2)O)C(O)c4ccc(cc4)OCC[NH+]CCCC5)O,True,False,LEAK,syntax (ring closure / parens / token),ccc(ccc1c2c(c3ccc(cc3s2)O)C(O)c4ccc(cc4)OCC[NH+]5CCCC5)O
+CBOc=1Pnc29ccc,True,False,LEAK,syntax (ring closure / parens / token),CCOc=1Pnc2ccc
+CC1=C(C(CCC)(C)C)/C=C/C(=C/C=C/C(=C\C(=O)[O-])/C)/C,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C(CCC1)(C)C)/C=C/C(=C/C=C/C(=C\C(=O)[O-])/C)/C
+C[N+]1(C3C67C)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)-C4=CSC(=N4)N)SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3C67C)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+CC(C)c1nc(cs1)4CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2ccccc2)C[C@@H]([C@H](Cc3ccccc3)NC(=O)OCc4cncs)O,True,False,LEAK,aromaticity / kekulization,CC(C)c1nc(cs1)4CN(C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc2ccccc2)C[C@@H]([C@H](Cc3ccccc3)NC(=O)OCc4cncs4)O
+CC1C2CC3=C(C1(CCN2CC=C(C))C)C=C(CC)O,True,False,LEAK,syntax (ring closure / parens / token),CC1C2CC3=C(C1(CCN2CC=C(C)C)C)C=C(C=C)O
+Cc1ccc4c(c1)C5[NH+]2CCN(CC2)C(c3cccc3)c4ccc(cc4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc1ccc4c(c1)C[NH+]2CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl
+C[NH+]CC[C@]23c4c5ccc(c4O[C@H]1C(=O)CC[C@]3([C@H]C5)O)O4C,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]1CC[C@]23c4c5ccc(c4O[C@H]1C(=O)CC[C@]3([C@H]C5)O)O4C
+CCC(C)C(C)(C/n(=O)N)COC(=O)N,True,False,LEAK,aromaticity / kekulization,CCC(C)C(C)(COC(=O)N)COC(=O)N
+CC(C)[NH2+]C[C@@H](COc1coc(cc1)CCOCC25CC2)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)[NH2+]C[C@@H](COc1ccc(cc1)CCOCC2CC2)O
+Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC(C)I)3(C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)I)3(C)C
+CCCINCC(COC1=CC5CC=C1C6(=O)CCC2=CC=CC=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CCCNCC(COC1=CC=CC=C1C6(=O)CCC2=CC=CC=C2)O
+Cc1c(ccncCS(=O)c2[nH]c3ccccc3n2)CCCOC,True,False,LEAK,syntax (ring closure / parens / token),Cc1c(ccncCS(=O)c2[nH]c3ccccc3n2)OCCCOC
+c1ccc(cc1)C(=O)1c2cc#cc(c72N)CC(=O)N,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(=O)1c2cccc(c72N)CC(=O)N
+CN1CCC23C4C1C3C5=C2C(=C(C=C5)O)OC3C(C=o4)O,True,False,LEAK,syntax (ring closure / parens / token),CN1CCC23C4C1CC5=C2C(=C(C=C5)O)OC3C(C=C4)O
+C8C(CN1CC(=O))C(=ONC1)N2C25-C(=O)NC(=O)=C2,True,False,LEAK,syntax (ring closure / parens / token),CC(CN1CC(=O))C(=ONC1)N2C25-C(=O)NC(=O)=C2
+CNC(=O)C=N/C=CC(=C-1)OC2=CC,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C=NC=CC(=C-1)OC2=CC=C(C7=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F
+CNC(=O)O=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)5=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=3)Cl)C(F)(F)F
+CN1CC[C@@]23C=C[C@@H](C[C@@H]2OC4=C(C=C(=C34)C1)OC)O,True,False,LEAK,valence too high,CN1CC[C@@]23C=C[C@@H](C[C@@H]2OC4=C(C=CC(=C34)C1)OC)O
+C11CCC(C1)C(CC#N)N2C=C(C=N2)C3=C4C=CNC4=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1CCC(C1)C(CC#N)N2C=C(C=N2)C3=C4C=CNC4=NC=N3
+CC15([C@@H](N2[C@H](S1(=O)=O)CC29=O)C(=O)[O-])C,True,False,LEAK,syntax (ring closure / parens / token),CC1([C@@H](N2[C@H](S1(=O)=O)CC2=O)C(=O)[O-])C
+C1CCC96(C1)C(CC#oN)NCC=C(C=N28)C=4C=CNC,True,False,LEAK,syntax (ring closure / parens / token),C1CCC86(C1)C(CC#oN)NCC=C(C=N2)C=4C=CNC
+CC(CHSCC=9C(C=C1)C(=O)C2=CC=CS2)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C=SCC=9C(C=C1)C(=O)C2=CC=CS2)C(=O)O
+CN1CCC23C4C1C3C5=C2CN(=C(C=C5)O)OC3C(C=o4)O,True,False,LEAK,syntax (ring closure / parens / token),CN1CCC23C4C1C3C5=C2C(=C(C=C5)O)OC3C(C=o4)O
+Cc1ccc(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)5C)(C)2C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC2(C)5C)(C)C
+CBOc=11P,True,False,LEAK,syntax (ring closure / parens / token),CBOc=1Pnc29ccc
+C5Oc=11P,True,False,LEAK,syntax (ring closure / parens / token),CBOc=11P
+COCCOC(=O)NCCCC[n@@H](C(=O)NCCCCCCCOP(=O)(C)O)NC(=O)OCCOC,True,False,LEAK,aromaticity / kekulization,COC9COC(=O)NCCCC[n@@H](C(=O)NCCCCCCCOP(=O)(C)O)NC(=O)OCCOC
+COC1=C(C=C(H=C1)CNC2=NC(=NC=C2C(=O)NCC3=NC=CC=N3)N4C4CC[C@H]4CO)Cl,True,False,LEAK,syntax (ring closure / parens / token),COC1=C(C=C(C=C1)CNC2=NC(=NC=C2C(=O)NCC3=NC=CC=N3)N4CCC[C@H]4CO)Cl
+CCH(H)(C)CC(C)(C)c1ccc(cc)O,True,False,LEAK,syntax (ring closure / parens / token),CCH(C)(C)CC(C)(C)c1ccc(cc)O
+C1=C/C(C(C(=C1)Cl)CC(=O)N7C(N1)N)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(C(C(=C1)Cl)CC(=O)N7C(N1)N)Cl
+CNC(=O)C=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C=NC=CC(=C1)OC2=CC=C(C7=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F
+CC(C)C(C)(C/n(=O)N)COC(=O)N,True,False,LEAK,aromaticity / kekulization,CCC(C)C(C)(C/n(=O)N)COC(=O)N
+C1=NC2=C(N)C(=S)N=C(N2)N,True,False,LEAK,syntax (ring closure / parens / token),C1=NC2=C(N1)C(=S)N=C(N2)N
+Ccc1cc2c(cc1C(cC)c83c=c(co3)C(=O)[O-])C(CCC2(C)C)(C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)c83ccc(co3)C(=O)[O-])C(CCC2(C)C)(C)C
+c1cc(ccc1c2c(c6ccc(cc3s2)O)C(=O)c4ccc(cc4)OC[NH+]5CCCCC5)O,True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1c2c(c3ccc(cc3s2)O)C(=O)c4ccc(cc4)OCC[NH+]5CCCCC5)O
+C1=C(=CC=C16C#N)C(C52=CC=C(C=C2)#N)N3C=NC=3,True,False,LEAK,syntax (ring closure / parens / token),C1=C(=CC=C1C#N)C(C52=CC=C(C=C2)#N)N3C=NC=3
+CC1(F(=C)N(C2=CC=PCC21)CCCCC(=O)O)C,True,False,LEAK,valence too high,CC1(F(=C)N(C2=CC=CCC21)CCCCC(=O)O)C
+CC(C)CN(C[C@H]([C@H](Cc1ccccc1)NC(=O)O[C@H]2CO[C@@H]3[C@H4]2CCO3)O)S(=O)(=O)1c4ccc(cc4)N,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CN(C[C@H]([C@H](Cc1ccccc1)NC(=O)O[C@H]2CO[C@@H]3[C@H]2CCO3)O)S(=O)(=O)1c4ccc(cc4)N
+NC[NH+](CC)7CCN1c2ccc(cc2C(=NCC1=O)c3ccccc3F)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC[NH+](CC)7CCN1c2ccc(cc2C(=NCC1=O)c3ccccc3F)Cl
+CCCNCC(COC/31=C6=CC=C1C6(=O)CC4C2=CC=CC=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CCCNCC(COC/31=CC=CC=C1C6(=O)CC4C2=CC=CC=C2)O
+C1CCC8(C1)C(CC#N)NCC=C(C=N2)C=24C=CNCI=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1CCC8(C1)C(CC#N)NCC=C(C=N2)C=24C=CNC4=NC=N3
+CC(=O)S[C@@H]1CC22=CC(=O)CC[C@@]2([C@@H]3[C@@H]1[C@@H]4CC[C@]5([C@]4(CC3)C)CCC(=O)O5)C,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)S[C@@H]1CC2=CC(=O)CC[C@@]2([C@@H]3[C@@H]1[C@@H]4CC[C@]5([C@]4(CC3)C)CCC(=O)O5)C
+[H]/[NH+]=C(/C=CC(=O)/C3(=C\C=cccc(=C([NH+])o)cc2)/C=CP)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)/C3(=C\C=c2ccc(=C([NH+])o)cc2)/C=CP)\N
+CCC1=NN(C(=O6)N1CCOC2=CC=CC=C2)CCCN3CCN(CC)C4=CC(=C=CB)Cl,True,False,LEAK,syntax (ring closure / parens / token),CCC1=NN(C(=O6)N1CCOC2=CC=CC=C2)CCCN3CCN(CC3)C4=CC(=C=C8)Cl
+FC1C2CC3=C(C1(CCN2CC=C(C)C)C)ClC(C=C3)O,True,False,LEAK,valence too high,CC1C2CC3=C(C1(CCN2CC=C(C)C)C)ClC(C=C3)O
+c1ccc2c(c1)C(=[NH+]c3cccc3S)N4CC[NH+]7(CC4)CC3OCCO,True,False,LEAK,syntax (ring closure / parens / token),c1ccc2c(c1)C(=[NH+]c3cccc3S2)N4CC[NH+]7(CC4)CCOCCO
+C[N+]1(C3CC7C)CC2=C(N3C(C(C3=O)NC(=O)C(=OC)C4=CSC(=N4)N)SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+CC(C)(c1ccccc1CC[C@H](c2cccc(c12)/C=C/c38ccc4ccc(cc4n3)Cl)SCC5(CC5)CC(=O)[O-])O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)(c1ccccc1CC[C@H](c2cccc(c2)/C=C/c3ccc4ccc(cc4n3)Cl)SCC5(CC5)CC(=O)[O-])O
+NC[NH+](CC)7CCN1c2ccc(cc2C(=NCC1=OC)c3ccccc3F)Cl,True,False,LEAK,syntax (ring closure / parens / token),NC[NH+](CC)7CCN1c2ccc(cc2C(=NCC1=O)c3ccccc3F)Cl
+C1=C2C(=CC(=C1Cl)S(=O)(=O)1N)S(=O)(=O)N=CN2,True,False,LEAK,syntax (ring closure / parens / token),C1=C2C(=CC(=C1Cl)S(=O)(=O)N)S(=O)(=O)N=CN2
+CCCC(=O)OC1(C(CC2C1(CC(=O)C3(C2CCC4=CC(=O)C=CC43C)F)C)C)C(nO)CCl,True,False,LEAK,aromaticity / kekulization,CCCC(=O)OC1(C(CC2C1(CC(=O)C3(C2CCC4=CC(=O)C=CC43C)F)C)C)C(=O)CCl
+CCCCCOC1=CC=C(C=C1)C2=CC=C(C=C2)C3=CC=C(C=C3)C(=O)N[C@H][C@H]([CoH](NC(=O)[C@@H]5[C@H]([C@H](CN5C(=O)[C@@H]2(NC(=O)[C@@H](NC(=O)[C@@H]6C[C@H](CNC(=O)[C@@H](NC4=Oc)[C@@H](C)O)O)[C@@H]([C@H](C7=CC=C(C=C7)O)O)O)[C@@H](C)O)C)O)O)O,True,False,LEAK,syntax (ring closure / parens / token),CCCCCOC1=CC=C(C=C1)C2=CC=C(C=C2)C3=CC=C(C=C3)C(=O)N[C@H][C@H]([CoH](NC(=O)[C@@H]5[C@H]([C@H](CN5C(=O)[C@@H](NC(=O)[C@@H](NC(=O)[C@@H]6C[C@H](CNC(=O)[C@@H](NC4=O)[C@@H](C)O)O)[C@@H]([C@H](C7=CC=C(C=C7)O)O)O)[C@@H](C)O)C)O)O)O
+CCOc1nccccc(c2n1Cc3cc6c(cc3)c4ccccc4c5[nH]oc(=O)n5)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc2cccc(c2n1Cc3cc6c(cc3)c4ccccc4c5[nH]oc(=O)n5)C(=O)OCc6c(oc(=O)o6)C
+C(C(C=CC=CC=C1)O)N,True,False,LEAK,syntax (ring closure / parens / token),CC(C(C=CC=CC=C1)O)N
+ccc(ccc1C(=O1)NCC(=O)[O-])6N,True,False,LEAK,syntax (ring closure / parens / token),ccc(ccc1C(=O)NCC(=O)[O-])N
+C1C,True,False,LEAK,syntax (ring closure / parens / token),C1COCC(=O)N1C2=CC=C(C=C2)N9CC(OC23=O)CNC(=O)C4=CC=CO(S4)Cl
+CCN(CC)C(=O)/7C(=C/c1c6c(c(c(c1)O)[O-])[N+](=O)[O-])/C#N,True,False,LEAK,syntax (ring closure / parens / token),CCN(CC)C(=O)/7C(=C/c1cc(c(c(c1)O)[O-])[N+](=O)[O-])/C#N
+CN(C)CCN(CC1=CC=C(C=C1)OC)C2=CC=CC=N,True,False,LEAK,syntax (ring closure / parens / token),CN(C)CCN(CC1=CC=C(C=C1)OC)C2=CC=CC=N2
+C1COCC(=O)1C2=CC=C(C=C2)N9CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1COCC(=O)N1C2=CC=C(C=C2)N9CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl
+Cc156c(cnI1)C(=O)Nc2ccc(cc2)C(F)(F7)F,True,False,LEAK,syntax (ring closure / parens / token),Cc16c(cno1)C(=O)Nc2ccc(cc2)C(F)(F7)F
+C3H8(C)(C)CC(C)(C)1Cccc(cc)O,True,False,LEAK,syntax (ring closure / parens / token),C3H(C)(C)CC(C)(C)1Cccc(cc)O
+C[n+]1ccc(c1)OC(=O),True,False,LEAK,aromaticity / kekulization,C[n+]1ccc(c1)OC(=O)N(C)C
+CC(=O)Oc1ccccc1C(=O)Nc2ncc(s)[N+](=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),CC(=O)Oc1ccccc1C(=O)Nc2ncc(s2)[N+](=O)[O-]
+C1=CC=C(C=C)C(=C(C2=CC=CC=C2)C3=CC=C(C=C3)OCCO)CCCl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=C1)C(=C(C2=CC=CC=C2)C3=CC=C(C=C3)OCCO)CCCl
+C11=CC(=C5C=C1C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C11=CC(=CC=C1C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N3
+C1=C,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(/CC=CCC(C(=O)O)N)N(CCCl)CCCl
+CC(CN1CC(=O))C(=ONC1)N2C5C(=O1)NC(=O)9=C2,True,False,LEAK,syntax (ring closure / parens / token),CC(CN1CC(=O))C(=ONC1)N2C5C(=O1)NC(=O)=C2
+CCN(CC)C1=CC=C(C=C1)C(=C2C=CC(=[N+](CC)CC)C=C2)C3=C(C=oC(=C3)S(=O)(=O)O)S(=O)(=O)O,True,False,LEAK,valence too high,CCN(CC)C1=CC=C(C=C1)C(=C2C=CC(=[N+](CC)CC)C=C2)C3=C(C=CC(=C3)S(=O)(=O)O)S(=O)(=O)O
+CC(C)NC(=O)C1=CC2=3C(C=C1)CNNC,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NC(=O)C1=CC=3C(C=C1)CNNC
+CC(C=SCC=9C(C4C1)6C(=O)C2=CC=CS2)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C=SCC=9C(C=C1)C(=O)C2=CC=CS2)C(=O)O
+C[C@]12CC[C@H]3[C@H]([C@@H]1CC[C@@H]2C(=O)NC8=C(C=CC(=C4)C(F)(F)F)C(F)(F)F)CC[C@@H][C@@]3(C=CC(=O)N5)C,True,False,LEAK,syntax (ring closure / parens / token),C[C@]12CC[C@H]3[C@H]([C@@H]1CC[C@@H]2C(=O)NC4=C(C=CC(=C4)C(F)(F)F)C(F)(F)F)CC[C@@H][C@@]3(C=CC(=O)N5)C
+C1C4OCC(=O)N1C2=CC=C(C=C2)N9CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1COCC(=O)N1C2=CC=C(C=C2)N9CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl
+C[NH+](C)CCN(Cc1cc(cc1)OC2)c2ccccn2,True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CCN(Cc1ccc(cc1)OC)c2ccccn2
+CC1(OC2CC3C4CCC5=CC(=O)CCC5(C4(C(CC(C2(O1)C(=O)CCl)C)O)F)C)C,True,False,LEAK,syntax (ring closure / parens / token),CC1(OC2CC3C4CCC5=CC(=O)CCC5(C4(C(CC3(C2(O1)C(=O)CCl)C)O)F)C)C
+CCOc=1P54nc2ccc,True,False,LEAK,syntax (ring closure / parens / token),CCOc=1P5nc2ccc
+C1CC(=O)NC2=C1C=CC(=C2)OCCCCN3CCN(CC3)Cl=C(C(=CC=C4)Cl)=Cl,True,False,LEAK,syntax (ring closure / parens / token),C1CC(=O)NC2=C1C=CC(=C2)OCCCCN3CCN(CC3)C4=C(C(=CC=C4)Cl)Cl
+c1ccc(cc7)C(CCC[NH3+]2C1CCC2)(ccccccc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc7)C(CCC[NH3+]2CCCC2)(ccccccc)O
+CCCCCN(C)CCC(O)(P(=O)(O)O)P(=O)(O)C6,True,False,LEAK,syntax (ring closure / parens / token),CCCCCN(C)CCC(O)(P(=O)(O)O)P(=O)(O)6
+C[NH+](C)CCN(Cc1ccc(cc1)#FC)c2ccccn72,True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CCN(Cc1ccc(cc1)#OC)c2ccccn2
+CCOC(=O)C1=C(NC(=C(C12cccc(c2Cl)Cl)C(=O)OC)C)C,True,False,LEAK,aromaticity / kekulization,CCOC(=O)C1=C(NC(=C(C1c2cccc(c2Cl)Cl)C(=O)OC)C)C
+CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4cccc4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccccc4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C
+CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C23)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C1=NC=CC(=C1)OC2=CC=C(C=C2)NC(=O)NC=CC(=C(C=C3)Cl)C(F)(F)2F
+CC(=O)Occcccc1C(=O)Nc2ncc(s2)[N+](=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),CC(=O)Oc1ccccc1C(=O)Nc2ncc(s2)[N+](=O)[O-]
+CC(C)(C)C(C=CC=C2=C(C=C1)OCO2)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)(C)C(C=CC1=C2=C(C=C1)OCO2)O
+C1C4(=O)NC2=nC12C=CC(=C2)OCCCCN3CCN(CC3)C4=C(C(=CC=C4)Cl)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1C4(=O)NC2=C12C=CC(=C2)OCCCCN3CCN(CC3)C4=C(C(=CC=C4)Cl)Cl
+[H]/[NH+]=C(/C=CC(=O)nC(=C8C=c2Cc\c(=C([NH3+])N)c2c2)/C=C1)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)nC(=C8C=c2Cc\c(=C([NH3+])N)cc2)/C=C1)\N
+CC1=C(C(=C2CCC(OC2=C1C))C)COC3=CC5=C(C=C3(CC4C9(=O)NC(=O)7S4)C)O,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C(=C2CCC(OC2=C1C)(C)COC3=CC5=C(C=C3)CC4C(=O)NC(=O)7S4)C)O
+COCCOC(=O)NCCCC[C@@H](C(=O)N6CCCCCCCOP(=O)(C2)O)NC(=O)OCCOC,True,False,LEAK,syntax (ring closure / parens / token),COCCOC(=O)NCCCC[C@@H](C(=O)NCCCCCCCOP(=O)(C)O)NC(=O)OCCOC
+C1CC(=O)NC2=C1C=CC(=C2)OC.CCN3CCN(CC3)C4=C(C(=CC=C4)Cl)Cl,False,True,OVER_STRICT,,C1CC(=O)NC2=C12C=CC(=C2)OCCCCN3CCN(CC3)C4=C(C(=CC=C4)Cl)Cl
+CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccc5cn4c5[nH]oc(=O)nc)C(=O)OCc6c(\c(=O)o)C,True,False,LEAK,valence too high,CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccc5cn4c5[nH]oc(=O)nc)C(=O)OCc6c(\c(=O)o6)C
+CCCCC(=O)OCC(=O)[C@@]1(Cc2c(c(c3c(c22[O-])C(=O)4c)cc(cI4C3=O)OC)[O-])[C@H](C1)OC5CC(C(C(O5cC)O)NC(=O)C(F)(F)F)O,True,False,LEAK,syntax (ring closure / parens / token),CCCCC(=O)OCC(=O)[C@@]1(Cc2c(c(c3c(c2[O-])C(=O)4c)cc(c4C3=O)OC)[O-])[C@H](C1)OC5CC(C(C(O5cC)O)NC(=O)C(F)(F)F)O
+c[NH+](C)CC/C=2C\1/c2c5cccC2Sc3c1c(cc3)Cl,True,False,LEAK,syntax (ring closure / parens / token),c[NH+](C)CC/C=C\1/c2c5cccC2Sc3c1cc(cc3)Cl
+Cc1c(c(c(c2cO[C@](CC2)(C)CCC[C@H](C)CCC[C@H](C)CCCC(C)C)C)OC(=O)C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1c(c(c(c2c1O[C@](CC2)(C)CCC[C@H](C)CCC[C@H](C)CCCC(C)C)C)OC(=O)C)C
+CC[NH+](CC)C3CN19c2ccc(cc2C(=NCC7=O2)c3ccccc3F)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC[NH+](CC)C3CN19c2ccc(cc2C(=NCC1=O2)c3ccccc3F)Cl
+CCC5COc1cc(cccN)CO(=O)OCC[NH+]2(CC)CC,True,False,LEAK,syntax (ring closure / parens / token),CCC5COc1cc(cccN)C(=O)OCC[NH+]2(CC)CC
+Cc1cc2c(cc1C(=C)cccc(cc3)C(=O)[O-]4)C(CCC(C)I)3(C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)c3ccc(cc3)C(=O)[O-])C(CCC(C)I)3(C)C
+Cc71cc2c(cc1C(=C)ccc(cc3)C(O)[O-])C(CCC2(C)C)3(C)C,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc2c(cc1C(=C)ccc(cc3)C(O)[O-])C(CCC2(C)C)3(C)C
+CCC2CC=3=C(C138(CCN2CC=C(C)C)C)C=C(C=C3)O,True,False,LEAK,syntax (ring closure / parens / token),CCC2CC=3=C(C13(CCN2CC=C(C)C)C)C=C(C=C3)O
+CC[NH+](CC)7CC1N1c2ccc(cc2C(=NC81=O)c3ccccc3F)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC[NH+](CC)7CCN1c2ccc(cc2C(=NCC1=O)c3ccccc3F)Cl
+CC(C)NCC(COC=CC=C(C=C1)CCOC)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NCC(COC1=CC=C(C=C1)CCOC)O
+C1S2CC3CC1CC(C2)(O73)[NH3+],True,False,LEAK,syntax (ring closure / parens / token),C1C2CC3CC1CC(C2)(O73)[NH3+]
+CC\5,True,False,LEAK,syntax (ring closure / parens / token),CC5
+C[N+](C3CC7CF1)CC=C,True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C1)CC=C
+c1ccc(-c1)C(=O8)c2cccc(c2N)CC(=O)N,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(=O8)c2cccc(c2N)CC(=O)N
+CNC(=O)c1cc(ccn1)Oc32ccc(cc2)NC(=O)Nc3ccc(c(c53)C(F)(F)F)Cl,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)c1cc(ccn1)Oc32ccc(cc2)NC(=O)Nc3ccc(c(c3)C(F)(F)F)Cl
+Cc1c(cno1)C(=O)Nc2c9c(cc2)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),Cc1c(cno1)C(=O)Nc2ccc(cc2)C(F)(F)F
+C1CC(=C)NC6(=O)C1N2C,True,False,LEAK,syntax (ring closure / parens / token),C1CC(=O)NC(=O)C1N2C
+CCN(CC)C1=CC=C(C=C1)C(=C2C=CC(=[N+](CC)CC)C=CC)C3=6C(C=CC(=C3)S(=O)(=O)O)S(=O)(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CCN(CC)C1=CC=C(C=C1)C(=C2C=CC(=[N+](CC)CC)C=C2)C3=6C(C=CC(=C3)S(=O)(=O)O)S(=O)(=O)O
+CNS(=O)(=O)CCc1ccc2H(c1)c(nc[nH])C3CC[NH+](CC3)C,True,False,LEAK,syntax (ring closure / parens / token),CNS(=O)(=O)CCc1ccc2H(c1)c(c[nH])C3CC[NH+](CC3)C
+C1CC(C\28=3CC=CC=C2C1)C3=N7CCN,True,False,LEAK,syntax (ring closure / parens / token),C1CC(C\28=3CC=CC=C2C1)C3=N7CCN3
+C1=NC2=C(N)C,True,False,LEAK,syntax (ring closure / parens / token),C1=NC2=C(N)C(=S)N=C(N2)N
+CC(=O5)NC1=[N](N=C(S1)S(=O)(=O)N)C,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)NC1=[N](N=C(S1)S(=O)(=O)N)C
+COC1=C(C=C29C(=C)N=5N=C2NC3=9CC(=C(C=C3)F)Cl)OCCCN4CCOCC,True,False,LEAK,syntax (ring closure / parens / token),COC1=C(C=C2C(=C)N=5N=C2NC3=9CC(=C(C=C3)F)Cl)OCCCN4CCOCC4
+CCOC1=NC2=CC=CC(=C2N1CC3=CC=C(C=C3)C4=CC=CC=CC5=NC(=O)ON5)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CCOC1=NC2=CC=CC(=C2N1CC3=CC=C(C=C3)C4=CC=CC=C4C5=NC(=O)ON5)C(=O)O
+C1=CC=C(C=C1)COC(=O)2C2=CC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=C1)COC(=O)C2=CC=CC=C2
+CC1=CC=C5=5C1(=O)(=O)NC(=O)C=CC(=C(C=C2)CC3=CN(C4=C3C=C(CC4)N#C(=O)OC5CCCC5)C)OC,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC=C5=5C1(=O)(=O)NC(=O)C=CC(=C(C=C2)CC3=CN(C4=C3C=C(C=C4)N#C(=O)OC5CCCC5)C)OC
+CN1B(C)NN=CC(=NC=No6)C(=S),True,False,LEAK,syntax (ring closure / parens / token),CN1(C)NN=CC(=NC=No6)C(=S)
+C=NC2=C(N)C,True,False,LEAK,syntax (ring closure / parens / token),C1=NC2=C(N)C
+CC(C)NC(=O)C1=CC=C(C=1)CNNC,True,False,LEAK,valence too high,CC(C)NC(=O)C1=CC=C(C=C1)CNNC
+c#71ncc(n1COCCO)[nH]c(nc2=4O)N,True,False,LEAK,syntax (ring closure / parens / token),c#71nc2c(n1COCCO)[nH]c(nc2=O)N
+C1=CC(=CC=C1NC(=NC(=NCCCCCCN=C(N)N=CS(N)NC2=CC=C(C=C2)Cl)N)1N)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC=C1NC(=NC(=NCCCCCCN=C(N)N=C(N)NC2=CC=C(C=C2)Cl)N)N)Cl
+CC(C7)/NCC(COC11=CC=CC27=CC=CC=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NCC(COC11=CC=CC27=CC=CC=C2)O
+C1CN8(CCC8N22C=CC=CC=C3NC=O)CCCC(C45=CC=C(C=C4)F)C=CC=C(C=C5)F,True,False,LEAK,syntax (ring closure / parens / token),C1CN8(CCC8N2C=CC=CC=C3NC2=O)CCCC(C45=CC=C(C=C4)F)C=CC=C(C=C5)F
+C[C@@]([C@@H]2C[C@@H]3[C@H](C(=O)C(=C(N)[O-])C(=O)[C@]3(C(=O)C2=C(C4=C1C=CC=C4O)[O-])O)[NH+](C)C)O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@]1([C@@H]2C[C@@H]3[C@H](C(=O)C(=C(N)[O-])C(=O)[C@]3(C(=O)C2=C(C4=C1C=CC=C4O)[O-])O)[NH+](C)C)O
+CC1=CC=CC=CC(=O)NC2=CC(=C(C=C2)C(=O)N3CCCC(C4=C3C=CC(=C4)Cl)O)C,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC=CC=CC(=O)NC2=CC(=C(C=C2)C(=O)N3CCC(C4=C3C=CC(=C4)Cl)O)C
+CCCCC(sC)(C/C=C/[C@H]1[C@@H](CC(=O)[C@@H]1CCCCCCC(=O)OC)O)O,True,False,LEAK,aromaticity / kekulization,CCCCC(C)(C/C=C/[C@H]1[C@@H](CC(=O)[C@@H]1CCCCCCC(=O)OC)O)O
+CCCC7c1c(c2cN(ccc2o1)cS(=O)(=OP)C)C(=O)c3ccc(cc3)OCCC[NH+](CCCC)CCCC,True,False,LEAK,syntax (ring closure / parens / token),CCCC7c1c(c2cc(ccc2o1)NS(=O)(=O)C)C(=O)c3ccc(cc3)OCCC[NH+](CCCC)CCCC
+COc1ccc(c(c1)O)C(=O)Pccccc2,True,False,LEAK,syntax (ring closure / parens / token),COc1ccc(c(c1)O)C(=O)c2ccccc2
+CNS(=O)(=O)CCcccc2H(c1)c(c[nH])C3CC[NH+](C3)C,True,False,LEAK,syntax (ring closure / parens / token),CNS(=O)(=O)CCc1ccc2H(c1)c(c[nH])C3CC[NH+](CC3)C
+CCCC1=NC(=C(N1CCl2=CC=C(C=C2)C3=CC=CC=C3C4=NNN8=N4)C(=O)O)C(C)(C)O,True,False,LEAK,syntax (ring closure / parens / token),CCCC1=NC(=C(N1CCl2=CC=C(C=C2)C3=CC=CC=C3C4=NNN=N4)C(=O)O)C(C)(C)O
+C1CN8(CCC8NC=CC=CC=C3NC2=O)CCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)1,True,False,LEAK,syntax (ring closure / parens / token),C1CN8(CCC18N2C=CC=CC=C3NC2=O)CCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)1
+C/CC1=NN(C(=O)N1CCOC2=CC=CC=C2)CCCN3CCN(CC3)C4=CC(=CC=Co)Cl,True,False,LEAK,syntax (ring closure / parens / token),C/CC1=NN(C(=O)N1CCOC2=CC=CC=C2)CCCN3CCN(CC3)C4=CC(=CC=C8)Cl
+C1=CC(=C5C=C1C#N)C(C2=C(=CCC=C2)3#N)N3C=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C11=CC(=C5C=C1C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N3
+CCN(CC)C1=CC=C(C=C1)C(C2C=CC(=[N+](CC)CC)C=C2)C3=C(C=oC(=C3)S(=O)(=O)O)S(=O)(=O)O,True,False,LEAK,valence too high,CCN(CC)C1=CC=C(C=C1)C(=C2C=CC(=[N+](CC)CC)C=C2)C3=C(C=oC(=C3)S(=O)(=O)O)S(=O)(=O)O
+Cc1nccn1CC2CC3c(c4ccccc4n3C)C2=O,True,False,LEAK,aromaticity / kekulization,Cc1nccn1CC2CCc3c(c4ccccc4n3C)C2=O
+CC(C)(C(=O)O)OC1=CC=C(C=C1)CCNC(=O)C2=CC=C(C=C2)9Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)(C(=O)O)OC1=CC=C(C=C1)CCNC(=O)C2=CC=C(C=C2)Cl
+c12c=c(cc9O1c)S(=O)(=c)c2cc(cc2)N,True,False,LEAK,syntax (ring closure / parens / token),c12cc(cc9O1c)S(=O)(=c)c2cc(cc2)N
+CCN1I(O)C(NC=O)C=CC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),CCN1I(O)C(NC1=O)C=CC=CC=C2
+C1=CC(=CC=C17C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC=C1C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N3
+C1CC(=C)NC6(=O)C142N2C,True,False,LEAK,syntax (ring closure / parens / token),C1CC(=C)NC6(=O)C1N2C
+C2C(=O)Ncc(c(c(c(csI)NC(=O)C)I)C(=O)[O-])I,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)Ncc(c(c(c(csI)NC(=O)C)I)C(=O)[O-])I
+FCC(O)(C)C(C=CC1=CC2=Cs(C=C1)O34O2)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC1=CC2=C(C=C1)O34O2)C
+CC1(OC2CC3C4C8C5=C\C(=O)CCC5(C4(C(CC3(C(O1)C(=O)CCl)C)O)F)C)C,True,False,LEAK,syntax (ring closure / parens / token),CC1(OC2CC3C4C8C5=CC(=O)CCC5(C4(C(CC3(C(O1)C(=O)CCl)C)O)F)C)C
+C1=CC=C52C(=C1)C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3C=CC(=C5)O,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C2C(=C1)C(=O)OC23C4=C(C=C(C=C4)O)OC5=C3C=CC(=C5)O
+CCN1C(=O)C(NC1=On)C2=CC=CC=C2,True,False,LEAK,valence too high,CCN1C(=O)C(NC1=O)C2=CC=CC=C2
+CC(C)N=C1C=C2C(=NC3=CC=CCn=C3NC4=CC=C(C=C94)Cl)7=C1N=CC=C(C=C5)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)N=C1C=C2C(=NC3=CC=CCn=C3N2C4=CC=C(C=C94)Cl)7=C1N=CC=C(C=C5)Cl
+Cc/cccc(c1)C[NH+]2CCN(CC2)C(c3ccccP3)c4ccc(cc4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc/cccc(c1)C[NH+]2CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl
+c1c[5H],True,False,LEAK,syntax (ring closure / parens / token),c1c[5H]nc1CC[NH3+]
+CCCNCC(COC19=CC=CC=C1C(=O)CCC2=CC=C=C=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CCCNCC(COC19=CC=CC=C1C(=O)CCC2=CC=CC=C2)O
+CC(C(=O)c1ccccc11)C,True,False,LEAK,syntax (ring closure / parens / token),CC(C(=O)c1cccc(c11)Cl)[NH2+]C(C3)(C)C
+CC[C@@H](CO)N(=O)[C@H]1,True,False,LEAK,syntax (ring closure / parens / token),CC[C@@H](CO)NC(=O)[C@H]1
+CC(=O)NC1=4[N](N=C(S1)S(=O)(=O)N)4C,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)NC1=[N](N=C(S1)S(=O)(=O)N)C
+CCl1=C(C=C(C=C31)C(=O)NC2=CC(=CC(=C2)NC=C(N=C3)C)C(F)(F2)F)NC4=NC=CC(=N4)C5=CN=CC=C5,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C=C(C=C1)C(=O)NC2=CC(=CC(=C2)NC=C(N=C3)C)C(F)(F2)F)NC4=NC=CC(=N4)C5=CN=CC=C5
+CN1CCN(CC1)CCCOC2=C(C=C3C(=o2)N=CC(=C3NC4=CC(=C(C=C4Cl)C8)OC)C#N)cC,True,False,LEAK,syntax (ring closure / parens / token),CN1CCN(CC1)CCCOC2=C(C=C3C(=C2)N=CC(=C3NC4=CC(=C(C=C4Cl)C8)OC)C#N)cC
+c1cc(ccc1C(=O)CCC[NH+]2CCC(CC)(c3ccc(cc3)Cl)O)F,True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1C(=O)CCC[NH+]2CCC(CC2)(c3ccc(cc3)Cl)O)F
+CNC(=O)c1cc(ccn1)Oc2ccc(cc2)cC(=O)Nc3ccc(N(c3)C(F)(F)F)Cl,True,False,LEAK,aromaticity / kekulization,CNC(=O)c1cc(ccn1)Oc2ccc(cc2)NC(=O)Nc3ccc(c(c3)C(F)(F)F)Cl
+COC=C(C=C(C=C1)CNC2=NC(=NC=C2C(=O)NCC3=NC=CC=N)N4CCC[C@H]4CO)Cl,True,False,LEAK,syntax (ring closure / parens / token),COC1=C(C=C(C=C1)CNC2=NC(=NC=C2C(=O)NCC3=NC=CC=N)N4CCC[C@H]4CO)Cl
+CC1=CC=C5=5C1(=O)(=O)NC(=O)C=CC(=C(C=C2)3=CN(C4=C3C=C(CC4)N#C(=O)OC5CCCC5)C)OC,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC=C5=5C1(=O)(=O)NC(=O)C=CC(=C(C=C2)CC3=CN(C4=C3C=C(CC4)N#C(=O)OC5CCCC5)C)OC
+C1COCC(=O)N1C2=CC=C(=C)N9CC(OC3=O)=CNC(=O)C4=CC=C(S)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1COCC(=O)N1C2=CC=C(C=C)N9CC(OC3=O)=CNC(=O)C4=CC=C(S)Cl
+C1,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=C2C(=C1NCCNCCO)C(=O)C3=C(C=CC(=C3C2=O)O)O)NCCNCCO
+C[N+]1(C3CC7C)CC2=C(N3C(C(C=O)N(=O)C(=nNOC)C4=CSC(=N4)N)SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C)CC2=C(N3C(C(C=O)NC(=O)C(=nNOC)C4=CSC(=N4)N)SC2)C(=O)[O-]
+C[C@]12CC[C@H]3[C@H][C@@H]1CC[C@@H]2C,True,False,LEAK,syntax (ring closure / parens / token),C[C@]12CC[C@H]3[C@H]([C@@H]1CC[C@@H]2C(=O)NC4=C(C=CC(=C4)C(F)(F)F)C(F)(F)F)CC[C@@H][C@@]3(C=CC(=O)N5)C
+CC1=C(C(C(=C(N1)C)C(=O)OCC9-[NH+](C)Cc2ccccc2)c3cccc(c3)[N+](=O)[O-])C(=O)OC,True,False,LEAK,syntax (ring closure / parens / token),CC1=C(C(C(=C(N1)C)C(=O)OCC9-[NH+](C)Cc2ccccc2)c93cccc(c3)[N+](=O)[O-])C(=O)OC
+CFOC(=O)CCCCCCCCC(C)ccc7cc1I,True,False,LEAK,syntax (ring closure / parens / token),CFOC(=O)CCCCCCCCC(C)ccccc1I
+C[C@@H]1CC[C@@]23CCC(=O)[C@H]2[C@@]1([C@@H](C[C@@]([C@H]N([C@@H]3C)O)(C)C=C)OC(=O)CSCC[C@H]5CC[C@@H](C4)[NH+]5C)C,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H]1CC[C@@]23CCC(=O)[C@H]2[C@@]1([C@@H](C[C@@]([C@H]([C@@H]3C)O)(C)C=C)OC(=O)CSC4C[C@H]5CC[C@@H](C4)[NH+]5C)C
+C1CN8(CCC8N22C=CC=8CC=C3NC=O)CCCC(C45=CC=C(C=C4)Fr)C=CC=C(C=C5)F,True,False,LEAK,syntax (ring closure / parens / token),C1CN8(CCC8N22C=CC=CC=C3NC=O)CCCC(C45=CC=C(C=C4)F)C=CC=C(C=C5)F
+COC(=O)NC=NC2=C(N1)C=C(C=C2)C(=O)C3=CCCC,True,False,LEAK,syntax (ring closure / parens / token),COC(=O)NC=NC2=C(N1)C=C(C=C2)C(=O)C3=CC=CC
+CCOC(=O)CCCCCCCCC(-C)cccccc1I,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)CCCCCCCCC(C)cccccc1I
+CC1=CC=C(C=C1)C2=CC(=NN2C3=3CC=C(C=C3)S(=O)(=O)N)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC=C(C=C1)C2=CC(=NN2C3=CC=C(C=C3)S(=O)(=O)N)C(F)(F)F
+C1CN(CCC1N2C3=CC=CC=C3NC2=O)CCCC(C4=BCC=C(C=C4)F)C=CC=2C(C=C5)F,True,False,LEAK,syntax (ring closure / parens / token),C1CN(CCC1N2C3=CC=CC=C3NC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=2C(C=C5)F
+C5CCC(=O)OC1(CCCC1(CC(C3C2CC4=CC(=O9)CCC34C)O)C)C(=O)CO,True,False,LEAK,syntax (ring closure / parens / token),CCCC(=O)OC1(CCCC1(CC(C3C2CC4=CC(=O9)CCC34C)O)C)C(=O)CO
+C1=NC\2=C(N1)C(=S)N6=C(N2)N,True,False,LEAK,syntax (ring closure / parens / token),C1=NC2=C(N1)C(=S)N=C(N2)N
+CC(C)6OC(=O)C(C)(C)O/c1\ccc(cc)C(=O)c2ccc(cc9)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)6OC(=O)C(C)(C)O/c1ccc(cc)C(=O)c2ccc(cc9)Cl
+cNS(=O)(=O)CCcccc2c(c1)(c[nH]2)C3CC[NH+](CC3)C,True,False,LEAK,syntax (ring closure / parens / token),cNS(=O)(=O)CCc1ccc2c(c1)(c[nH]2)C3CC[NH+](CC3)C
+c11c[9nH]n1CC[NH3+],True,False,LEAK,syntax (ring closure / parens / token),c11c[9nH]nc1CC[NH3+]
+COC=C5(C=C(C=C1)CNC2=NC(=NC=C2C(=O)NCC3=NC=CC=N)N4CCC[C@H]4CIO)Cl,True,False,LEAK,syntax (ring closure / parens / token),COC=C(C=C(C=C1)CNC2=NC(=NC=C2C(=O)NCC3=NC=CC=N)N4CCC[C@H]4CO)Cl
+C1CN(CCCHN2C3=CC=CC=CNC=O)CCCC(C4=CC=C(C=C4)F)C5=CC=2C(C=C5)F,True,False,LEAK,syntax (ring closure / parens / token),C1CN(CCC1N2C3=CC=CC=CNC2=O)CCCC(C4=CC=C(C=C4)F)C5=CC=2C(C=C5)F
+CC(O)(C)C(#C=CC51=CC2=C(C=C1)O3CO1)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC51=CC2=C(C=C1)O3CO2)C
+ccOc(ccc1c2c(c3ccc(cc3s2)O)C(O)c4ccc(cc4)OCC[NH+]5CCCC5)O,True,False,LEAK,syntax (ring closure / parens / token),ccc(ccc1c2c(c3ccc(cc3s2)O)C(O)c4ccc(cc4)OCC[NH+]5CCCC5)O
+CC(CN1CC(=O))C(=ONC1)n2C(=O)NC(=O)C2,True,False,LEAK,valence too high,CC(CN1CC(=O))C(=ONC1)N2CC(=O)NC(=O)C2
+CCOc1n8c26ccc(c2n1Cc3ccc(cc3)c4ccc5cn4c5[nH]oc(=O)nc)C(=O)OCc6c(\c(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccc5cn4c5[nH]oc(=O)nc)C(=O)OCc6c(\c(=O)o6)C
+C[N+]1(C367C)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)-C4=CSC(=N4)N)SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3C67C)CC2=C(N3C(C(C3=O)NC(=O)C(=NOC)-C4=CSC(=N4)N)SC2)C(=O)[O-]
+C122CC3CC1C(CC)(C3)[NH3+],True,False,LEAK,syntax (ring closure / parens / token),C122CC3CC1CC(CC)(C3)[NH3+]
+C9C9\5,True,False,LEAK,syntax (ring closure / parens / token),CC\5
+c1ccc(cc1)C(CCC[NH3+]2CCC2CC)(c3ccccc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(CCC[NH3+]2CCCCC2)(c3ccccc)O
+Cc1cc(no1)7(=O)NNCc2ccccc2,True,False,LEAK,syntax (ring closure / parens / token),Cc1cc(no1)C(=O)NNCc2ccccc2
+C1C2,True,False,LEAK,syntax (ring closure / parens / token),C1C2CC3CC1CC(C2)(O73)[NH3+]
+C[2N+]1(C3CC7C1)CC2=C(N3C(C(Cn=O7)NC(=O)C6(=NOC)C4=C1SC(=N4)N)#SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[2N+]1(C3CC7C1)CC2=C(N3C(C(C3=O)NC(=O)C6(=NOC)C4=C1SC(=N4)N)#SC2)C(=O)[O-]
+CCN(CC)C(=O)/7C(=C/c1cc(c(c(c1)O)[O-])[N+](=O)[O-])/CN,True,False,LEAK,syntax (ring closure / parens / token),CCN(CC)C(=O)/7C(=C/c1cc(c(c(c1)O)[O-])[N+](=O)[O-])/C#N
+C[NH+](C)CC3N(Ccccc(cO)OC)c2ccccn2,True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CC3N(Ccccc(cO1)OC)c2ccccn2
+c1cccc2(c1)C(=[NH+]c3ccccc4S2)N4CC[NH+](CC44)CCOCCO,True,False,LEAK,syntax (ring closure / parens / token),c1cccc2(c1)C(=[NH+]c3ccccc4S2)N4CC[NH+](CC4)CCOCCO
+C1C4OCC(=O)N1C2=CC=C(C=C2)N9CC(OC32O)CNC(=O)C4=CC=C(S4)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1C4OCC(=O)N1C2=CC=C(C=C2)N9CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl
+cccn2c(c1)nn(c=O)CnCC[NH+]3CCN(CC3)c4cccc(c4)Cl,True,False,LEAK,syntax (ring closure / parens / token),c1ccn2c(c1)nn(c2=O)CnCC[NH+]3CCN(CC3)c4cccc(c4)Cl
+C1CC(C28=3CC=CC=C2C17)C3=NCCN3,True,False,LEAK,syntax (ring closure / parens / token),C1CC(C28=3CC=CC=C2C1)C3=NCCN3
+CC1=CC(=NO)C(=O)NNCC23=CC=CC=C2,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC(=NO)C(=O)NNCC2=CC=CC=C2
+CCCCC(=O)OCC(=O)[C@@]1(Cc2c(c(c3c(c2[O-])C(=O)c4c#ccc(c4C3=O)OC1)[O-])[C@H](C1)OC5CC(C(=C(O5)C)O)NC(=O)C(F)(F)F)O,True,False,LEAK,syntax (ring closure / parens / token),CCCCC(=O)OCC(=O)[C@@]1(Cc2c(c(c3c(c2[O-])C(=O)c4c#ccc(c4C3=O)OC1)[O-])[C@H](C1)OC5CC(C(C(O5)C)O)NC(=O)C(F)(F)F)O
+CCC2CC3=C2(C13(CCNCC=C(C)C)C)C=C(C2=C3)O,True,False,LEAK,syntax (ring closure / parens / token),CCC2CC3=C2(C13(CCNCC=C(C)C)C)C=C(C=C3)O
+CBOc=11,True,False,LEAK,syntax (ring closure / parens / token),CBOc=11P
+C[NH+](C)CCN(Cc1ccc(cc15)OC)c2ccccn2,True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CCN(Cc1ccc(cc1)OC)c2ccccn2
+CS7(=O)C,True,False,LEAK,syntax (ring closure / parens / token),CS(=O)C
+c1cc(ccc1CCc2c[nH]c3c2c(=O)nc([nH]3)N)C(=O)N[C@@H](C3CC9(=O)[O-])C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1CCc2c[nH]c3c2c(=O)nc([nH]3)N)C(=O)N[C@@H](CCC(=O)[O-])C(=O)[O-]
+c1cc(cccC(=O)CCC1[NH+]C1C(CC2)(c3ccc(cc3)Cl)O)F,True,False,LEAK,syntax (ring closure / parens / token),c1cc(cccC(=O)CCC[NH+]CCC(CC2)(c3ccc(cc3)Cl)O)F
+cc=cc2c(c1)CCCC2C=[NH+]CC2N3,True,False,LEAK,syntax (ring closure / parens / token),cc=cc2c(c1)CCCC2C3=[NH+]CCN3
+Cc156,True,False,LEAK,syntax (ring closure / parens / token),Cc156c(cnI1)C(=O)Nc2ccc(cc2)C(F)(F7)F
+CCCC1=NC(=C(N1Cl2=CC=C(C=C2)C3=CC=CC=C3C4=NNN8=N4)C(=O)O)C(C)(C)O,True,False,LEAK,syntax (ring closure / parens / token),CCCC1=NC(=C(N1CCl2=CC=C(C=C2)C3=CC=CC=C3C4=NNN8=N4)C(=O)O)C(C)(C)O
+Cc1c(cno1)C(=c)Nc2c9c(cc\2)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),Cc1c(cno1)C(=O)Nc2c9c(cc2)C(F)(F)F
+C=NC2=C(N1CCC(CO)CO),True,False,LEAK,syntax (ring closure / parens / token),C=NC2=C(N1CCC(CO)CO)NC(NC2=O)N
+c1ccn2c(c1)nn(c2=O)CC[NH+2]3CCN(C#C3)c74cccc(c4)Cl,True,False,LEAK,syntax (ring closure / parens / token),c1ccn2c(c1)nn(c2=O)CC[NH+2]3CCN(CC3)c74cccc(c4)Cl
+CC(C)OC(=O)C(C)(C)Occcc(cc)C(=O)cccc(cc)Cl,True,False,LEAK,aromaticity / kekulization,CC(C)OC(=O)C(C)(C)Occcc(cc)C(=O)cccc(cc2)Cl
+C[NH+]CCCCC1CCN2c3c\cc9ccSc4c2cc(cc4)S(=O)C,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]CCCCC1CCN2c3c\cc9cc3Sc4c2cc(cc4)S(=O)C
+CCOC(=O)C1(C1C[NH+](CC1)I7C)cccccc,True,False,LEAK,syntax (ring closure / parens / token),CCOC(=O)C1(CC[NH+](CC1)IC)cccccc
+c1cc6(cccC[C@@H](C(=O3)[O-])[NH3+]5)O,True,False,LEAK,syntax (ring closure / parens / token),c1cc(cccC[C@@H](C(=O3)[O-])[NH3+]5)O
+C1=NC2=C(N)C(=SN=CN2)N,True,False,LEAK,syntax (ring closure / parens / token),C1=NC2=C(N)C(=S)N=C(N2)N
+C5Oc=1P,True,False,LEAK,syntax (ring closure / parens / token),C5Oc=11P
+c15c(ccc1(=n3)CC(=O)[O-])N,True,False,LEAK,syntax (ring closure / parens / token),c15c(ccc1(=O3)CC(=O)[O-])N
+c1cnc25c3c(cc2n1)[C@@H]4C[C@H]3C[9NH2+]C4,True,False,LEAK,syntax (ring closure / parens / token),c1cnc25c3c(cc2n1)[C@@H]4C[C@H]3C[NH2+]C4
+CC7N(CoC)C(=O)/7C(=C/c1Scc(c(c(c1)O)[1O-])[N+](=O)[O-])P/C#N,True,False,LEAK,valence too high,CC7N(CC)C(=O)/7C(=C/c1Scc(c(c(c1)O)[1O-])[N+](=O)[O-])P/C#N
+CC(C)(C(=O)O)OC1=CC=C6(C=C1)CCNC(=O)C2CC=C(C=C)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)(C(=O)O)OC1=CC=C6(C=C1)CCNC(=O)C2=CC=C(C=C)Cl
+CC(=O5)NC1=[N](N=C(S1)S(=O)(=O)N)4,True,False,LEAK,syntax (ring closure / parens / token),CC(=O5)NC1=[N](N=C(S1)S(=O)(=O)N)C
+C1CCC(C1)C(#CC#N)N2C=C(C=N2)C=C4C=CNC4=NC=7N,True,False,LEAK,syntax (ring closure / parens / token),C1CCC(C1)C(#CC#N)N2C=C(C=N2)C=C4C=CNC4=NC=N3
+CC(CN1CC(=O))C(=ONC1)N2C25-C(=O)N5C(=O)=C2,True,False,LEAK,syntax (ring closure / parens / token),CC(CN1CC(=O))C(=ONC1)N2C25-C(=O)NC(=O)=C2
+CCc(C=SCC=9C(C=C1)C(=O)C2=CC=CS2)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C=SCC=9C(C=C1)C(=O)C2=CC=CS2)C(=O)O
+CH(C)NN=CC(=NC=No)C(=S)N,True,False,LEAK,syntax (ring closure / parens / token),CN(C)NN=CC(=NC=No6)C(=S)N
+c1ccn2c(c1)nn(cc=O)CC[NH+]3CCN(CC3)c742ccc(c4)Cl,True,False,LEAK,syntax (ring closure / parens / token),c1ccn2c(c1)nn(c2=O)CC[NH+2]3CCN(CC3)c74cccc(c4)Cl
+c1cn2c(c1)nn(c2=O)CnCC[NH+]3CCN(CC3)c4c5ccc(c4)Cl,True,False,LEAK,syntax (ring closure / parens / token),c1cn2c(c1)nn(c2=O)CnCC[NH+]3CCN(CC3)c4cccc(c4)Cl
+CC=C(C(CCC1)(C)C)/C=C/C(=C/C=C/C(=C\C(O)[O-])/C)/C,True,False,LEAK,syntax (ring closure / parens / token),CC=C(C(CCC1)(C)C)/C=C/C(=C/C=C/C(=C\C(=O)[O-])/C)/C
+C1S2CC3CC1CC(C)(O73)[NH3+7],True,False,LEAK,syntax (ring closure / parens / token),C1S2CC3CC1CC(C2)(O73)[NH3+]
+CC1=CC=CC=C1C(=O)NC2=CC(=C(SC=C2)C(=O)N3CCCC(C4=C3C=CC(=C)Cl)O)C,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC=CC=C1C(=O)NC2=CC(=C(C=C2)C(=O)N3CCCC(C4=C3C=CC(=C4)Cl)O)C
+CN2(C)CCCNC2=CC=CC=C2CC3=CC=CC=13C,True,False,LEAK,syntax (ring closure / parens / token),CN2(C)CCCNC2=CC=CC=C2CCC3=CC=CC=C31
+CCH(H)(C)CC(C7)(C)c1ccc(Ic)O,True,False,LEAK,syntax (ring closure / parens / token),CCH(H)(C)CC(C)(C)c1ccc(cc)O
+c1cnc(Pc1)[N-]S(=O)(=n)c2cc/c(cc)N,True,False,LEAK,syntax (ring closure / parens / token),c1cnc(Pc1)[N-]S(=O)(=n)c2ccc(cc2)N
+COCCOC(=O)NCCCC[n@@H](C(=O)NCCCCCCCOP(=O)(C)O)NC(=O)OCC#C,True,False,LEAK,aromaticity / kekulization,COC9COC(=O)NCCCC[n@@H](C(=O)NCCCCCCCOP(=O)(C)O)NC(=O)OCCOC
+CN2(C)CCCNC2CC5=CC=C2CC3=CC=CC=13C,True,False,LEAK,syntax (ring closure / parens / token),CN2(C)CCCNC2=CC=CC=C2CC3=CC=CC=13C
+Cc(C4)ccccc(c1OCOP(=O)([O-])[O-])C(C)C,True,False,LEAK,syntax (ring closure / parens / token),CC(C4)c1cccc(c1OCOP(=O)([O-])[O-])C(C)C
+C1COCC(=O)N1C2=CC=C(C=c2)N9CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1COCC(=O)N1C2=CC=C(C=C2)N9CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl
+[H]/[NH+]=C(/C=CC4(=O)nC(=CC=c2Cc\c(=C([NH+])N)cc2)/C=C)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)nC(=CC=c2Cc\c(=C([NH+])N)cc2)/C=C1)\N
+ccc(ccc1c2c(c3c2cc(cc3s2)O)Cs(O)c4ccc(cc4)OCC[NH+]CCCC5)O,True,False,LEAK,syntax (ring closure / parens / token),ccc(ccc1c2c(c3ccc(cc3s2)O)C(O)c4ccc(cc4)OCC[NH+]CCCC5)O
+CC1=NC=C(C=C1)C2=NC=C(C=CC3=CC=C(C=C3)S(=O)(=O)C)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC1=NC=C(C=C1)C2=NC=C(C=C2C3=CC=C(C=C3)S(=O)(=O)C)Cl
+C1COCC(=O)N1N2=CC=C(C=C2)N9CC(OC=O)CNC(=O)C4=CC=C(S4)Cl,True,False,LEAK,syntax (ring closure / parens / token),C1COCC(=O)N1C2=CC=C(C=C2)N9CC(OC3=O)CNC(=O)C4=CC=C(S4)Cl
+CFOC(=O)CCCCCCCCC(C)1cccccI,True,False,LEAK,syntax (ring closure / parens / token),CFOC(=O)CCCCCCCCC(C)1ccccc1I
+c1cS(ccc1C(=O)CCC[NH+]2CCC(CC2)(c3ccc(cc3)Cl)O)F,True,False,LEAK,aromaticity / kekulization,c1cc(ccc1C(=O)CCC[NH+]2CCC(CC2)(c3ccc(cc3)Cl)O)F
+C(CNCC6(=O)O=CC(=O)O)N(CPC(=O)O)1CC=OO,True,False,LEAK,syntax (ring closure / parens / token),C(CNCC(=O)O=CC(=O)O)N(CPC(=O)O)CC=OO
+c1ccc(c(c1)C2=N9CC(=O)ONc3c2cc(cc3)[N+](=O)[O-])Cl,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(c(c1)C2=N9CC(=O)Nc3c2cc(cc3)[N+](=O)[O-])Cl
+CC(*O)Nc1c(cc(c(c1I)C(=O)[O-])I)I,False,True,OVER_STRICT,,CC(=O)Nc1c(cc(c(c1I)C(=O)[O-])I)I
+CC(=O)SC1CC=CC(=O)CCC2(CCC1C4CCC5(C4(CC3)C)CC3(=O)O5)C,True,False,LEAK,syntax (ring closure / parens / token),CC(=O)SC1CC2=CC(=O)CCC2(C3C1C4CCC5(C4(CC3)C)CCC(=O)O5)C
+CCN(CC)C(=O)/76C(=C/c1cc(c(c(c1)O)[O-])[N+](=O)[O-])/C#N,True,False,LEAK,syntax (ring closure / parens / token),CCN(CC)C(=O)/7C(=C/c1cc(c(c(c1)O)[O-])[N+](=O)[O-])/C#N
+CC(C)NCC(CC=CC=C(C=C1)CCOC)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NCC(COC=CC=C(C=C1)CCOC)O
+CN(C)NN=CC(=NN=No16)C(=O)C,True,False,LEAK,syntax (ring closure / parens / token),CN(C)NN=CC(=NC=No16)C(=O)N
+C[NH+]1CC(=C42cccccc3CCc4c2nccc)CC1,True,False,LEAK,syntax (ring closure / parens / token),C[NH+]1CC(=C2cccccc3CCc4c2nccc)CC1
+CN16CC123C4C1C3C5=C2C(=C(C=C5)O)OC3C(C=o4)O,True,False,LEAK,syntax (ring closure / parens / token),CN1CCC23C4C1C3C5=C2C(=C(C=C5)O)OC3C(C=o4)O
+CCOc1nc2cH9cc,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc2ccc
+C1CCC9(C1)C(CC#oN)NCC=C,True,False,LEAK,syntax (ring closure / parens / token),C1CCC96(C1)C(CC#oN)NCC=C(C=N28)C=4C=CNC
+CC[NH2+](CCCn(C)-Nc1cc\[CH+]cc1ccc(c2)Cl)2CO,True,False,LEAK,valence too high,CC[NH+](CCCC(C)-Nc1cc\[nH+]cc1ccc(c2)Cl)2CO
+CCCC(=O)OC1(CCCC1(CC(C3C2CC4=CC(=O9)CCC34C)O)C)C(=O)C6,True,False,LEAK,syntax (ring closure / parens / token),CCCC(=O)OC1(CCCC1(CC(C3C2CC4=CC(=O9)CCC34C)O)C)C(=O)CO
+CC(PCC)C1=CC=C(C=C1)C(=C2C=CC(=[N+](CC)CC)C=C2)C3=6C(C=CC(=C3)S(=O)(=cO)O)S(=O)(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CCN(PCC)C1=CC=C(C=C1)C(=C2C=CC(=[N+](CC)CC)C=C2)C3=6C(C=CC(=C3)S(=O)(=cO)O)S(=O)(=O)O
+CN1CC(=O)N2[C@@H](C1=O)Cc3c4ccccc4[nH]c3[C@H]2c5cc3c6c(c5)OCO6,True,False,LEAK,syntax (ring closure / parens / token),CN1CC(=O)N2[C@@H](C1=O)Cc3c4ccccc4[nH]c3[C@H]2c5ccc6c(c5)OCO6
+CC(C)CC(C(=O)NC(CCCN=C(N)N)C(=O)N1CCCC1C(=O)NCC(=O)N)NC(=O)CNC(=O)C(CC2=C5C=C(C=C2)O)NC(=O)C(CO)NC(=O)C(CC3=CNC4=CC=CC=4C43)NC(=O)C(CC5=CN=CN5)NC(=O)C6CCC(=O)N6,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CC(C(=O)NC(CCCN=C(N)N)C(=O)N1CCCC1C(=O)NCC(=O)N)NC(=O)CNC(=O)C(CC2=CC=C(C=C2)O)NC(=O)C(CO)NC(=O)C(CC3=CNC4=CC=CC=4C43)NC(=O)C(CC5=CN=CN5)NC(=O)C6CCC(=O)N6
+C[NH2+3]/C(=C\[N+](=O)[O-])/NCCSCc1ccc(o1)C[NH](C8)C,True,False,LEAK,syntax (ring closure / parens / token),C[NH2+3]/C(=C\[N+](=O)[O-])/NCCSCc1ccc(o1)C[NH](C)C
+CC(C)CC(C(=O)NC(CCCN=C(N)N)C(=O)N1CCCC1C(=O)NCC(=O)N)NC(=O)CNC(=O)C(CC2=C5C=C(C=C2)O)NC(=O)C(CO)NC(=O)C(CC3=CNC4=IC=CC=4C43)NC(=O)C(CC5=CN=CN5)NC(=O)C6CCC(=O)N6,True,False,LEAK,syntax (ring closure / parens / token),CC(C)CC(C(=O)NC(CCCN=C(N)N)C(=O)N1CCCC1C(=O)NCC(=O)N)NC(=O)CNC(=O)C(CC2=C5C=C(C=C2)O)NC(=O)C(CO)NC(=O)C(CC3=CNC4=CC=CC=4C43)NC(=O)C(CC5=CN=CN5)NC(=O)C6CCC(=O)N6
+CC(C)OC(=O)C(C)(C2Occcc(cc8)C(=O)c2ccc(cc))Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)OC(=O)C(C)(C2Oc1ccc(cc18)C(=O)c2ccc(cc))Cl
+CC(=S)Occcccc1C(=O)Nc2ncc(s)[N+](=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),CC(=O)Occcccc1C(=O)Nc2ncc(s)[N+](=O)[O-]
+CC(C4)NC(=O)\C1=CC=C(C=C1)CNNC,True,False,LEAK,syntax (ring closure / parens / token),CC(C4)NC(=O)C1=CC=C(C=C1)CNNC
+c1cc(ccc1c2c(c6ccc(cc3s2)O)C(=O)c54ccc(cc4)OC[NH+]5CCCCC5)O,True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc1c2c(c6ccc(cc3s2)O)C(=O)c4ccc(cc4)OC[NH+]5CCCCC5)O
+CN1C(=O)CC(C1=O)c2cccc6c2,True,False,LEAK,syntax (ring closure / parens / token),CN1C(=O)CC(C1=O)c2ccccc2
+CNC(=O)C=NC=CC(=C1)OC2=CC=C(C7=C2)N\C(=O)NC3=CC(=C(C=C)Cl)C(F)(F)F,True,False,LEAK,syntax (ring closure / parens / token),CNC(=O)C=NC=CC(=C1)OC2=CC=C(C7=C2)NC(=O)NC3=CC(=C(C=C3)Cl)C(F)(F)F
+ccc(ccc1c2c(c3ccc(cc3s)O)C(O)c4ccc(cc4)OCC[NH+]CCCC-5)O,True,False,LEAK,syntax (ring closure / parens / token),ccc(ccc1c2c(c3ccc(cc3s2)O)C(O)c4ccc(cc4)OCC[NH+]CCCC5)O
+C1=NC2=8C(N)C,True,False,LEAK,syntax (ring closure / parens / token),C1=NC2=C(N)C
+c1cc(ccc1C(=oO)NCC(=O)[O-])N,True,False,LEAK,aromaticity / kekulization,c1cc(ccc1C(=O)NCC(=O)[O-])N
+Cc1c(ccncCS(=O)cC[nH]ccccccn2)OCCCO2,True,False,LEAK,syntax (ring closure / parens / token),Cc1c(ccncCS(=O)c2[nH]ccccccn2)OCCCOC
+c1cc(cccC(=O)CCC[NH+]CCC(CC2)(c3ccc5(cc3)Cl)O)F,True,False,LEAK,syntax (ring closure / parens / token),c1cc(cccC(=O)CCC[NH+]CCC(CC2)(c3ccc(cc3)Cl)O)F
+CC(C)NCC(COC11=CC=CC2=CC=C=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NCC(COC11=C4C=CC27=CC=C=C2)O
+Cc1ccc6c(c1)C[NH+]2CCS(CC2)C(c39ccccc33)c4ccc(c5c4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc1ccc6c(c1)C[NH+]2CCS(CC2)C(c39ccccc33)c4ccc(cc4)Cl
+CC[C@H](C)[C@H]1C(=O)N[C@H](C(=O)N[C@@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)NCC(=O)N[C@H](C(=O)NCC(=O)N[C@@H](CSSC[C@@H](C(=O)N[C@H](C(=O)NCC(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N1)CCCNC(=N)N)CC(=O)O)CCSC)CCCCN)CCCNC(=N)N)CC2=CC=CC=C2)NC(=O)CNC(=O)[C@H](CO)NC(=O)CNC(=O)[C@H](CCC(=O)N)NC(=O)[C@H](C(C)C)NC(=O)[C@H](CCSC)NC(=O)[C@H](CCCCN)NC(=O)[C@@H]3CCCN3C(=O)[C@H](CO)N)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](CC(C)C)C(=O)N[C@@H](CCCNC(=N)N)C(=O)N[C@@H](CCCNC(=N)N)C(=O)N[C@@H](CCC=NC=N4)C(=O)O)CC(C)C)CO)CO)CO)CO,True,False,LEAK,syntax (ring closure / parens / token),CC[C@H](C)[C@H]1C(=O)N[C@H](C(=O)N[C@@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)NCC(=O)N[C@H](C(=O)NCC(=O)N[C@@H](CSSC[C@@H](C(=O)N[C@H](C(=O)NCC(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N[C@H](C(=O)N1)CCCNC(=N)N)CC(=O)O)CCSC)CCCCN)CCCNC(=N)N)CC2=CC=CC=C2)NC(=O)CNC(=O)[C@H](CO)NC(=O)CNC(=O)[C@H](CCC(=O)N)NC(=O)[C@H](C(C)C)NC(=O)[C@H](CCSC)NC(=O)[C@H](CCCCN)NC(=O)[C@@H]3CCCN3C(=O)[C@H](CO)N)C(=O)N[C@@H](CCCCN)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](CC(C)C)C(=O)N[C@@H](CCCNC(=N)N)C(=O)N[C@@H](CCCNC(=N)N)C(=O)N[C@@H](CC4C=NC=N4)C(=O)O)CC(C)C)CO)CO)CO)CO
+C1CCC(C5)C(#CC#N)N2C=C(C=N2)C=C4C=CNC4=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1CCC(C1)C(#CC#N)N2C=C(C=N2)C=C4C=CNC4=NC=N3
+C[NH2+]CCCN=1c2cNcc,True,False,LEAK,syntax (ring closure / parens / token),C[NH2+]CCCN=1c2ccc
+COC(=O)NC1=NC8=C(N1)C=C(C=C)C(=O)C3=CC1=CCCF3,True,False,LEAK,syntax (ring closure / parens / token),COC(=O)NC1=NC2=C(N1)C=C(C=C)C(=O)C3=CC1=CCCF3
+C1=CC(=CC(=C81)I)CN=C(/N)4N,True,False,LEAK,syntax (ring closure / parens / token),C1=CC(=CC(=C81)I)CN=C(N)4N
+CC(\CN1CC(=O))C(=ONC1)N2C5C(=O)NC(=O)C2,True,False,LEAK,syntax (ring closure / parens / token),CC(CN1CC(=O))C(=ONC1)N2C5C(=O)NC(=O)C2
+C[NH+](C4)CCCN1c2ccccc2CCc3c1cccc3,True,False,LEAK,syntax (ring closure / parens / token),C[NH+](C)CCCN1c2ccccc2CCc3c1cccc3
+C[C@@H](C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](C)C(=O)N[C@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc1c[nH]c2c1cccc2)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc3c[nH]c4c3cccc4)C(=O)N[C@H](CC6(C)C)7C(=O)N[C@@H](Cc5c[nH]c6c5cccc6)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc7c[nH]c8c7cccc8)C(=O)NCCO)NC(=O)CNC(=O)[C@H](C(C)C)NC=O,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H](C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](C)C(=O)N[C@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](C(C)C)C(=O)N[C@@H](Cc1c[nH]c2c1cccc2)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc3c[nH]c4c3cccc4)C(=O)N[C@H](CC6(C)C)C(=O)N[C@@H](Cc5c[nH]c6c5cccc6)C(=O)N[C@H](CC(C)C)C(=O)N[C@@H](Cc7c[nH]c8c7cccc8)C(=O)NCCO)NC(=O)CNC(=O)[C@H](C(C)C)NC=O
+C1=C6(=CC=C1H#N)C(C2=CC=C1(C=C2)C#N)NC=NC=N3,True,False,LEAK,syntax (ring closure / parens / token),C1=C6(=CC=C1C#N)C(C2=CC=C1(C=C2)C#N)N3C=NC=N3
+c1ccn2c(c1)nn(c2=O)CC[NH+2]3CCN(SC3)c74cccc(c4)Cl,True,False,LEAK,syntax (ring closure / parens / token),c1ccn2c(c1)nn(c2=O)CC[NH+2]3CCN(CC3)c74cccc(c4)Cl
+C[C@@H]1CN(C[C@@H]([NH2+])C)c2c(c(c3c(c2F)n(cc(c3=O)C(=O)[O-])C4CC4)N)F,True,False,LEAK,syntax (ring closure / parens / token),C[C@@H]1CN(C[C@@H]([NH2+]1)C)c2c(c(c3c(c2F)n(cc(c3=O)C(=O)[O-])C4CC4)N)F
+CC(C)OC(=O)C(C)(C)O/c1ccc(cc)C(=O)c2ccc(cc)Cl,True,False,LEAK,syntax (ring closure / parens / token),CC(C)6OC(=O)C(C)(C)O/c1ccc(cc)C(=O)c2ccc(cc9)Cl
+ccc(cccc2c4(c3c\cc(cc3s2)O)C(O)c4ccc(cc4H)OCC[NH+]5CCCCC5)O,True,False,LEAK,syntax (ring closure / parens / token),ccc(ccc1c2c4(c3ccc(cc3s2)O)C(O)c4ccc(cc4H)OCC[NH+]5CCCCC5)O
+CC(O)(C)C(C=CC=C=2C3(-CC1)O3CO2)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC=C=2C3(CCC1)O3CO2)C
+Cc16c(c3no1)C(=O)Nc2ccc(cc2)C(F)(F7)F,True,False,LEAK,syntax (ring closure / parens / token),Cc16c(cno1)C(=O)Nc2ccc(cc2)C(F)(F7)F
+CCOc1nc26ccc(c2n1C5c3ccc(cc3)c4ccc=cc4c5[nH]oc(=O)4n5)C(=O)OCc6co(Ic(=O)o6)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1C5c3ccc(cc3)c4ccc=cc4c5[nH]oc(=O)4n5)C(=O)OCc6c(oc(=O)o6)C
+[5H]/[NH+]=C(/C=CC(=O)nC(=C\C=cccc(=C([NH3+])N)cc2)/C=C1)\N,True,False,LEAK,syntax (ring closure / parens / token),[H]/[NH+]=C(/C=CC(=O)nC(=C\C=c2ccc(=C([NH3+])N)cc2)/C=C1)\N
+ClC\5,True,False,LEAK,syntax (ring closure / parens / token),CC\5
+CC(O)(C)C(C=CC=C=2C3(CC4C1)O3CO)C,True,False,LEAK,syntax (ring closure / parens / token),CC(O)(C)C(C=CC=C=2C3(CCC1)O3CO2)C
+CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]9c4c3c(ccc4)C2=C1)C,True,False,LEAK,syntax (ring closure / parens / token),CC[C@@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4c3c(ccc4)C2=C1)C
+Cc/cccc(c1)C[NH+]12CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl,True,False,LEAK,valence too high,Cc/cccc(c1)C[NH+]2CCN(CC2)C(c3ccccc3)c4ccc(cc4)Cl
+C[NH2+]CCCN1c2ccccc2CCc-c1cccc3,True,False,LEAK,syntax (ring closure / parens / token),C[NH2+]CCCN1c2ccccc2CCc3c1cccc3
+C1=CC=C(C=C)C(=C(C2=CC=CC=C2)C3=CC=3C(C=C3)OCCO)CCCl,True,False,LEAK,syntax (ring closure / parens / token),C1=CC=C(C=C)C(=C(C2=CC=CC=C2)C3=CC=C(C=C3)OCCO)CCCl
+CC(C)NCC(COC1=CC=CC/2=CC=C=C2)O,True,False,LEAK,syntax (ring closure / parens / token),CC(C)NCC(COC11=CC=CC2=CC=C=C2)O
+C6C[C@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2CcCc[nH]c4c3c(ccc4)32=C1)C,True,False,LEAK,syntax (ring closure / parens / token),C6C[C@H](CO)NC(=O)[C@H]1C[NH+]([C@@H]2Cc3c[nH]c4c3c(ccc4)C2=C1)C
+CC1=CC(=NO)C(=O)NNCC23=CC=nC=C2,True,False,LEAK,syntax (ring closure / parens / token),CC1=CC(=NO)C(=O)NNCC23=CC=CC=C2
+CCC1=N(NC(=O)N1CCC2=CC=CC=C2)CCCN3CCN(CC3)C4=CC(=CC=C4)Cl,True,False,LEAK,valence too high,CCC1=NN(C(=O)N1CCOC2=CC=CC=C2)CCCN3CCN(CC3)C4=CC(=CC=C4)Cl
+c1ccc(cc1)(CCC[NH3+]2CCC2CC)(c3ccccc)O,True,False,LEAK,syntax (ring closure / parens / token),c1ccc(cc1)C(CCC[NH3+]2CCC2CC)(c3ccccc)O
+CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccc5cn4c5[nH]oc(=O)nc)C(=O)OCcc(\c(=O)o)C,True,False,LEAK,syntax (ring closure / parens / token),CCOc1nc26ccc(c2n1Cc3ccc(cc3)c4ccc5cn4c5[nH]oc(=O)nc)C(=O)OCc6c(\c(=O)o)C
+CCN1C=C(C(=O)C2=CC(=C(C4=2C219)H3CCNCC3o)F)C(=O)O,True,False,LEAK,syntax (ring closure / parens / token),CCN1C=C(C(=O)C2=CC(=C(C=2C219)H3CCNCC3)F)C(=O)O
+C1CN8(CCC18N2C=CC=CC=C3NC2=O)CCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)3F,True,False,LEAK,valence too high,C1CN8(CCC18N2C=CC=CC=C3NC2=O)CCC(C4=CC=C(C=C4)F)C5=CC=C(C=C5)F
+C[N+]1(C3CC7C1)CC2=C(N3C(C(C3=O)N4(=O)C6(=NOC)C4=CSC(=NC)N)#SC2)C(=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),C[N+]1(C3CC7C1)CC2=C(N3C(C(C3=O)NC(=O)C6(=NOC)C4=CSC(=N4)N)#SC2)C(=O)[O-]
+C1nCC(=CC=C91C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N,True,False,LEAK,syntax (ring closure / parens / token),C11nCC(=CC=C1C#N)C(C2=CC=C(C=C2)3#N)N3C=NC=N
+CNS(=O)(=O)cC,True,False,LEAK,aromaticity / kekulization,cNS(=O)(=O)CC
+Cc/cccc(c1)C[7NH+]CCN(CC2)C(c3ccccP3)c4ccc(cc4)Cl,True,False,LEAK,syntax (ring closure / parens / token),Cc/cccc(c1)C[NH+]2CCN(CC2)C(c3ccccP3)c4ccc(cc4)Cl
+c1cc(ccc=c2ccc(o2)sC=N/N3C3C(=O)NC3=O)[N+](=O)[O-],True,False,LEAK,syntax (ring closure / parens / token),c1cc(ccc=1c2ccc(o2)sC=N/N3C3C(=O)NC3=O)[N+](=O)[O-]
