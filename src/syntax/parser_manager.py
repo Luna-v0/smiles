@@ -234,18 +234,40 @@ class ParserManager:
             )
         return value
 
-    def chiral(self, rotation: str = "", chiral1: str = None, chiral2: str = None) -> Optional[str]:
+    #: Maximum index per chirality class (OpenSMILES §3.8).
+    _CHIRALITY_RANGES = {"TH": 2, "AL": 2, "SP": 3, "TB": 20, "OH": 30}
+
+    def chiral(self, rotation: str = "", chiral1: str = None, chiral2: str = None, token: str = None) -> Optional[str]:
         """
         Function to parse the 'chiral' rule.
 
-        chiral -> "@" | "@@"
-        
+        chiral -> "@" | "@@" | "@TH1" | ... | "@TB20" | ... | "@OH30"
+
         Args:
             rotation: Rotation direction (new API).
             chiral1: First chiral symbol (old API compatibility).
             chiral2: Second chiral symbol (old API compatibility).
+            token: Full chirality designator from the lexer (e.g. ``"@"``,
+                ``"@@"``, ``"@TH1"``).  Extended classes are range-checked
+                here rather than enumerated in the grammar.
 
+        Raises:
+            ParserException: If a chirality class index is out of range
+                (e.g. ``@TB21``, ``@OH31``).
         """
+        if token is not None:
+            designator = token.lstrip("@")
+            if not designator:
+                return "clockwise" if token == "@" else "counterclockwise"
+            keyword, index = designator[:2], int(designator[2:])
+            limit = self._CHIRALITY_RANGES[keyword]
+            if not 1 <= index <= limit:
+                raise ParserException(
+                    rule="chiral",
+                    parameter=token,
+                    message=f"Chirality class @{keyword} index must be in 1..{limit}, got {index}",
+                )
+            return token
         # Support old API
         if chiral1 is not None:
             if chiral2 is None or chiral2 == "":

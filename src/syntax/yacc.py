@@ -3,7 +3,7 @@ from itertools import combinations
 from sly import Parser
 
 from chem.chemistry import chemistry as chem
-from syntax.lex import SmilesLex
+from syntax.lex import BracketLex, SmilesLex
 from syntax.parser_manager import parser_manager as pm
 
 
@@ -78,12 +78,12 @@ class SmilesParser(Parser):
     """
 
     debugfile = "parser.out"
-    tokens = SmilesLex.tokens
+    tokens = SmilesLex.tokens | BracketLex.tokens
     use_only_grammar = False
 
     precedence = (
         ('right', 'CHAIN_END'),
-        ('left', '.', '-', 'semi_bond', '[', 'H', 'semi_symbol', 'digit', '%', '(', '*'),
+        ('left', '.', '-', ':', 'semi_bond', '[', 'H', 'semi_symbol', 'digit', '%', '(', '*'),
     )
 
     def error(self, t):
@@ -234,7 +234,7 @@ class SmilesParser(Parser):
     def bond_dot(self, rules):
         return rules[0]
 
-    @_("semi_bond_rule", '"-"')  # type: ignore
+    @_("semi_bond_rule", '"-"', '":"')  # type: ignore
     def bond(self, rules):
         return rules[0]
 
@@ -258,25 +258,17 @@ class SmilesParser(Parser):
     def rnum(self, rules):
         return pm.rnum(ring_number=10 * rules[1] + rules[2])
 
-    @_("digit")  # type: ignore
+    @_("NUMBER")  # type: ignore
     def isotope(self, rules):
-        return pm.isotope(value=rules.digit)
-
-    @_("digit digit")
-    def isotope(self, rules):
-        return pm.isotope(value=10 * rules[0] + rules[1])
-
-    @_("digit digit digit")  # type: ignore
-    def isotope(self, rules):
-        return pm.isotope(value=100 * rules[0] + 10 * rules[1] + rules[2])
+        return pm.isotope(value=rules.NUMBER)
 
     @_('"H"')  # type: ignore
     def hcount(self, rules):
         return pm.hcount(hcount=1)
 
-    @_('"H" digit')
+    @_('"H" NUMBER')
     def hcount(self, rules):
-        return pm.hcount(hcount=rules.digit)
+        return pm.hcount(hcount=rules.NUMBER)
 
     @_('"+"')
     def charge(self, rules):
@@ -302,33 +294,17 @@ class SmilesParser(Parser):
     def charge(self, rules):
         return pm.charge(charge=-2)
 
-    @_('":" digit digit digit')
+    @_('":" NUMBER')
     def mol_map(self, rules):
-        return pm.mol_map(value=100 * rules[1] + 10 * rules[2] + rules[3])
+        return pm.mol_map(value=rules.NUMBER)
 
-    @_('":" digit digit')
-    def mol_map(self, rules):
-        return pm.mol_map(value=10 * rules[1] + rules[2])
-
-    @_('":" digit')
-    def mol_map(self, rules):
-        return pm.mol_map(value=rules.digit)
-
-    @_('"@"')
+    @_("CHIRAL")
     def chiral(self, rules):
-        return pm.chiral(rotation="clockwise")
+        return pm.chiral(token=rules.CHIRAL)
 
-    @_('"@" "@"')
-    def chiral(self, rules):
-        return pm.chiral(rotation="counterclockwise")
-
-    @_("digit digit")  # type: ignore
+    @_("NUMBER")  # type: ignore
     def fifteen(self, rules):
-        return pm.fifteen(value=10 * rules[0] + rules[1])
-
-    @_("digit")
-    def fifteen(self, rules):
-        return pm.fifteen(value=rules.digit)
+        return pm.fifteen(value=rules.NUMBER)
 
 
 parser = SmilesParser()

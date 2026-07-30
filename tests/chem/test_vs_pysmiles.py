@@ -38,8 +38,12 @@ STRICTER_THAN_PYSMILES = [
     "C()",       # empty branch            (pysmiles: accepts)
     "CC.",       # trailing dot            (pysmiles: accepts)
     "[C+16]",    # charge out of range >15 (pysmiles: rejects)
-    "[99999C]",  # isotope out of range    (pysmiles: rejects)
 ]
+
+# "[99999C]" used to be in this list as "isotope out of range", but OpenSMILES
+# (§3.10) puts no upper bound on isotope width — implementations must accept at
+# least 3 digits and may accept more.  Since Phase 2 the grammar accepts any
+# width, so a wide isotope is *not* malformed.
 
 
 def _pysmiles_accepts(smiles: str) -> bool:
@@ -62,4 +66,4 @@ def test_we_catch_more_than_pysmiles_parser():
     pysmiles_accept = sum(_pysmiles_accepts(s) for s in STRICTER_THAN_PYSMILES)
     assert ours_reject == len(STRICTER_THAN_PYSMILES)
     # pysmiles waves through the great majority of these malformed strings.
-    assert pysmiles_accept >= 9
+    assert pysmiles_accept >= 8

@@ -55,23 +55,31 @@ class BracketLex(Lexer):
 
     Entered when :class:`SmilesLex` sees ``[`` and exited on ``]``.  Inside
     brackets the full periodic table is legal, ``:`` is the atom-class
-    separator (never a bond) and digits belong to isotope / hcount / charge /
-    class fields rather than ring closures.
+    separator (never a bond), digit runs are single ``NUMBER`` tokens
+    (isotope / hcount / charge / class fields, uncapped width) and the
+    chirality designator — ``@``, ``@@`` or a ``@TH1``-style class — is one
+    ``CHIRAL`` token whose numeric suffix is range-checked semantically.
 
     Attributes:
         tokens: A set of all tokens.
         literals: A set of all literals.
         semi_symbol: A regex for element symbols.
+        CHIRAL: A regex for the chirality designator (OpenSMILES §3.8).
     """
 
-    literals = {"@", "-", "+", ":", "H", "*"}
+    literals = {"-", "+", ":", "H", "*"}
 
-    tokens = {"digit", "semi_symbol"}
+    tokens = {"NUMBER", "CHIRAL", "semi_symbol"}
+
+    # '@', '@@' or '@'-prefixed chirality class (TH/AL/SP/TB/OH + index).
+    # The numeric range (e.g. TB1..TB20, OH1..OH30) is validated in the
+    # semantic action, not here.
+    CHIRAL = r'@@?((TH|AL|SP|TB|OH)\d{1,2})?'
 
     semi_symbol = _SEMI_SYMBOL_PATTERN
 
-    @_(r'\d')
-    def digit(self, t):
+    @_(r'\d+')
+    def NUMBER(self, t):
         t.value = int(t.value)
         return t
 
