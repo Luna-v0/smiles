@@ -7,7 +7,7 @@ from chem.atomic import Atom, BracketAtom
 from chem.chemistry import chemistry as chem
 from chem.graph_builder import GraphBuilder
 from chem.structure import MolecularGraph
-from exceptions import ParserException
+from exceptions import ParserException, RingSemanticsException
 
 
 class ParserManager:
@@ -145,16 +145,17 @@ class ParserManager:
         """
         # Support old API: current_open_rnum
         if hasattr(self, 'current_open_rnum') and self.current_open_rnum:
-            raise ParserException(
+            raise RingSemanticsException(
                 rule="validate",
                 parameter="open_cycles",
                 message="Unclosed ring numbers"
             )
         if self.has_open_cycles():
-            raise ParserException(
+            open_numbers = sorted(set(self.open_cycles) | set(self._open_rings))
+            raise RingSemanticsException(
                 rule="validate",
                 parameter="open_cycles",
-                message="Unclosed ring numbers"
+                message=f"Unclosed ring numbers: {', '.join(map(str, open_numbers))}"
             )
         return True
     

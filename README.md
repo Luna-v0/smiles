@@ -20,11 +20,33 @@ uv pip install -e .
 
 ## 🚀 Usage
 
-```py
-from validator.yacc import validate_smiles
+There is a single validation entry point, `validate_smiles`, which runs the
+full pipeline: lexing, grammar, ring-closure semantics and chemistry
+validation (valence + aromaticity). It is available both from the package
+root and — for backwards compatibility — from `syntax.yacc`; the two are
+the same function.
 
-print(validate_smiles("c1ccccc1"))
+```py
+from src import validate_smiles
+
+is_valid, error = validate_smiles("c1ccccc1")  # (True, None)
 ```
+
+For structured failure information (which tier rejected the input, at which
+character position), use `validate_smiles_detailed`:
+
+```py
+from src import validate_smiles_detailed
+
+result = validate_smiles_detailed("C1CCC")
+result.valid     # False
+result.tier      # "ring_semantics"
+result.message   # "Unclosed ring numbers: 1"
+result.as_tuple()  # legacy (is_valid, exception) contract
+```
+
+Internal errors (a missing chemistry backend, a non-string input) **raise**
+instead of being reported as "invalid molecule".
 
 ## 🧪 Run Tests
 
