@@ -3,6 +3,8 @@
 from chem.graph_builder import GraphBuilder
 from chem.structure import MolecularGraph
 from chem.validator import ChemistryValidator
+from syntax.parser_manager import parser_manager
+from syntax.yacc import lexer, parser
 from validation import (
     ValidationResult,
     parse_smiles,
@@ -18,4 +20,7 @@ __all__ = [
     'MolecularGraph',
     'GraphBuilder',
     'ChemistryValidator',
+    'parser',
+    'lexer',
+    'parser_manager',
 ]
