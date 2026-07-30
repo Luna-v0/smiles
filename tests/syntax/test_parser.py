@@ -125,13 +125,25 @@ def test_ring_number(parser_manager: ParserManager):
         )
         == 4
     ), "Ring number 4 opened"
-    parser_manager.atom("C")  # Set a last_atom for ring opening
+    parser_manager.atom("C")
+    parser_manager.atom("C")  # Two atoms along, the closure is legal
     assert (
         parser_manager.ring_number(
             ring_number_or_symbol="4", ring_number1=None, ring_number2=None
         )
         == 4
     ), "Ring number 4 closed"
+
+    # Closing onto the directly-bonded neighbour would duplicate the chain
+    # bond (a two-membered ring) — invalid per OpenSMILES §3.4.
+    from exceptions import RingSemanticsException
+    parser_manager.atom("C")
+    parser_manager.ring_number(ring_number_or_symbol="5", ring_number1=None, ring_number2=None)
+    parser_manager.atom("C")
+    with pytest.raises(RingSemanticsException):
+        parser_manager.ring_number(
+            ring_number_or_symbol="5", ring_number1=None, ring_number2=None
+        )
 
     with pytest.raises(ParserException) as exc_info:
         parser_manager.ring_number(

@@ -49,8 +49,13 @@ class ParserManager:
         self._branch_anchors: List[Atom] = []        # saved anchors for branches
         self._pending_bond: Optional[str] = None      # explicit bond for next bond
         self._no_bond_next: bool = False             # dot: next atom is disconnected
-        self._open_rings: Dict[int, Tuple[Atom, str]] = {}  # ring_num -> (atom, bond)
+        # ring_num -> (atom, bond); bond is None when the opening had no
+        # explicit bond symbol (needed for the §3.4 agreement check).
+        self._open_rings: Dict[int, Tuple[Atom, Optional[str]]] = {}
         self._parent_edge: Dict[Atom, Atom] = {}     # atom -> atom it bonded to
+        # atom_ids that already closed a branch: a ring-bond digit on such an
+        # atom violates §3.6 (branched_atom ::= atom ringbond* branch*).
+        self._branch_closed_atoms: set[int] = set()
 
     def _get_last_atom_from_chains(self, chains_data):
         """Helper to extract the last atom from a chains structure."""
@@ -91,6 +96,7 @@ class ParserManager:
         self._no_bond_next = False
         self._open_rings = {}
         self._parent_edge = {}
+        self._branch_closed_atoms = set()
 
     def get_graph(self) -> MolecularGraph:
         """Return the canonical molecule graph handed to the chemistry backend."""
@@ -122,19 +128,81 @@ class ParserManager:
         if parent is not None and bond_type:
             self.cgraph.update_edge(parent, atom, bond_type)
 
-    def _canonical_ring(self, ring_number: int, bond_type: str = "-") -> None:
-        """Open or close a ring-closure bond on the current anchor."""
+    #: Bond order per symbol, used for the §3.4 ring-closure agreement check.
+    #: Directional single bonds (``/``, ``\``) agree with ``-`` and each other.
+    _RING_BOND_ORDER = {"-": 1, "/": 1, "\\": 1, ":": 1.5, "=": 2, "#": 3, "$": 4}
+
+    def _canonical_ring(self, ring_number: int, bond_type: Optional[str] = None) -> Optional[str]:
+        """Open or close a ring-closure bond on the current anchor.
+
+        Enforces the OpenSMILES ring-bond semantics that are not expressible
+        in the grammar (§3.4, §3.6): no ring bond after a branch on the same
+        atom, no self ring-bond, no duplicate bond between an atom pair, and
+        agreement of explicit bond symbols on the two ends of a closure.
+
+        Args:
+            ring_number: The ring-closure number.
+            bond_type: Explicit bond symbol preceding the digit, or ``None``
+                when the closure had no bond symbol.
+
+        Returns:
+            The resolved bond symbol when this call *closes* a ring,
+            ``None`` when it opens one.
+
+        Raises:
+            RingSemanticsException: On any §3.4/§3.6 violation.
+        """
         if self._anchor is None:
-            return
+            return None
+        if self._anchor.atom_id in self._branch_closed_atoms:
+            raise RingSemanticsException(
+                rule="ring_semantics.ring_after_branch",
+                parameter=str(ring_number),
+                message=(
+                    f"Ring bond {ring_number} appears after a branch on the same atom; "
+                    "ring bonds must precede branches (§3.6)"
+                ),
+            )
         if ring_number in self._open_rings:
             opening_atom, opening_bond = self._open_rings.pop(ring_number)
-            bond = bond_type if bond_type and bond_type != "-" else opening_bond
-            if bond in (None, "-") and getattr(opening_atom, "aromatic", False) \
-                    and getattr(self._anchor, "aromatic", False):
-                bond = ":"
-            self.cgraph.add_edge(opening_atom, self._anchor, bond_type=bond or "-")
-        else:
-            self._open_rings[ring_number] = (self._anchor, bond_type)
+            if opening_atom is self._anchor:
+                raise RingSemanticsException(
+                    rule="ring_semantics.self_bond",
+                    parameter=str(ring_number),
+                    message=f"Ring bond {ring_number} opens and closes on the same atom (§3.4)",
+                )
+            if any(n is opening_atom for n, _ in self.cgraph.adjacency_list.get(self._anchor, [])):
+                raise RingSemanticsException(
+                    rule="ring_semantics.duplicate_bond",
+                    parameter=str(ring_number),
+                    message=(
+                        f"Ring bond {ring_number} would create a second bond "
+                        "between an already-bonded atom pair (§3.4)"
+                    ),
+                )
+            if (
+                opening_bond is not None
+                and bond_type is not None
+                and self._RING_BOND_ORDER.get(opening_bond) != self._RING_BOND_ORDER.get(bond_type)
+            ):
+                raise RingSemanticsException(
+                    rule="ring_semantics.bond_mismatch",
+                    parameter=str(ring_number),
+                    message=(
+                        f"Ring bond {ring_number} bond symbols disagree: opened with "
+                        f"'{opening_bond}', closed with '{bond_type}' (§3.4)"
+                    ),
+                )
+            bond = bond_type if bond_type is not None else opening_bond
+            if bond is None:
+                bond = (
+                    ":" if getattr(opening_atom, "aromatic", False)
+                    and getattr(self._anchor, "aromatic", False) else "-"
+                )
+            self.cgraph.add_edge(opening_atom, self._anchor, bond_type=bond)
+            return bond
+        self._open_rings[ring_number] = (self._anchor, bond_type)
+        return None
 
     def validate(self) -> bool:
         """
@@ -325,27 +393,36 @@ class ParserManager:
         """
         return value
 
-    def rnum(self, ring_number=-1, bond_type: str = "-") -> int:
+    def rnum(self, ring_number=-1, bond_type: Optional[str] = None) -> int:
         """
         Function to parse the 'rnum' rule.
-        rnum -> digit digit digit | digit digit | digit
+        rnum -> digit | "%" digit digit
 
         Ring numbers can be reused after being closed (valid in SMILES).
 
+        Args:
+            ring_number: The ring-closure number.
+            bond_type: Explicit bond symbol preceding the digit, or ``None``
+                when the closure had no bond symbol.
+
         Returns:
             The ring number.
+
+        Raises:
+            RingSemanticsException: On a §3.4/§3.6 ring-bond violation.
         """
         cycle_num = ring_number
 
         # Canonical: open/close the ring-closure bond on the current anchor.
-        self._canonical_ring(cycle_num, bond_type)
+        # Raises on self ring-bonds, duplicate bonds, mismatched bond symbols
+        # and ring bonds following a branch; returns the resolved bond symbol
+        # when this digit closes a ring.
+        resolved_bond = self._canonical_ring(cycle_num, bond_type)
 
         if cycle_num in self.open_cycles:
             # Close the ring using graph builder
             if self.last_atom:
-                # Use provided bond_type or opening bond
-                opening_atom, opening_bond, _ = self.open_cycles[cycle_num]
-                bond = bond_type if bond_type != "-" else opening_bond
+                bond = resolved_bond if resolved_bond is not None else (bond_type or "-")
                 closing_atom = self.last_atom
                 self.graph_builder.close_ring(cycle_num, closing_atom, bond)
                 # Update last_atom to the closing atom (graph_builder.close_ring already does this)
@@ -359,7 +436,7 @@ class ParserManager:
                 self.closed_cycles.discard(cycle_num)
 
             if self.last_atom:
-                self.graph_builder.open_ring(cycle_num, self.last_atom, bond_type)
+                self.graph_builder.open_ring(cycle_num, self.last_atom, bond_type or "-")
                 # Store reference for parser_manager tracking
                 opening_atom, opening_bond, opening_index = self.graph_builder.open_cycles[cycle_num]
                 self.open_cycles[cycle_num] = (opening_atom, opening_bond, opening_index)
@@ -521,6 +598,10 @@ class ParserManager:
         # Canonical: the atom after the branch bonds to the pre-branch anchor.
         if self._branch_anchors:
             self._anchor = self._branch_anchors.pop()
+        # §3.6: ring bonds precede branches on an atom, so once this atom has
+        # closed a branch any further ring digit on it is a violation.
+        if self._anchor is not None:
+            self._branch_closed_atoms.add(self._anchor.atom_id)
         # Restore last_atom to the branch start atom
         # This ensures atoms after the branch connect to where we branched from
         if self.branch_stack:
