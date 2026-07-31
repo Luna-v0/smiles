@@ -49,9 +49,65 @@ _ALL_SYMBOLS = sorted(set(pt_uppercase + AROMATIC_SYMBOLS), key=len, reverse=Tru
 _SEMI_SYMBOL_PATTERN = generate_regex_from_list(_ALL_SYMBOLS)
 
 
+class BracketLex(Lexer):
+    """
+    Tokenizer state for the contents of a bracket atom (``[...]``).
+
+    Entered when :class:`SmilesLex` sees ``[`` and exited on ``]``.  Inside
+    brackets the full periodic table is legal, ``:`` is the atom-class
+    separator (never a bond), digit runs are single ``NUMBER`` tokens
+    (isotope / hcount / charge / class fields, uncapped width) and the
+    chirality designator — ``@``, ``@@`` or a ``@TH1``-style class — is one
+    ``CHIRAL`` token whose numeric suffix is range-checked semantically.
+
+    Attributes:
+        tokens: A set of all tokens.
+        literals: A set of all literals.
+        semi_symbol: A regex for element symbols.
+        CHIRAL: A regex for the chirality designator (OpenSMILES §3.8).
+    """
+
+    literals = {"-", "+", ":", "H", "*"}
+
+    tokens = {"NUMBER", "CHIRAL", "semi_symbol"}
+
+    # '@', '@@' or '@'-prefixed chirality class (TH/AL/SP/TB/OH + index).
+    # The numeric range (e.g. TB1..TB20, OH1..OH30) is validated in the
+    # semantic action, not here.
+    CHIRAL = r'@@?((TH|AL|SP|TB|OH)\d{1,2})?'
+
+    semi_symbol = _SEMI_SYMBOL_PATTERN
+
+    @_(r'\d+')
+    def NUMBER(self, t):
+        t.value = int(t.value)
+        return t
+
+    @_(r'\]')
+    def rbracket(self, t):
+        """Leave the bracket state and hand ``]`` to the grammar."""
+        t.type = ']'
+        self.begin(SmilesLex)
+        return t
+
+    def tokenize(self, text, lineno=1, index=0):
+        """Recover from a prior parse that aborted mid-bracket.
+
+        SLY switches lexer state by reassigning ``self.__class__``, so an
+        error inside ``[...]`` strands the instance in this state.  A fresh
+        ``tokenize`` call always restarts from the outer state.
+        """
+        self.begin(SmilesLex)
+        return self.tokenize(text, lineno, index)
+
+
 class SmilesLex(Lexer):
     """
-    Tokenizer for SMILES strings.
+    Tokenizer for SMILES strings (outside bracket atoms).
+
+    ``[`` switches to :class:`BracketLex` until the matching ``]``; bracket
+    contents therefore never share token rules with the main chain, where
+    only the organic subset is legal bare and digits are ring closures.
 
     Attributes:
         tokens: A set of all tokens
@@ -67,6 +123,13 @@ class SmilesLex(Lexer):
 
     semi_symbol = _SEMI_SYMBOL_PATTERN
     semi_bond = r'[=#$/\\]'
+
+    @_(r'\[')
+    def lbracket(self, t):
+        """Enter the bracket state and hand ``[`` to the grammar."""
+        t.type = '['
+        self.begin(BracketLex)
+        return t
 
     # Two-character element symbols that are legal as *bare* (non-bracket) atoms.
     # Outside brackets the organic subset only allows Cl and Br (plus the

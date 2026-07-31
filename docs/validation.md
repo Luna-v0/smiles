@@ -2,6 +2,29 @@
 
 This document describes the chemistry validation algorithms used by the SMILES parser to ensure molecular structures are chemically valid.
 
+## Valence policy (decided: permissive)
+
+The default chemistry backend (`ChemistryValidator(backend="pysmiles")`) is
+**deliberately permissive**: it accepts radicals and expanded-octet /
+hypervalent species — e.g. `N(C)(C)(C)C` (4-valent neutral nitrogen) — and
+rejects only physically impossible *over*-valence (beyond the element's
+maximum modelled valence, e.g. pentavalent carbon). This is a considered
+choice, not an omission:
+
+- OpenSMILES itself does not mandate a valence model; valence checking is a
+  policy layered on top of the language.
+- Generative-model output (the primary use case) legitimately contains
+  radicals and hypervalent species that RDKit's default sanitizer rejects.
+
+Callers who want RDKit-equivalent strictness can opt in with
+`ChemistryValidator(backend="rdkit")` /
+`validate_smiles_detailed(mol, backend="rdkit")`.
+
+Note that `C11` — which the pysmiles backend used to wave through — is now
+rejected *before* chemistry, by the ring-semantics tier (OpenSMILES §3.4:
+an atom cannot close a ring onto itself). Ring-closure rules are language
+semantics, not valence policy.
+
 ## Overview
 
 The validation system checks two main aspects of molecular chemistry:
