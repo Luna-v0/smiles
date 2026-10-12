@@ -18,7 +18,6 @@ Outputs (under analyses/):
 import argparse
 import glob
 import os
-import re
 import sys
 import time
 from multiprocessing import get_context
@@ -38,36 +37,20 @@ import partialsmiles as ps
 import pysmiles
 from molvs import validate_smiles as molvs_validate
 
-from src import validate_smiles, parse_smiles, parser, lexer, parser_manager
-from chem.validator import ChemistryValidator
+from src import validate_smiles, parse_smiles
 from chem.adapter import to_descriptor, valid_rdkit
 
-_oc = ChemistryValidator()
-
+# NOTE: the "YACC (original)" baseline (the legacy octet/Hückel validator) was
+# removed when that code was deleted from src/chem.  The current pipeline
+# (py-yacc-smiles) is the syntax gate + pysmiles chemistry; rd-yacc-kit is the
+# same graph handed to RDKit's sanitizer.
 VALIDATORS = [
-    "YACC (original)", "py-yacc-smiles", "rd-yacc-kit",
+    "py-yacc-smiles", "rd-yacc-kit",
     "RDKit", "PartialSMILES", "PySMILES", "MolVS",
 ]
 
 PARTS = os.path.join(_REPO, "analyses", "_validation_parts")
 CHUNK = 150_000
-
-
-def _yacc_original(m):
-    try:
-        if re.search(r"C$", m) and not re.search(r"C\d$", m) and re.search(r"\d", m):
-            return False
-        parser.parse(lexer.tokenize(m))
-        g = parser_manager.graph_builder.get_graph()
-        parser_manager.clear()
-        ok, _ = _oc.validate_rings_and_valency(g)
-        if not ok:
-            return False
-        ok, _ = _oc.validate_aromaticity(g)
-        return bool(ok)
-    except Exception:
-        parser_manager.clear()
-        return False
 
 
 def _py_yacc_smiles(m):
@@ -112,15 +95,18 @@ def _pysmiles(m):
 
 
 def _molvs(m):
+    # Only ERROR-level messages are a verdict.  INFO messages ("sodium is
+    # present", "not an overall neutral system", "contains isotope 13C")
+    # describe valid molecules and must not count as rejections.
     try:
-        return len(molvs_validate(m)) == 0
+        return not any(msg.startswith("ERROR") for msg in molvs_validate(m))
     except Exception:
         return False
 
 
 def validate_all(smiles):
     m = smiles.strip()
-    return (_yacc_original(m), _py_yacc_smiles(m), _rd_yacc_kit(m),
+    return (_py_yacc_smiles(m), _rd_yacc_kit(m),
             _rdkit(m), _partialsmiles(m), _pysmiles(m), _molvs(m))
 
 

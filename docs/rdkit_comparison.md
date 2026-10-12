@@ -32,11 +32,13 @@ them toward RDKit.
 These are not spec matters but validation-policy choices, documented in
 [validation.md](validation.md):
 
-- **Permissive valence (default backend)**: radicals and
-  expanded-octet/hypervalent species (e.g. `N(C)(C)(C)C`, `[SH6]`) are
-  accepted; RDKit's default sanitizer rejects them. Only physically
-  impossible over-valence is rejected. Opt into RDKit-equivalent behaviour
-  with `backend="rdkit"`.
+- **Permissive valence (default backend)**: radicals and the
+  expanded-octet/hypervalent species of period 3+ (e.g. `[SH6]`) are
+  accepted; RDKit's default sanitizer rejects them. Second-row atoms keep
+  their octet (`N(C)(C)(C)C` is rejected, as in RDKit). Opt into
+  RDKit-equivalent behaviour with `backend="rdkit"`.
+- **cis/trans mark on a non-single bond**: `C=N\#N` is accepted (the mark is
+  dropped with a warning); RDKit rejects it as two bonds in a row.
 - **Known deviations from the strict BNF** (listed with rationale in
   `tests/conformance/spec_grammar.py` / `test_differential.py`): bare
   single-letter elements outside the organic subset are accepted (E1),

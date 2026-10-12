@@ -84,32 +84,111 @@ def to_descriptor(
     return atoms, bonds
 
 
-def valid_pysmiles(
-    atoms: List[AtomDescriptor], bonds: List[BondDescriptor]
-) -> Tuple[bool, Optional[str]]:
-    """Validate a descriptor using the pysmiles chemistry engine.
+# Atomic-number ranges of the d- and f-block (transition metals, lanthanides,
+# actinides).  Their valence depends on oxidation state and coordination, which
+# no simple electron-count model captures, so no valence limit is applied.
+_D_F_BLOCK_RANGES = ((21, 30), (39, 48), (57, 80), (89, 112))
 
-    Builds a ``networkx`` graph with the node/edge attributes pysmiles expects
-    and calls its valence and aromaticity helpers directly, **bypassing**
-    ``pysmiles.read_smiles``.
+# Second-row elements have no d orbitals and cannot expand their octet: only
+# the lowest valence of the isoelectronic element is reachable (N 3, N+ 4,
+# O 2, O- 1, ...).  pysmiles' electron-count model would otherwise also allow
+# N 5 and O 4/6.
+_NO_OCTET_EXPANSION = {"B", "C", "N", "O", "F"}
 
-    Args:
-        atoms: Atom descriptors from :func:`to_descriptor`.
-        bonds: Bond descriptors from :func:`to_descriptor`.
+# Neutral donors whose bond to a d/f-block metal is read as a coordinate
+# (dative) bond: it uses the donor's lone pair, so it does not count towards
+# the donor's own valence (``[NH3][Pt]`` is cisplatin's ammine ligand).
+_DATIVE_DONORS = {"N", "O"}
 
-    Returns:
-        ``(is_valid, reason)``.  ``reason`` is ``None`` when valid, otherwise a
-        short human-readable message.
-    """
-    # Imported lazily so importing this module does not hard-depend on the
-    # backend until chemistry validation is actually requested.
-    import networkx as nx
+# Electron counts of the noble gases.  An ion isoelectronic with one of them
+# (``[F-]``, ``[Cl-]``, ``[O-2]``) has a closed shell and cannot form bonds.
+_NOBLE_GAS_ELECTRONS = {2, 10, 18, 36, 54, 86}
+
+
+def _is_d_f_block(element: str) -> bool:
+    """Return whether ``element`` is a transition metal, lanthanide or actinide."""
     from pysmiles import PTE
-    from pysmiles.smiles_helper import (
-        bonds_missing,
-        correct_aromatic_rings,
-        fill_valence,
-    )
+
+    number = PTE[element]["AtomicNumber"]
+    return any(lo <= number <= hi for lo, hi in _D_F_BLOCK_RANGES)
+
+
+def _valence_limit(mol, node, explicit_h: int) -> Tuple[float, float]:
+    """Return ``(bond_total, max_valence)`` for one atom of a perceived graph.
+
+    ``bond_total`` sums bond orders plus the explicit (bracket) hydrogens;
+    implicit hydrogens of organic-subset atoms are never counted, since the
+    backend only adds them up to a valid valence.
+
+    Raises:
+        ValueError, KeyError: If the backend cannot determine a valence.
+    """
+    from pysmiles import PTE
+    from pysmiles.smiles_helper import valence
+
+    attrs = mol.nodes[node]
+    element = attrs["element"]
+    charge = attrs.get("charge", 0)
+
+    # An aromatic bond is one sigma bond; the atom's share of the delocalised
+    # pi system adds one more, once (benzene C 2+1, naphthalene ring-fusion C
+    # 3+1, pyridine N 2+1).  Summing 1.5 per aromatic bond would overcount.
+    total = float(explicit_h)
+    if any(mol.edges[node, n].get("order", 1) == 1.5 for n in mol[node]):
+        total += 1
+    for neighbour in mol[node]:
+        neighbour_element = mol.nodes[neighbour].get("element", "*")
+        if (
+            element in _DATIVE_DONORS
+            and charge == 0
+            and neighbour_element != "*"
+            and _is_d_f_block(neighbour_element)
+        ):
+            continue  # coordinate bond: the donor's lone pair, not a valence
+        order = mol.edges[node, neighbour].get("order", 1)
+        total += 1 if order == 1.5 else order
+
+    if PTE[element]["AtomicNumber"] - charge in _NOBLE_GAS_ELECTRONS:
+        return total, 0
+
+    valences = valence(attrs)
+    if not valences:
+        raise ValueError(f"no valence model for {element}")
+    if element in _NO_OCTET_EXPANSION:
+        limit = valences[0]
+        if _is_pentavalent_n_convention(mol, node, element, charge, explicit_h, total):
+            limit = 5
+        return total, limit
+    return total, valences[-1]
+
+
+def _is_pentavalent_n_convention(mol, node, element, charge, explicit_h, total) -> bool:
+    """Neutral pentavalent N written without charge separation.
+
+    ``CN(=O)=O`` (nitro), ``c1ccn(=O)cc1`` (N-oxide), ``C=N#N`` (diazo) and
+    ``N=N#N`` (azide) are conventional shorthands for ``[N+]``/``[O-]`` or
+    ``[N+]``/``[N-]`` forms; RDKit accepts them by charge-separating, so they
+    are accepted here too.  A hydrogen on that N, or a fifth bond that is not
+    a multiple bond to O/N, is still impossible.
+    """
+    if element != "N" or charge != 0 or explicit_h or total != 5:
+        return False
+    for neighbour in mol[node]:
+        order = mol.edges[node, neighbour].get("order", 1)
+        if order >= 2 and mol.nodes[neighbour].get("element") in ("O", "N"):
+            return True
+    return False
+
+
+def _perceive(atoms: List[AtomDescriptor], bonds: List[BondDescriptor]):
+    """Build the pysmiles graph and run aromaticity perception + H filling.
+
+    Raises:
+        Exception: Whatever the backend raises when a region marked aromatic
+            cannot be kekulized.
+    """
+    import networkx as nx
+    from pysmiles.smiles_helper import correct_aromatic_rings, fill_valence
 
     mol = nx.Graph()
     for i, atom in enumerate(atoms):
@@ -126,21 +205,33 @@ def valid_pysmiles(
     for i, j, order in bonds:
         mol.add_edge(i, j, order=order)
 
-    try:
-        # Aromaticity perception + kekulization (raises if a region marked
-        # aromatic cannot be kekulized).
-        correct_aromatic_rings(mol, strict=True)
-        # Fill implicit hydrogens from the per-element valence model.
-        fill_valence(mol)
-    except Exception as exc:  # noqa: BLE001 - backend signals invalidity by raising
-        return False, f"aromaticity/kekulization failed: {exc}"
+    # Aromaticity perception + kekulization (raises if a region marked
+    # aromatic cannot be kekulized).
+    correct_aromatic_rings(mol, strict=True)
+    # Fill implicit hydrogens from the per-element valence model.
+    fill_valence(mol)
+    return mol
 
+
+def valence_violations(
+    atoms: List[AtomDescriptor], bonds: List[BondDescriptor]
+) -> List[Tuple[int, str]]:
+    """List the atoms whose valence is impossible, with a reason for each.
+
+    Raises:
+        Exception: If aromaticity perception fails (see :func:`_perceive`).
+    """
+    from pysmiles import PTE
+
+    mol = _perceive(atoms, bonds)
+    violations: List[Tuple[int, str]] = []
     for node in mol:
         element = mol.nodes[node].get("element", "*")
         if element == "*":
             continue
         if element not in PTE:
-            return False, f"unknown element {element}"
+            violations.append((node, f"unknown element {element}"))
+            continue
         # A disconnected, charged atom is a free ion (e.g. [Na+], [Li+], [Cl-]):
         # it has no bonds to satisfy a valence, so the charge alone makes it
         # well-formed.  pysmiles' valence model is undefined for several such
@@ -148,21 +239,58 @@ def valid_pysmiles(
         # RDKit).
         if mol.degree(node) == 0 and mol.nodes[node].get("charge", 0) != 0:
             continue
-        try:
-            missing = bonds_missing(mol, node)
-        except (ValueError, KeyError):
-            # Valence undeterminable (e.g. some transition metals): no
-            # constraint to apply, treat as acceptable.
+        if _is_d_f_block(element):
             continue
-        # ``bonds_missing`` is positive when the atom is *under* valence (a
-        # radical / electron-deficient species) and negative when it is *over*
-        # valence (beyond the element's maximum modelled valence, e.g.
-        # pentavalent carbon).  This validator is deliberately permissive: it
-        # accepts radicals and expanded-octet/hypervalent species (which RDKit
-        # rejects) and only rejects the physically impossible over-valence.
-        if missing < 0:
-            return False, f"impossible valence on {element} (atom {node})"
+        try:
+            total, limit = _valence_limit(mol, node, atoms[node].get("hcount", 0))
+        except (ValueError, KeyError):
+            # Valence undeterminable: no constraint to apply, treat as acceptable.
+            continue
+        # Only over-valence is rejected.  This validator is deliberately
+        # permissive: it accepts radicals (under-valence) and the
+        # expanded-octet/hypervalent species of period 3+ (which RDKit rejects).
+        if total > limit:
+            charge = mol.nodes[node].get("charge", 0)
+            charge_text = f"{charge:+d}" if charge else "neutral"
+            violations.append(
+                (
+                    node,
+                    f"impossible valence on {element} (atom {node}): "
+                    f"{total:g} bond{'s' if total != 1 else ''}, {charge_text} {element} "
+                    f"allows at most {limit}",
+                )
+            )
+    return violations
 
+
+def valid_pysmiles(
+    atoms: List[AtomDescriptor], bonds: List[BondDescriptor]
+) -> Tuple[bool, Optional[str]]:
+    """Validate a descriptor using the pysmiles chemistry engine.
+
+    Builds a ``networkx`` graph with the node/edge attributes pysmiles expects
+    and calls its valence and aromaticity helpers directly, **bypassing**
+    ``pysmiles.read_smiles``.  pysmiles' electron-count valence model is
+    tightened where it is chemically wrong: second-row atoms cannot expand
+    their octet, closed-shell ions cannot bond, and d/f-block metals get no
+    limit (see :func:`valence_violations`).
+
+    Args:
+        atoms: Atom descriptors from :func:`to_descriptor`.
+        bonds: Bond descriptors from :func:`to_descriptor`.
+
+    Returns:
+        ``(is_valid, reason)``.  ``reason`` is ``None`` when valid, otherwise a
+        short human-readable message.
+    """
+    try:
+        violations = valence_violations(atoms, bonds)
+    except ImportError:
+        raise  # a missing backend is an internal error, not a verdict
+    except Exception as exc:  # noqa: BLE001 - backend signals invalidity by raising
+        return False, f"aromaticity/kekulization failed: {exc}"
+    if violations:
+        return False, violations[0][1]
     return True, None
 
 

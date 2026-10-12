@@ -14,7 +14,8 @@ mistaken for "invalid molecule".
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import re
+from dataclasses import dataclass, field
 from typing import Literal
 
 from sly.lex import LexError
@@ -46,6 +47,18 @@ class ValidationResult:
         expected: Legal tokens at the failure point, when known.
         error: Underlying exception for the legacy tuple contract
             (``None`` when valid).
+        warnings: Notes on accepted-but-irregular input (e.g. a cis/trans
+            mark written on a double bond and dropped).
+        repaired_smiles: For a chemistry failure, the input with only the
+            broken atoms rewritten so that it validates (``None`` when no
+            unambiguous repair exists).
+        repairs: One line per edited atom, explaining the repair.
+        failed_fragment: With ``remove_salts``, the component that failed
+            (``None`` when valid or single-component).
+        parent_smiles: With ``remove_salts``, the largest component of a
+            multi-component input (of the repaired string when one exists).
+        removed_fragments: With ``remove_salts``, the other components
+            (counter-ions, solvents).
     """
 
     valid: bool
@@ -54,6 +67,12 @@ class ValidationResult:
     position: int | None = None
     expected: set[str] | None = None
     error: Exception | None = None
+    warnings: list[str] = field(default_factory=list)
+    repaired_smiles: str | None = None
+    repairs: list[str] = field(default_factory=list)
+    failed_fragment: str | None = None
+    parent_smiles: str | None = None
+    removed_fragments: list[str] = field(default_factory=list)
 
     def __bool__(self) -> bool:
         return self.valid
@@ -121,16 +140,56 @@ def _parse(mol: str) -> tuple[MolecularGraph | None, ValidationResult | None]:
     return graph, None
 
 
-def validate_smiles_detailed(mol: str, backend: str = "pysmiles") -> ValidationResult:
+# A cis/trans mark directly in front of another bond symbol (``C=N\\#N``).
+_DIRECTION_ON_BOND = re.compile(r"(?<!\\)[/\\](?=[-=#$:])")
+
+
+def _direction_warnings(smiles: str) -> list[str]:
+    """Warn about cis/trans marks the lexer dropped (they never sit in brackets)."""
+    warnings = []
+    unbracketed = re.sub(r"\[[^\]]*\]", lambda m: " " * len(m[0]), smiles)
+    for match in re.finditer(r"\\\\", unbracketed):
+        warnings.append(
+            f"doubled backslash at position {match.start()} read as a single '\\' "
+            "(a string-escaping artefact)"
+        )
+    for match in _DIRECTION_ON_BOND.finditer(unbracketed):
+        bond = smiles[match.end()]
+        warnings.append(
+            f"cis/trans mark '{match[0]}' at position {match.start()} is written on a "
+            f"'{bond}' bond and was ignored: only single bonds next to a double bond "
+            "carry cis/trans direction"
+        )
+    return warnings
+
+
+def _chemistry_message(exc: Exception | None) -> str:
+    return exc.message if isinstance(exc, ParserException) else str(exc)
+
+
+def validate_smiles_detailed(
+    mol: str,
+    backend: str = "pysmiles",
+    *,
+    physiological_ph: bool = True,
+    remove_salts: bool = True,
+) -> ValidationResult:
     """Validate a SMILES string, reporting the failing tier on rejection.
 
     Runs the full pipeline: lexing, grammar, ring-closure semantics and
-    chemistry validation (valence + aromaticity via the backend engine).
+    chemistry validation (valence + aromaticity via the backend engine).  A
+    chemistry failure also gets a repair suggestion when one exists.
 
     Args:
         mol: SMILES string to validate.
         backend: Chemistry policy — ``"pysmiles"`` (permissive, default) or
             ``"rdkit"`` (strict).
+        physiological_ph: When a broken nitrogen can be fixed either by adding
+            a charge or by dropping a hydrogen, pick its protonation state at
+            body pH (7.4).  Off: keep the written charge and drop the hydrogen.
+        remove_salts: Report the parent molecule and the removed counter-ions
+            of a multi-component input, and name the component that failed.
+            Every component is still validated.
 
     Returns:
         A :class:`ValidationResult`; truthy iff the molecule is valid.
@@ -139,18 +198,58 @@ def validate_smiles_detailed(mol: str, backend: str = "pysmiles") -> ValidationR
         TypeError: If ``mol`` is not a string.
         ImportError: If the chemistry backend is not installed.
     """
+    from chem.adapter import to_descriptor
+    from chem.fragments import parent_index, split_fragments
+    from chem.repair import suggest_repair
+
     graph, failure = _parse(mol)
     if failure is not None:
         return failure
-    is_valid, chem_exc = ChemistryValidator(backend=backend).validate(graph)
+    smiles = mol.strip()
+    validator = ChemistryValidator(backend=backend)
+    atoms, bonds = to_descriptor(graph)
+
+    result = ValidationResult(valid=True, warnings=_direction_warnings(smiles))
+    is_valid, chem_exc = validator.validate_descriptor(atoms, bonds)
+
+    fragments = split_fragments(smiles, atoms, bonds) if remove_salts else None
+    if fragments is not None and len(fragments) < 2:
+        fragments = None
+    if fragments is not None and not is_valid:
+        parent = parent_index(fragments)
+        for k, fragment in enumerate(fragments):
+            ok, exc = validator.validate_descriptor(fragment.atoms, fragment.bonds)
+            if not ok:
+                result.failed_fragment = fragment.smiles
+                if k != parent:
+                    chem_exc = ParserException(
+                        rule="chemistry",
+                        parameter=_chemistry_message(exc),
+                        message=f"counter-ion {fragment.smiles!r}: {_chemistry_message(exc)}",
+                    )
+                break
+
     if not is_valid:
-        return ValidationResult(
-            valid=False,
-            tier="chemistry",
-            message=chem_exc.message if isinstance(chem_exc, ParserException) else str(chem_exc),
-            error=chem_exc,
-        )
-    return ValidationResult(valid=True)
+        result.valid = False
+        result.tier = "chemistry"
+        result.message = _chemistry_message(chem_exc)
+        result.error = chem_exc
+        repair = suggest_repair(smiles, atoms, bonds, physiological_ph=physiological_ph)
+        if repair is not None:
+            repaired_graph, _ = _parse(repair.smiles)
+            if repaired_graph is not None:
+                repaired = to_descriptor(repaired_graph)
+                if validator.validate_descriptor(*repaired)[0]:
+                    result.repaired_smiles = repair.smiles
+                    result.repairs = repair.edits
+                    if fragments is not None:
+                        fragments = split_fragments(repair.smiles, *repaired)
+
+    if fragments is not None:
+        parent = parent_index(fragments)
+        result.parent_smiles = fragments[parent].smiles
+        result.removed_fragments = [f.smiles for k, f in enumerate(fragments) if k != parent]
+    return result
 
 
 def validate_smiles(mol: str) -> tuple[bool, Exception | None]:

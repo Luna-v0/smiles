@@ -2,19 +2,61 @@
 
 This document describes the chemistry validation algorithms used by the SMILES parser to ensure molecular structures are chemically valid.
 
-## Valence policy (decided: permissive)
+## Valence policy (decided: permissive, octet-bound for row 2)
 
 The default chemistry backend (`ChemistryValidator(backend="pysmiles")`) is
-**deliberately permissive**: it accepts radicals and expanded-octet /
-hypervalent species — e.g. `N(C)(C)(C)C` (4-valent neutral nitrogen) — and
-rejects only physically impossible *over*-valence (beyond the element's
-maximum modelled valence, e.g. pentavalent carbon). This is a considered
-choice, not an omission:
+**deliberately permissive**: it accepts radicals and the expanded-octet /
+hypervalent species of period 3 and below — e.g. sulfate, `[SH6]`,
+`F[P-](F)(F)(F)(F)F` — and rejects only physically impossible *over*-valence.
+This is a considered choice, not an omission:
 
 - OpenSMILES itself does not mandate a valence model; valence checking is a
   policy layered on top of the language.
 - Generative-model output (the primary use case) legitimately contains
   radicals and hypervalent species that RDKit's default sanitizer rejects.
+
+What counts as "impossible" (`chem/adapter.py`, `valence_violations`):
+
+| Rule | Example rejected | Example accepted |
+|---|---|---|
+| Second-row atoms (B, C, N, O, F) cannot expand their octet: only the lowest valence of the isoelectronic element (N 3, N⁺ 4, O 2, O⁻ 1) | `N(C)(C)(C)C`, `[NH4]C`, `[OH3]C`, `C(N)=[NH2]` | `[NH4+]`, `[NH2+]=C(N)N` |
+| …except the conventional neutral pentavalent-N shorthands (RDKit charge-separates them) | — | `CN(=O)=O`, `c1ccn(=O)cc1`, `C=N#N`, `N=N#N` |
+| A closed-shell ion cannot bond | `[Cl-]C`, `[F-][B+3]…` | `[Na+].[Cl-]` |
+| d/f-block metals get no valence limit; a neutral N/O bonded to one is a dative donor | `[NH4][Pt]…` | `[NH3][Pt]([NH3])(Cl)Cl`, `Cl[Pt-2](Cl)(Cl)Cl` |
+| Main-group atoms of period 3+ use pysmiles' electron-count maximum | `O[AlH3](O)O` | `O=S(=O)(O)O` |
+
+Until October 2026 neutral 4-valent N (`N(C)(C)(C)C`) and `[OH4]` were
+accepted as "hypervalent".  Second-row atoms have no d orbitals to expand
+into, and public datasets showed these strings are always a missing charge
+or an extra hydrogen, so they are now rejected — with a repair suggestion.
+
+## Repairs, body pH and salts
+
+A chemistry failure comes with a repair when changing one atom fixes it
+(`chem/repair.py`): drop hydrogens (`[AlH3]` → `[Al]`), add a charge
+(`O=N([O-])C` → `O=[N+]([O-])C`), or move a bonded ion's charge onto its
+partner (`[Cl-][Pt]` → `Cl[Pt-]`).  Only the edited atoms are rewritten, so
+stereo and atom order are kept; `ValidationResult.repaired_smiles` holds the
+result and `repairs` one explanation per atom.
+
+When a nitrogen can be fixed either way (`=[NH2]` → `=[NH2+]` or `=[NH]`),
+`physiological_ph=True` (default) picks its protonation state at pH 7.4 from a
+small pKa table (`PKA_TABLE`: guanidines and amidines protonated, N-cyano
+guanidines neutral, …).  With it off, the written charge is kept.
+
+`remove_salts=True` (default) splits multi-component input into
+`parent_smiles` (most heavy atoms) and `removed_fragments`.  Every component
+is still validated: a broken counter-ion makes the record invalid and is named
+in `failed_fragment`, so salt removal never hides a data error.
+
+## cis/trans marks
+
+`/` and `\` mark cis/trans direction.  OpenSMILES spells them as directional
+*single* bonds, so `C=N\#N` is two bonds in a row and a syntax error there.
+This validator treats the mark as an annotation instead: written in front of
+another bond symbol it is accepted, ignored (a double or triple bond carries
+no cis/trans direction of its own) and reported in
+`ValidationResult.warnings`.
 
 Callers who want RDKit-equivalent strictness can opt in with
 `ChemistryValidator(backend="rdkit")` /

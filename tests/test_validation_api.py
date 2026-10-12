@@ -73,11 +73,9 @@ class TestValidationResult:
         assert result.tier == "grammar"
         assert result.position == 2
 
-    def test_unclosed_ring_is_ring_semantics_tier(self):
-        result = validate_smiles_detailed("C1CCC")
-        assert not result
-        assert result.tier == "ring_semantics"
-        assert "1" in result.message
+    # NOTE: the ring_semantics-tier case ("C1CCC") is covered canonically by
+    # tests/syntax/test_ring_semantics.py::test_unclosed_ring (same assertions
+    # plus the message content), so the duplicate here was removed.
 
     def test_as_tuple_preserves_contract(self):
         result = validate_smiles_detailed("C((")

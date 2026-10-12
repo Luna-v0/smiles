@@ -122,7 +122,23 @@ class SmilesLex(Lexer):
     tokens = {"semi_bond", "digit", "semi_symbol"}
 
     semi_symbol = _SEMI_SYMBOL_PATTERN
-    semi_bond = r'[=#$/\\]'
+
+    # ``/`` and ``\`` are cis/trans direction marks, not a bond order of their
+    # own.  OpenSMILES spells them as directional single bonds, so ``\#`` reads
+    # as two bonds in a row; here a mark written in front of another bond
+    # symbol (``C=N\#N``) is accepted and dropped, since the bond it would
+    # annotate is not a single bond.  A doubled backslash (``\\``) is a
+    # string-escaping artefact of exported datasets and reads as one ``\``
+    # (RDKit does the same).  ``validation`` reports both.
+    @_(r'\\\\', r'[/\\][-=#$:]', r'[=#$/\\]')
+    def semi_bond(self, t):
+        if t.value == "\\\\":
+            t.value = "\\"
+        elif len(t.value) == 2:
+            t.value = t.value[1]
+            if t.value in "-:":
+                t.type = t.value  # these bond symbols are grammar literals
+        return t
 
     @_(r'\[')
     def lbracket(self, t):
