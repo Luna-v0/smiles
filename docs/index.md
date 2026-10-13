@@ -19,8 +19,9 @@ reported as invalid molecules.
 
 ## Documentation
 
-- [**Validation Algorithms**](validation.md) - Hückel's rule (aromaticity) and octet rule (valency) validation
-- [**RDKit Comparison**](rdkit_comparison.md) - Comparison with RDKit validation
+- [**Validation**](validation.md) - valence policy, repair suggestions, salt splitting, cis/trans warnings and the validation pipeline
+- [**OpenSMILES Conformance**](rdkit_comparison.md) - what the validator accepts per the spec, and where that differs from RDKit
+- [**Legacy Algorithms**](validation_algorithms.md) - the octet-rule and Hückel-rule validator removed in October 2026
 
 ## Next Steps
 

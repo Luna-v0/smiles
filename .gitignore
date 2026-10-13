@@ -3,3 +3,7 @@ __pycache__
 *.egg-info/
 .coverage
 GEMINI.md
+# SLY writes its parser debug file here on every import
+parser.out
+# resume cache of analyses/run_full_validation.py
+analyses/_validation_parts/

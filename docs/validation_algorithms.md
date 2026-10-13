@@ -1,6 +1,11 @@
-# Simple Molecular Validation Algorithms
+# Legacy Validation Algorithms
 
-The SMILES Validator uses two fundamental chemistry rules to validate molecular structures: the **Octet Rule** for valency checking and **Huckel's Rule** for aromaticity validation. These algorithms operate on the molecular graph built during SMILES parsing.
+!!! note "Removed in October 2026"
+    This page describes the hand-written validator that the pysmiles
+    chemistry backend replaced. None of this code runs any more. Current
+    behaviour is documented in [Chemical Validation](validation.md).
+
+The legacy validator used two fundamental chemistry rules to validate molecular structures: the **Octet Rule** for valency checking and **Huckel's Rule** for aromaticity validation. These algorithms operated on the molecular graph built during SMILES parsing. Valency was checked first; Huckel's rule ran only when the molecule had aromatic atoms.
 
 ## Octet Rule (Valency Validation)
 
@@ -8,7 +13,7 @@ The octet rule states that atoms tend to form bonds until they are surrounded by
 
 ### How It Works
 
-The validator checks valency for bracket atoms (`[...]` notation in SMILES) that are **not aromatic** and **not part of a ring**. The process is:
+`MolecularGraph.check_valency_for_aba()` checked valency for bracket atoms (`[...]` notation in SMILES) that are **not aromatic** and **not part of a ring**. The process is:
 
 1. **Parse the electron configuration** from the periodic table data (e.g., Carbon: `1s2 2s2 2p2` = 4 valence electrons).
 2. **Adjust for charge and hydrogens** specified in the bracket atom:
@@ -39,14 +44,15 @@ The validator checks valency for bracket atoms (`[...]` notation in SMILES) that
 | `[Li+]` | `[Li+]` | 1 | -1 (charge) | 0 | 2 | 2 | Yes |
 | `CC[Li]` | `[Li]` | 1 | none | 1 (to C) | 2 (internal=1) | 2 | No (Li requires charge) |
 | `[O-]c1ccccc1` | `[O-]` | 6 | +1 (charge) | 1 (to c) | 8 | 8 | Yes |
+| `[CH]` | `[CH]` | 4 | +1 (H) | 0 | 5 | 8 | No |
 
 ## Huckel's Rule (Aromaticity Validation)
 
-Huckel's rule states that a planar, cyclic, fully conjugated molecule is aromatic if it contains **4n + 2 pi electrons**, where n is a non-negative integer (n = 0, 1, 2, ...). This gives valid pi electron counts of **2, 6, 10, 14, 18, ...** for aromatic systems.
+Huckel's rule states that a planar, cyclic, fully conjugated molecule is aromatic if it contains **4n + 2 pi electrons**, where n is a non-negative integer (n = 0, 1, 2, ...). This gives valid pi electron counts of **2, 6, 10, 14, 18, ...** for aromatic systems (2: cyclopropenyl cation; 6: benzene, pyridine, pyrrole; 10: naphthalene; 14: anthracene).
 
 ### How It Works
 
-After parsing the SMILES and building the molecular graph, the validator:
+After parsing the SMILES and building the molecular graph, `MolecularGraph.huckel()` (with `_count_pi_electrons()` per atom and `validate_fused_aromatic_system()` for fused systems):
 
 1. **Identifies all cycles** in the molecular graph.
 2. **Groups cycles into fused ring systems** — two cycles are fused if they share 2 or more atoms.
@@ -70,6 +76,7 @@ Each aromatic atom contributes pi electrons based on its type and bonding:
 | Sulfur (s) | Aromatic | 2 | Thiophene sulfur |
 | Boron (b) | Aromatic | 1 | Borole boron |
 | Phosphorus (p) | Aromatic | 1 | Phosphorine phosphorus |
+| Selenium (se), arsenic (as) | Aromatic | 2 | Selenophene selenium |
 
 ### Examples
 
@@ -78,6 +85,8 @@ Each aromatic atom contributes pi electrons based on its type and bonding:
 **Pyrrole** (`c1cc[nH]c1`): 4 aromatic carbons (4 pi e-) + 1 pyrrole nitrogen with H (2 pi e-) = **6 pi electrons**. Valid (n=1).
 
 **Cyclobutadiene** (hypothetical `c1ccc1`): 4 aromatic carbons = **4 pi electrons**. Check: 4n + 2 = 4 has no integer solution. Invalid (antiaromatic).
+
+**Five aromatic carbons** (`c1cccc1`): **5 pi electrons**, not of the form 4n + 2. Invalid.
 
 **Naphthalene** (`c1ccc2ccccc2c1`): Fused system with 2 rings. Each 6-membered ring individually has 6 pi electrons. At least one satisfies 4n + 2, so the fused system is valid.
 
@@ -108,3 +117,9 @@ Cycles detected?
                                   |
                                   No? --> Check total pi electrons
 ```
+
+## References
+
+- [Hückel's Rule - Wikipedia](https://en.wikipedia.org/wiki/H%C3%BCckel%27s_rule)
+- [Octet Rule - Wikipedia](https://en.wikipedia.org/wiki/Octet_rule)
+- [OpenSMILES Specification](http://opensmiles.org/opensmiles.html)

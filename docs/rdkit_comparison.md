@@ -7,15 +7,24 @@ claim than "agreement with RDKit". RDKit is a *reference point* in the
 comparisons below, not the ground truth; where its behaviour diverges from
 the spec, this validator follows the spec.
 
-The conformance claim is executable:
+The conformance claim is backed by example-based regression tests, run with
+`pytest` (the CI workflow only builds and deploys these docs):
 
 - `tests/conformance/test_opensmiles_gaps.py` — the measured gap table
   (every divergence found against the pre-conformance `main`), frozen as a
-  spec-tagged regression test.
-- `tests/conformance/test_differential.py` — a two-way differential test:
-  strings generated from the spec BNF must be accepted (*completeness*),
-  and mutated strings the parser accepts must be derivable from the spec
-  grammar (*soundness*). Both halves are seeded and run in CI.
+  spec-tagged regression test. Its spec-invalid rows must also be rejected
+  by the `ring_semantics` tier, not by the grammar.
+- `tests/syntax/test_ring_semantics.py` — the §3.4/§3.6 ring-closure rules
+  (self bonds, duplicate bonds, mismatched closure symbols, ring digits
+  after a branch, unclosed rings) and the closures that must stay accepted.
+- `tests/chem/test_vs_pysmiles.py` — malformed strings the grammar must
+  reject (leading or dangling bonds, unmatched parentheses, empty branches,
+  charge magnitude ≥ 15).
+
+These tests pin known cases. Nothing checks the accepted language against
+the spec BNF as a whole any more: the seeded differential fuzzer that did
+(a BNF string generator plus an independent reference acceptor) was removed
+in October 2026, in commit `3b7f83f`.
 
 ## Intentional disagreements with RDKit
 
@@ -39,17 +48,20 @@ These are not spec matters but validation-policy choices, documented in
   RDKit-equivalent behaviour with `backend="rdkit"`.
 - **cis/trans mark on a non-single bond**: `C=N\#N` is accepted (the mark is
   dropped with a warning); RDKit rejects it as two bonds in a row.
-- **Known deviations from the strict BNF** (listed with rationale in
-  `tests/conformance/spec_grammar.py` / `test_differential.py`): bare
-  single-letter elements outside the organic subset are accepted (E1),
-  multi-digit hcount (E2), wide charge digit runs below magnitude 15 (E3);
-  conversely, ring closures may not span a dot (`C1.C1` rejected, R1) and
-  charge magnitude ≥ 15 is rejected (R2).
+- **Known deviations from the strict BNF.** The grammar accepts a little
+  more than the spec: bare single-letter elements outside the organic
+  subset (`K`, `W`, `U`) and bare aromatic `se`/`as` (E1), a multi-digit
+  hcount such as `[UH12]` (E2; chemistry still applies, so `[CH12]` fails
+  on valence), and zero-padded charge digit runs below magnitude 15 such as
+  `[C+007]` (E3). It also rejects two spec-valid forms: ring closures may
+  not span a dot (`C1.C1`, R1), and charge magnitude ≥ 15 is out of range
+  (`[C+16]`, R2). Only R2 has a test (`tests/chem/test_vs_pysmiles.py`);
+  E1–E3 and R1 are current behaviour with no dedicated test.
 
 ## Historical benchmark notes
 
 On ZINC250k the validator accepts 100% (RDKit-canonical SMILES), so
 "agreement with RDKit" is saturated there by construction — which is why it
-is not the headline metric. The interesting, checkable property is that the
-accepted language provably matches the OpenSMILES grammar, which the
-differential tests above enforce.
+is not the headline metric. The property that matters is conformance to the
+OpenSMILES grammar, which the tests listed at the top of this page check on
+known cases.
