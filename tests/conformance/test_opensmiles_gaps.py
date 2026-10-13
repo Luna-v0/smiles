@@ -14,6 +14,13 @@ Two rows are *intentional disagreements with RDKit* and are marked as such:
   both ends must agree), accepted by RDKit (it lets one symbol win).
 
 The claim being made is conformance to OpenSMILES, not agreement with RDKit.
+
+``DOCUMENTED_DEVIATIONS`` is the other half: the divergences that are still
+open and documented in ``docs/rdkit_comparison.md`` ("Known deviations from
+the strict BNF").  E1-E3 are inputs the grammar accepts beyond the BNF; R1
+and R2 are spec-valid inputs it rejects.  Those rows pin *current* behaviour,
+not the spec verdict: if one fails, the deviation changed and the doc has to
+change with it.
 """
 
 import os
@@ -67,4 +74,52 @@ def test_spec_invalid_rows_reject_at_ring_semantics_tier():
         assert result.tier == "ring_semantics", (
             f"{smiles!r} ({section}) should reject at ring_semantics, "
             f"got {result.tier}"
+        )
+
+
+# (deviation, smiles, expected_tier, message_contains, note)
+# expected_tier None means the input validates.
+DOCUMENTED_DEVIATIONS = [
+    # -- E1: bare atoms the BNF only allows inside brackets -------------------
+    ("E1", "K", None, None, "bare element outside the organic subset"),
+    ("E1", "W", None, None, "bare element outside the organic subset"),
+    ("E1", "U", None, None, "bare element outside the organic subset"),
+    ("E1", "se", None, None, "bare aromatic se"),
+    ("E1", "as", None, None, "bare aromatic as"),
+    ("E1", "c1ccsec1", None, None, "bare aromatic se inside a ring"),
+    # -- E2: multi-digit hcount; chemistry still applies ----------------------
+    ("E2", "[UH12]", None, None, "multi-digit hcount"),
+    ("E2", "[CH12]", "chemistry", "valence", "parsed, then rejected on valence"),
+    # -- E3: zero-padded charge digit runs below magnitude 15 -----------------
+    ("E3", "[C+007]", None, None, "zero-padded charge"),
+    ("E3", "[C+014]", None, None, "zero-padded charge just below the bound"),
+    ("E3", "[C+0015]", "grammar", None, "the bound is on the value, not the digits"),
+    # -- R1: ring closures may not span a dot ---------------------------------
+    ("R1", "C1.C1", "grammar", None, "spec-valid ethane"),
+    ("R1", "C%10.C%10", "grammar", None, "spec-valid ethane, two-digit ring number"),
+    # -- R2: charge magnitude >= 15 is out of range ---------------------------
+    ("R2", "[C+15]", "grammar", None, "the spec requires accepting +15"),
+    ("R2", "[C-15]", "grammar", None, "the spec requires accepting -15"),
+    ("R2", "[C+16]", "grammar", None, "BNF-valid two-digit charge"),
+]
+
+
+@pytest.mark.parametrize(
+    "deviation,smiles,expected_tier,message_contains,note",
+    DOCUMENTED_DEVIATIONS,
+    ids=[f"{row[0]}-{row[1]}" for row in DOCUMENTED_DEVIATIONS],
+)
+def test_documented_deviation(deviation, smiles, expected_tier, message_contains, note):
+    result = validate_smiles_detailed(smiles)
+    expected = "valid" if expected_tier is None else f"invalid at {expected_tier}"
+    got = "valid" if result.valid else f"invalid at {result.tier}: {result.message}"
+    assert result.valid == (expected_tier is None) and result.tier == expected_tier, (
+        f"documented deviation {deviation} ({note}) says {smiles!r} is "
+        f"{expected}; validator said {got}. Update docs/rdkit_comparison.md "
+        "if the change is intended."
+    )
+    if message_contains is not None:
+        assert message_contains in result.message, (
+            f"{smiles!r} ({deviation}) should fail on {message_contains}, "
+            f"got: {result.message}"
         )

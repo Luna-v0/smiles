@@ -13,7 +13,9 @@ The conformance claim is backed by example-based regression tests, run with
 - `tests/conformance/test_opensmiles_gaps.py` — the measured gap table
   (every divergence found against the pre-conformance `main`), frozen as a
   spec-tagged regression test. Its spec-invalid rows must also be rejected
-  by the `ring_semantics` tier, not by the grammar.
+  by the `ring_semantics` tier, not by the grammar. Its
+  `DOCUMENTED_DEVIATIONS` table pins the deviations that are still open
+  (see [Unintentional / policy disagreements](#unintentional-policy-disagreements)).
 - `tests/syntax/test_ring_semantics.py` — the §3.4/§3.6 ring-closure rules
   (self bonds, duplicate bonds, mismatched closure symbols, ring digits
   after a branch, unclosed rings) and the closures that must stay accepted.
@@ -55,8 +57,10 @@ These are not spec matters but validation-policy choices, documented in
   on valence), and zero-padded charge digit runs below magnitude 15 such as
   `[C+007]` (E3). It also rejects two spec-valid forms: ring closures may
   not span a dot (`C1.C1`, R1), and charge magnitude ≥ 15 is out of range
-  (`[C+16]`, R2). Only R2 has a test (`tests/chem/test_vs_pysmiles.py`);
-  E1–E3 and R1 are current behaviour with no dedicated test.
+  (`[C+16]`, R2). Each of E1–E3, R1 and R2 is pinned by the
+  `DOCUMENTED_DEVIATIONS` table in `tests/conformance/test_opensmiles_gaps.py`,
+  which asserts the current behaviour above; R2 is also covered by
+  `tests/chem/test_vs_pysmiles.py`.
 
 ## Historical benchmark notes
 

@@ -1,9 +1,12 @@
 """Chemistry validator for SMILES molecules."""
 
-from typing import Tuple
+from typing import TYPE_CHECKING, List, Tuple
 
 from chem.structure import MolecularGraph
 from exceptions import ParserException
+
+if TYPE_CHECKING:
+    from chem.adapter import AtomDescriptor, BondDescriptor
 
 
 class ChemistryValidator:
@@ -42,7 +45,9 @@ class ChemistryValidator:
 
         return self.validate_descriptor(*to_descriptor(graph))
 
-    def validate_descriptor(self, atoms, bonds) -> Tuple[bool, ParserException | None]:
+    def validate_descriptor(
+        self, atoms: "List[AtomDescriptor]", bonds: "List[BondDescriptor]"
+    ) -> Tuple[bool, ParserException | None]:
         """Validate an ``(atoms, bonds)`` descriptor from ``chem.adapter``.
 
         Args:

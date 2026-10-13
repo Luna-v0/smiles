@@ -393,7 +393,7 @@ class ParserManager:
         """
         return value
 
-    def rnum(self, ring_number=-1, bond_type: Optional[str] = None) -> int:
+    def rnum(self, ring_number: int = -1, bond_type: Optional[str] = None) -> int:
         """
         Function to parse the 'rnum' rule.
         rnum -> digit | "%" digit digit
@@ -460,7 +460,9 @@ class ParserManager:
             # Clear the pending bond
             self.pending_branch_bond = None
 
-    def atom(self, symbol=None, **kwargs) -> Union[Atom, BracketAtom]:
+    def atom(
+        self, symbol: Optional[str] = None, **kwargs: BracketAtom
+    ) -> Union[Atom, BracketAtom]:
         """
         Function to parse the 'atom' rule.
         atom -> symbol | bracket_atom
