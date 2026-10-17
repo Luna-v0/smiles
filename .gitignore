@@ -7,3 +7,8 @@ GEMINI.md
 parser.out
 # resume cache of analyses/run_full_validation.py
 analyses/_validation_parts/
+# resume cache of analyses/feature_eval.py
+analyses/_feature_eval_parts/
+# large (22MB), fully reproducible via `feature_eval.py main`; the smaller
+# feature_eval_*.parquet caches stay tracked
+analyses/feature_eval_main.parquet
