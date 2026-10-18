@@ -164,6 +164,32 @@ def test_metal_complexes_are_exempt(smiles):
     assert result.repaired_smiles is None
 
 
+@pytest.mark.parametrize("smiles", [
+    "CC(=O)O[Hg]c1ccccc1",                      # bare ester O donor -> Hg
+    "N[Pt](N)(Cl)Cl",                            # bare amine N donor -> Pt (x2)
+    "O=[N+]([O-])O[Cd]O[N+](=O)[O-]",            # bare O donor -> Cd (x2)
+    "N#C[Fe-2](C#N)(C#N)(C#N)(C#N)N=O",          # nitrosyl N donor -> Fe
+    "O[Fe]=O.O[Fe]=O.[Fe]",                      # bare O donor -> Fe (x2)
+    "CCOC(=O)/C=C(\\C)O[Ti](O/C(C)=C/C(=O)OCC)(OC(C)C)OC(C)C",  # 4 bare O donors -> Ti
+])
+def test_bare_donor_atoms_bonded_to_metals_are_not_false_radicals(smiles):
+    """Regression (found during the real-dataset false-positive scan,
+    2026-10-17): an organic-subset (bracket-less) N/O donor bonded to a
+    d/f-block metal was wrongly flagged as open-shell. fill_valence (run by
+    _perceive, before this check ever sees the molecule) fills that donor's
+    implicit H by counting *every* bond at face value, including the one to
+    the metal -- but our own dative-bond convention excludes that same bond
+    from valence. Trusting fill_valence's hcount therefore understated the
+    atom's true total by exactly the (wrongly-counted) metal bond,
+    manufacturing an odd deficit out of nothing. open_shell_atoms now
+    recomputes an organic atom's implicit H itself, on top of the
+    dative-aware bond total, instead of trusting fill_valence for it."""
+    result = validate_smiles_detailed(smiles, closed_shell=True)
+    assert result.valid
+    assert result.warnings == []
+    assert result.repaired_smiles is None
+
+
 def test_main_group_metal_radical_is_still_flagged():
     # [Na] is a bare main-group atom (not d/f-block) with a genuine unpaired
     # 3s electron; valence_violations already documents it as "accepted
@@ -182,9 +208,12 @@ def test_main_group_metal_radical_is_still_flagged():
 # --------------------------------------------------------------------------- #
 
 @pytest.mark.parametrize("smiles", [
-    "[CH3]",         # methyl radical
-    "CN([O])C",      # nitroxide (aminoxyl radical)
-    "c1ccccc1[O]",   # phenoxyl radical
+    "[CH3]",                               # methyl radical
+    "CN([O])C",                            # nitroxide (aminoxyl radical)
+    "c1ccccc1[O]",                         # phenoxyl radical
+    "CC1(C)CC(=O)CC(C)(C)N1[O]",           # TEMPO -- a real tox21 spin-label record
+    "[N]=O",                               # nitric oxide -- a real clintox/sider record
+    "[As]", "[In]",                        # bare main-group atoms -- real sider records
 ])
 def test_genuine_radicals_warned_but_valid(smiles):
     result = validate_smiles_detailed(smiles, closed_shell=True)

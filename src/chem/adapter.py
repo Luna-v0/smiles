@@ -273,14 +273,26 @@ def open_shell_atoms(
     :func:`valence_violations` and never changes a verdict, it only tells the
     caller which atoms are radicals.
 
-    An atom's bond total (bonds + explicit H, aromaticity-aware, dative bonds
-    to d/f-block metals excluded — the same ``total`` :func:`_valence_limit`
+    An atom's bond total (bonds + H, aromaticity-aware, dative bonds to
+    d/f-block metals excluded — the same ``total`` :func:`_valence_limit`
     computes) is compared against its *ground-state* valence (``valence()[0]``
     from pysmiles — the lowest, unexcited value, the same one used as the
     ceiling for second-row atoms). A shortfall is a lone pair when it is even
     (the unfilled electrons can pair with each other, e.g. a singlet carbene)
     and a forced radical when it is odd (one electron has no partner to pair
     with). Only the odd case is reported.
+
+    An organic-subset (implicit-H) atom's H count is **not** taken from
+    ``fill_valence`` (run earlier, inside :func:`_perceive`): that helper sums
+    *every* bond at face value, including one to a d/f-block metal, which our
+    own dative-bond convention excludes from valence entirely. Trusting it
+    would false-positive every neutral N/O donor written bare and bonded to a
+    metal (``O[Hg]c1ccccc1``, ``N[Pt](N)(Cl)Cl``, a vitamin-B12-like cobalt
+    corrin ring, …) — confirmed empirically: it was most of the real-dataset
+    false positives found during this check's own validation. Implicit H is
+    instead filled the same way ``fill_valence`` does (smallest valence at or
+    above the bond total, from the same :func:`~pysmiles.smiles_helper.valence`
+    list), but on top of *our* dative-aware bond total.
 
     Exempt, matching :func:`valence_violations`: wildcard atoms, elements
     with no entry in the periodic table, free (disconnected) charged ions,
@@ -315,20 +327,26 @@ def open_shell_atoms(
             continue
         if _is_d_f_block(element):
             continue
-        try:
-            # Unlike valence_violations (over-valence only, where ignoring an
-            # organic atom's implicit H is a safe lower bound), the implicit
-            # H an organic atom was filled with here (fill_valence, inside
-            # _perceive) must be counted: it is what already closes that
-            # atom's shell, and skipping it would flag every ordinary
-            # organic-subset atom as a false radical.
-            total, _ = _valence_limit(mol, node, mol.nodes[node].get("hcount", 0))
-        except (ValueError, KeyError):
-            continue
         if PTE[element]["AtomicNumber"] - attrs.get("charge", 0) in _NOBLE_GAS_ELECTRONS:
             continue  # closed-shell ion: no valence to fill, never open-shell
         ground = valence(attrs)
         if not ground:
+            continue
+        try:
+            if "hcount" in atoms[node]:
+                # Bracket atom: hcount is explicit, fill_valence never
+                # touches it (respect_hcount=True) -- use it as written.
+                total, _ = _valence_limit(mol, node, mol.nodes[node].get("hcount", 0))
+            else:
+                # Organic-subset atom: recompute its implicit H ourselves
+                # (smallest valence at/above the bond total) on top of the
+                # dative-aware bond total, rather than trusting
+                # fill_valence's own (dative-blind) hcount -- see docstring.
+                bonds_only, _ = _valence_limit(mol, node, 0)
+                closing = [v for v in ground if v >= bonds_only] or ground[-1:]
+                implicit_h = max(0, closing[0] - bonds_only)
+                total = bonds_only + implicit_h
+        except (ValueError, KeyError):
             continue
         deficit = ground[0] - total
         if deficit > 0 and int(deficit) % 2 == 1:
