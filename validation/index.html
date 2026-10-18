@@ -1,0 +1,901 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../rdkit_comparison/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Validation - Smiles Validator</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chemical-validation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Smiles Validator" class="md-header__button md-logo" aria-label="Smiles Validator" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Smiles Validator
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Validation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Smiles Validator" class="md-nav__button md-logo" aria-label="Smiles Validator" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Smiles Validator
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Validation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#valence-policy-decided-permissive-octet-bound-for-row-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Valence policy (decided: permissive, octet-bound for row 2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repairs-body-ph-and-salts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repairs, body pH and salts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#closed-shell-check-opt-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Closed-shell check (opt-in)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cistrans-marks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cis/trans marks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#legacy-validator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legacy validator
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../rdkit_comparison/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OpenSMILES Conformance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/validator/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Syntax
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/chem/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chem
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../validation_algorithms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Legacy Algorithms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#valence-policy-decided-permissive-octet-bound-for-row-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Valence policy (decided: permissive, octet-bound for row 2)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#repairs-body-ph-and-salts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repairs, body pH and salts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#closed-shell-check-opt-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Closed-shell check (opt-in)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cistrans-marks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        cis/trans marks
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#legacy-validator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Legacy validator
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="chemical-validation">Chemical Validation</h1>
+<p>This document describes the chemistry validation algorithms used by the SMILES parser to ensure molecular structures are chemically valid.</p>
+<h2 id="valence-policy-decided-permissive-octet-bound-for-row-2">Valence policy (decided: permissive, octet-bound for row 2)</h2>
+<p>The default chemistry backend (<code>ChemistryValidator(backend="pysmiles")</code>) is
+<strong>deliberately permissive</strong>: it accepts radicals and the expanded-octet /
+hypervalent species of period 3 and below — e.g. sulfate, <code>[SH6]</code>,
+<code>F[P-](F)(F)(F)(F)F</code> — and rejects only physically impossible <em>over</em>-valence.
+This is a considered choice, not an omission:</p>
+<ul>
+<li>OpenSMILES itself does not mandate a valence model; valence checking is a
+  policy layered on top of the language.</li>
+<li>Generative-model output (the primary use case) legitimately contains
+  radicals and hypervalent species that RDKit's default sanitizer rejects.</li>
+</ul>
+<p>What counts as "impossible" (<code>chem/adapter.py</code>, <code>valence_violations</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Rule</th>
+<th>Example rejected</th>
+<th>Example accepted</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Second-row atoms (B, C, N, O, F) cannot expand their octet: only the lowest valence of the isoelectronic element (N 3, N⁺ 4, O 2, O⁻ 1)</td>
+<td><code>N(C)(C)(C)C</code>, <code>[NH4]C</code>, <code>[OH3]C</code>, <code>C(N)=[NH2]</code></td>
+<td><code>[NH4+]</code>, <code>[NH2+]=C(N)N</code></td>
+</tr>
+<tr>
+<td>…except the conventional neutral pentavalent-N shorthands (RDKit charge-separates them)</td>
+<td>—</td>
+<td><code>CN(=O)=O</code>, <code>c1ccn(=O)cc1</code>, <code>C=N#N</code>, <code>N=N#N</code></td>
+</tr>
+<tr>
+<td>A closed-shell ion cannot bond</td>
+<td><code>[Cl-]C</code>, <code>[F-][B+3]…</code></td>
+<td><code>[Na+].[Cl-]</code></td>
+</tr>
+<tr>
+<td>d/f-block metals get no valence limit; a neutral N/O bonded to one is a dative donor</td>
+<td><code>[NH4][Pt]…</code></td>
+<td><code>[NH3][Pt]([NH3])(Cl)Cl</code>, <code>Cl[Pt-2](Cl)(Cl)Cl</code></td>
+</tr>
+<tr>
+<td>Main-group atoms of period 3+ use pysmiles' electron-count maximum</td>
+<td><code>O[AlH3](O)O</code></td>
+<td><code>O=S(=O)(O)O</code></td>
+</tr>
+</tbody>
+</table>
+<p>Until October 2026 neutral 4-valent N (<code>N(C)(C)(C)C</code>) and <code>[OH4]</code> were
+accepted as "hypervalent".  Second-row atoms have no d orbitals to expand
+into, and public datasets showed these strings are always a missing charge
+or an extra hydrogen, so they are now rejected — with a repair suggestion.</p>
+<h2 id="repairs-body-ph-and-salts">Repairs, body pH and salts</h2>
+<p>A chemistry failure comes with a repair when changing one atom fixes it
+(<code>chem/repair.py</code>): drop hydrogens (<code>[AlH3]</code> → <code>[Al]</code>), add a charge
+(<code>O=N([O-])C</code> → <code>O=[N+]([O-])C</code>), or move a bonded ion's charge onto its
+partner (<code>[Cl-][Pt]</code> → <code>Cl[Pt-]</code>).  Only the edited atoms are rewritten, so
+stereo and atom order are kept; <code>ValidationResult.repaired_smiles</code> holds the
+result and <code>repairs</code> one explanation per atom.</p>
+<p>When a nitrogen can be fixed either way (<code>=[NH2]</code> → <code>=[NH2+]</code> or <code>=[NH]</code>),
+<code>physiological_ph=True</code> (default) picks its protonation state at pH 7.4 from a
+small pKa table (<code>PKA_TABLE</code>: guanidines and amidines protonated, N-cyano
+guanidines neutral, …).  With it off, the written charge is kept.</p>
+<p><code>remove_salts=True</code> (default) splits multi-component input into
+<code>parent_smiles</code> (most heavy atoms) and <code>removed_fragments</code>.  Every component
+is still validated: a broken counter-ion makes the record invalid and is named
+in <code>failed_fragment</code>, so salt removal never hides a data error.  Because the
+repair is computed over the <em>whole</em> molecule rather than per fragment, a
+multi-component record can have both <code>failed_fragment</code> and <code>repaired_smiles</code>
+set at once: <code>repaired_smiles</code> is the full repaired input (every component,
+not just the one that failed), and <code>failed_fragment</code> still names which
+original component made the record invalid as written.</p>
+<h2 id="closed-shell-check-opt-in">Closed-shell check (opt-in)</h2>
+<p><code>closed_shell=True</code> (default off) adds a second, independent check that
+never touches <code>valid</code>: it warns about every atom left with an odd number of
+unpaired electrons — an open shell, i.e. a radical — and, when the molecule
+is otherwise chemistry-valid, suggests the edit that closes it.</p>
+<p>This fills a real gap in the permissive valence policy above: that policy
+only rejects <em>over</em>-valence, so a <strong>missing hydrogen or a missing negative
+charge</strong> — which move an atom to <em>under</em>-valence — pass through silently
+today (confirmed on the known-answer corruption test:
+<code>analyses/feature_eval.py corrupt</code>, ~1% detected before this option, close to
+100% with it on; see the 2026-10-17 report). <code>closed_shell</code> is how a caller
+who cares about that gap opts into catching it, without changing what the
+validator accepts by default.</p>
+<ul>
+<li><strong>Warning</strong>: one line per open-shell atom in <code>ValidationResult.warnings</code>,
+  e.g. <code>"O (atom 3) is open-shell: 1 unpaired electron (a radical; accepted
+  under the permissive valence policy)"</code>.</li>
+<li><strong>Repair</strong>: when the molecule is otherwise valid, <code>repaired_smiles</code> and
+  <code>repairs</code> hold the shell-closing edit — add the missing hydrogen(s), or add
+  a matching negative charge. <code>physiological_ph</code> (the same flag the nitrogen
+  repair above uses) picks between them for an open-shell oxygen, by a small
+  pKa table of its own (<code>chem/repair.py: O_PKA_TABLE</code>): carboxylate and
+  nitro/nitroso O are deprotonated (so a negative charge is added) at pH 7.4,
+  phenolic and aliphatic-alcohol O are protonated (so a hydrogen is added) —
+  the same reasoning <code>PKA_TABLE</code> already applies to nitrogen. For every other
+  element, or with <code>physiological_ph=False</code>, a hydrogen is preferred when one
+  closes the shell. If the molecule is invalid for an unrelated reason (a
+  real over-valence failure elsewhere), the warning is still reported but no
+  closed-shell repair is suggested — <code>repaired_smiles</code> keeps meaning "this
+  makes the whole molecule valid," not a mix of two unrelated fixes.</li>
+<li><strong>Never flags</strong>: a <em>lone pair</em> is not a radical. An atom's shortfall
+  against its ground-state valence only forces an unpaired electron when
+  that shortfall is odd (one electron with no partner); an even shortfall
+  (e.g. a singlet carbene) can pair up on its own and is not reported — the
+  simple electron-count model used here cannot tell that apart from a
+  triplet biradical, and guessing would be worse than saying nothing.</li>
+<li><strong>Exempt</strong>, matching the valence policy: d/f-block metals (no simple
+  valence model applies), wildcard atoms, free (disconnected) ions, and
+  closed-shell ions. Aromatic rings are handled correctly — the same
+  aromaticity perception and pi-bond accounting the valence policy uses
+  means a normal aromatic ring never reports a false radical. A main-group
+  metal with a genuine unpaired electron (e.g. bare <code>[Na]</code>) is <em>not</em> exempt:
+  it is already accepted today as a radical under the permissive policy, and
+  this check names that same radical.</li>
+<li><strong>Explicit radical notation</strong> (<code>[CH3]</code>, nitroxide <code>R2N[O]</code>, …) is reported
+  as a warning, never an error — it already validates today and keeps doing
+  so; <code>closed_shell</code> only makes the radical visible.</li>
+</ul>
+<h2 id="cistrans-marks">cis/trans marks</h2>
+<p><code>/</code> and <code>\</code> mark cis/trans direction.  OpenSMILES spells them as directional
+<em>single</em> bonds, so <code>C=N\#N</code> is two bonds in a row and a syntax error there.
+This validator treats the mark as an annotation instead: written in front of
+another bond symbol it is accepted, ignored (a double or triple bond carries
+no cis/trans direction of its own) and reported in
+<code>ValidationResult.warnings</code>.</p>
+<p>Callers who want RDKit-equivalent strictness can opt in with
+<code>ChemistryValidator(backend="rdkit")</code> /
+<code>validate_smiles_detailed(mol, backend="rdkit")</code>.</p>
+<p>Note that <code>C11</code> — which the pysmiles backend used to wave through — is now
+rejected <em>before</em> chemistry, by the ring-semantics tier (OpenSMILES §3.4:
+an atom cannot close a ring onto itself). Ring-closure rules are language
+semantics, not valence policy.</p>
+<h2 id="pipeline">Pipeline</h2>
+<p><code>validate_smiles_detailed</code> runs four tiers in order (<code>validate_smiles</code> wraps
+it and returns the <code>(is_valid, exception)</code> tuple). The first tier that
+rejects is reported in <code>ValidationResult.tier</code>:</p>
+<ol>
+<li><strong><code>lex</code></strong>: the SLY lexer tokenises the string.</li>
+<li><strong><code>grammar</code></strong>: the LALR(1) parser checks OpenSMILES syntax.</li>
+<li><strong><code>ring_semantics</code></strong>: <code>ParserManager</code> enforces the ring-closure rules of
+   OpenSMILES §3.4/§3.6 while it builds the molecular graph.</li>
+<li><strong><code>chemistry</code></strong>: <code>chem.adapter.to_descriptor</code> turns the graph into a
+   backend-neutral atom and bond list, and <code>ChemistryValidator</code> hands it to
+   the chosen backend. The backend never sees the SMILES string.<ul>
+<li><code>pysmiles</code> (default): aromaticity perception and kekulization
+  (<code>correct_aromatic_rings(strict=True)</code>, which fails on a region marked
+  aromatic that cannot be kekulized), hydrogen filling, then the valence
+  policy above (<code>valence_violations</code>).</li>
+<li><code>rdkit</code>: <code>Chem.SanitizeMol</code> on a molecule built atom by atom.</li>
+</ul>
+</li>
+</ol>
+<p>After the chemistry tier, a failure gets a repair suggestion and a
+multi-component input is split into parent and counter-ions, as described
+above. cis/trans warnings are collected for every input that parses.</p>
+<h2 id="legacy-validator">Legacy validator</h2>
+<p>Until October 2026 a hand-written validator applied the octet rule to
+acyclic bracket atoms and Hückel's 4n+2 rule to aromatic cycles. That code
+has been removed; its algorithms are kept for reference on
+<a href="../validation_algorithms/">Legacy Validation Algorithms</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": [], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
