@@ -27,6 +27,7 @@ from chem.adapter import (
     AtomDescriptor,
     BondDescriptor,
     _NOBLE_GAS_ELECTRONS,
+    open_shell_atoms,
     valence_violations,
 )
 
@@ -216,6 +217,62 @@ def protonated_at_ph(atoms, bonds, n: int, ph: float = PHYSIOLOGICAL_PH) -> Tupl
     return pka > ph, f"{kind}, pKa ≈ {pka:g}: {state} at pH {ph:g}"
 
 
+#: Approximate pKa of the conjugate acid (R-O-H) of each oxygen class the
+#: closed-shell repair can meet.  An oxygen whose class pKa is below
+#: :data:`PHYSIOLOGICAL_PH` is deprotonated (anionic) in the body.
+O_PKA_TABLE: Dict[str, float] = {
+    "nitro/nitroso O": -11.0,
+    "sulfonate/phosphate O": -2.0,
+    "carboxylate O": 4.2,
+    "phenolic O": 10.0,
+    "aliphatic alcohol O": 16.0,
+}
+
+
+def _has_withdrawing_double_bond(atoms, bonds, centre: int, exclude: int) -> bool:
+    """Whether ``centre`` carries a C=O/N=O/S=O double bond other than ``exclude``."""
+    for other, order in _neighbours(bonds, centre):
+        if other == exclude:
+            continue
+        if order == 2 and atoms[other]["element"] in ("O", "N"):
+            return True
+    return False
+
+
+def oxygen_class(atoms, bonds, n: int) -> str:
+    """Classify an open-shell oxygen into an :data:`O_PKA_TABLE` row.
+
+    Looks only at the one atom ``n`` is bonded to (an open-shell O has at
+    most one bond — a second bond, or a double bond, already closes its
+    shell): carboxylate/sulfonate/nitro-type O when that neighbour carries
+    another O=/N= double bond, phenolic O when it is aromatic, and a plain
+    aliphatic alcohol O otherwise.
+    """
+    neighbours = _neighbours(bonds, n)
+    if not neighbours:
+        return "aliphatic alcohol O"
+    via, _ = neighbours[0]
+    via_element = atoms[via]["element"]
+    withdrawing = _has_withdrawing_double_bond(atoms, bonds, via, n)
+    if via_element in ("S", "P") and withdrawing:
+        return "sulfonate/phosphate O"
+    if via_element == "N" and withdrawing:
+        return "nitro/nitroso O"
+    if via_element == "C" and withdrawing:
+        return "carboxylate O"
+    if atoms[via]["aromatic"]:
+        return "phenolic O"
+    return "aliphatic alcohol O"
+
+
+def protonated_oxygen_at_ph(atoms, bonds, n: int, ph: float = PHYSIOLOGICAL_PH) -> Tuple[bool, str]:
+    """Return ``(is_protonated, explanation)`` for open-shell oxygen ``n`` at ``ph``."""
+    kind = oxygen_class(atoms, bonds, n)
+    pka = O_PKA_TABLE[kind]
+    state = "protonated" if pka > ph else "deprotonated"
+    return pka > ph, f"{kind}, pKa ≈ {pka:g}: {state} at pH {ph:g}"
+
+
 # --------------------------------------------------------------------------- #
 # Repair search
 # --------------------------------------------------------------------------- #
@@ -322,6 +379,102 @@ def suggest_repair(
 
     try:
         if valence_violations(work, bonds):
+            return None
+    except Exception:  # noqa: BLE001
+        return None
+
+    return Repair(smiles=_apply(smiles, atoms, work, bonds, changed), edits=edits)
+
+
+def _atom_closed(atoms, bonds, n: int) -> bool:
+    """Whether atom ``n`` is neither over-valent nor open-shell."""
+    try:
+        if any(node == n for node, _ in valence_violations(atoms, bonds)):
+            return False
+        return not any(node == n for node, _ in open_shell_atoms(atoms, bonds))
+    except Exception:  # noqa: BLE001 - kekulization failure: not a fix
+        return False
+
+
+def suggest_closed_shell_repair(
+    smiles: str,
+    atoms: List[AtomDescriptor],
+    bonds: List[BondDescriptor],
+    physiological_ph: bool = True,
+) -> Optional[Repair]:
+    """Find the smallest per-atom edit that closes every open shell.
+
+    The opt-in closed-shell check's repair (see ``docs/validation.md``,
+    "Closed-shell check"): for each atom :func:`open_shell_atoms` flags,
+    tries adding the missing hydrogen(s) or a matching negative charge, and
+    rewrites only the atoms it can close. Unlike :func:`suggest_repair`, the
+    molecule this is called on is not invalid — the caller decides whether to
+    surface the result as a verdict-changing repair (it never should) or as
+    an accompanying suggestion for a warning.
+
+    Args:
+        smiles: The original SMILES (edits are applied to this string).
+        atoms: Atom descriptors from ``to_descriptor``.
+        bonds: Bond descriptors from ``to_descriptor``.
+        physiological_ph: For an open-shell oxygen that can be closed either
+            way, choose by its protonation state at pH 7.4 (carboxylate and
+            nitro/nitroso O prefer a negative charge, phenolic and aliphatic
+            alcohol O prefer a hydrogen). With it off, or for any other
+            element, a hydrogen is preferred when one closes the shell.
+
+    Returns:
+        A :class:`Repair`, or ``None`` when no atom is open-shell, the
+        failure is not a valence problem (e.g. an unkekulizable aromatic
+        ring), or at least one flagged atom has no single-atom fix.
+    """
+    try:
+        flagged = open_shell_atoms(atoms, bonds)
+    except Exception:  # noqa: BLE001 - aromaticity failure: no repair here either
+        return None
+    if not flagged:
+        return None
+
+    work = copy.deepcopy(atoms)
+    edits: List[str] = []
+    changed = set()
+
+    for n, deficit in flagged:
+        candidates: List[Tuple[str, AtomDescriptor]] = []
+
+        trial = copy.deepcopy(work)
+        trial[n]["hcount"] = trial[n].get("hcount", 0) + deficit
+        if _atom_closed(trial, bonds, n):
+            candidates.append((f"added {deficit} H" if deficit > 1 else "added 1 H", trial[n]))
+
+        trial = copy.deepcopy(work)
+        trial[n]["charge"] = trial[n].get("charge", 0) - deficit
+        if _atom_closed(trial, bonds, n):
+            candidates.append((f"set charge {trial[n]['charge']:+d}", trial[n]))
+
+        if not candidates:
+            return None
+        choice = candidates[0]
+        h_options = [c for c in candidates if c[0].startswith("added")]
+        charge_options = [c for c in candidates if c[0].startswith("set charge")]
+        note = ""
+        if charge_options and h_options:
+            if physiological_ph and work[n]["element"] == "O":
+                protonated, why = protonated_oxygen_at_ph(work, bonds, n)
+                choice = h_options[0] if protonated else charge_options[0]
+                note = f" ({why})"
+            else:
+                choice = h_options[0]
+                note = f" (alternative: {charge_options[0][0]})"
+        work[n] = choice[1]
+        changed.add(n)
+        plural = "s" if deficit != 1 else ""
+        edits.append(
+            f"{_label(work, n)}: open-shell ({deficit} unpaired electron{plural}); "
+            f"{choice[0]}{note}"
+        )
+
+    try:
+        if open_shell_atoms(work, bonds) or valence_violations(work, bonds):
             return None
     except Exception:  # noqa: BLE001
         return None

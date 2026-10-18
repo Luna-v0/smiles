@@ -12,3 +12,6 @@ analyses/_feature_eval_parts/
 # large (22MB), fully reproducible via `feature_eval.py main`; the smaller
 # feature_eval_*.parquet caches stay tracked
 analyses/feature_eval_main.parquet
+# large (15.5MB, one row per real-dataset record), fully reproducible via
+# `feature_eval.py closed_shell_fp`
+analyses/feature_eval_closed_shell_fp.parquet

@@ -651,13 +651,143 @@ def run_corrupt(target_n=3500, procs: int = MAX_PROCS):
 
 
 # --------------------------------------------------------------------------- #
+# Stage: closed_shell=True re-run of the known-answer corruption test
+#
+# Uses the identical seeded pools/jobs as run_corrupt (same SEED,
+# pick_corruption_targets, build_corruption): only the validation call
+# differs. "Detected" now also counts an open-shell *warning*, not just
+# valid=False -- this check never changes `valid` by design, so a
+# remove_H/strip_negative corruption that the chemistry tier still accepts
+# can still be *caught* as a warning. run_corrupt's own output is untouched.
+# --------------------------------------------------------------------------- #
+
+def _corrupt_closed_shell_one(args):
+    pool_name, dataset, smiles, kind, seed = args
+    from src.validation import validate_smiles_detailed
+    from chem.adapter import to_descriptor
+
+    rng = random.Random(seed)
+    out = {"pool": pool_name, "dataset": dataset, "original_smiles": smiles, "kind": kind,
+           "corrupted_smiles": None, "detected": None, "warned": None, "repaired": None,
+           "exact_recovery_literal": None, "orig_charge_sign": None, "error": ""}
+    try:
+        from src.validation import _parse
+        graph, failure = _parse(smiles)
+        if failure is not None:
+            out["error"] = "original did not parse"
+            return out
+        atoms, bonds = to_descriptor(graph)
+        targets = pick_corruption_targets(smiles, atoms, bonds, rng)
+        if kind not in targets:
+            out["error"] = "no eligible atom"
+            return out
+        n = targets[kind]
+        if kind == "strip_charge":
+            c = atoms[n].get("charge", 0)
+            out["orig_charge_sign"] = "positive" if c > 0 else ("negative" if c < 0 else "zero")
+        corrupted = build_corruption(smiles, atoms, bonds, kind, n)
+        out["corrupted_smiles"] = corrupted
+    except Exception as exc:
+        out["error"] = f"corruption build failed: {exc}"
+        return out
+
+    try:
+        r = validate_smiles_detailed(corrupted, physiological_ph=True, closed_shell=True)
+    except Exception as exc:
+        out["error"] = f"validate crashed: {exc}"
+        return out
+    out["warned"] = any("open-shell" in w for w in r.warnings)
+    out["detected"] = (not r.valid) or out["warned"]
+    if not out["detected"]:
+        return out
+    out["repaired"] = r.repaired_smiles is not None
+    if not out["repaired"]:
+        return out
+
+    orig_canon = rdkit_canonical(smiles)
+    rep_canon = rdkit_canonical(r.repaired_smiles)
+    out["exact_recovery_literal"] = (
+        orig_canon is not None and rep_canon is not None and orig_canon == rep_canon
+    )
+    return out
+
+
+def run_corrupt_closed_shell(target_n=3500, procs: int = MAX_PROCS):
+    charged_pool, neutral_pool = build_corruption_pools(target_n)
+    print(f"[corrupt_closed_shell] charged pool={len(charged_pool)}  "
+          f"neutral pool={len(neutral_pool)}", flush=True)
+
+    jobs = []
+    for i, (name, smi) in enumerate(charged_pool):
+        for kind in ("strip_charge", "add_H", "remove_H"):
+            jobs.append(("charged", name, smi, kind, SEED * 1_000_003 + i))
+    for i, (name, smi) in enumerate(neutral_pool):
+        for kind in ("add_H", "remove_H"):
+            jobs.append(("neutral", name, smi, kind, SEED * 7_000_033 + i))
+
+    ctx = get_context("fork")
+    with ctx.Pool(procs, initializer=_niceify, maxtasksperchild=2000) as pool:
+        rows = pool.map(_corrupt_closed_shell_one, jobs, chunksize=50)
+    out = pd.DataFrame(rows)
+    out_path = os.path.join(_REPO, "analyses", "feature_eval_corruption_closed_shell.parquet")
+    out.to_parquet(out_path, index=False)
+    print(f"wrote {out_path} ({len(out)} rows)", flush=True)
+
+
+# --------------------------------------------------------------------------- #
+# Stage: closed_shell=True false-positive scan of the real datasets
+#
+# Every one of these records is already known-valid, curated, closed-shell
+# chemistry; any open-shell warning closed_shell=True raises here is a false
+# positive by construction. Separate from `main`'s own output/cache.
+# --------------------------------------------------------------------------- #
+
+def _closed_shell_fp_one(args):
+    dataset, smiles = args
+    from src.validation import validate_smiles_detailed
+    try:
+        r = validate_smiles_detailed(smiles, closed_shell=True)
+        warned = any("open-shell" in w for w in r.warnings)
+        return {
+            "dataset": dataset, "smiles": smiles, "valid": bool(r.valid),
+            "warned": warned, "n_warnings": len(r.warnings),
+            "repaired_smiles": r.repaired_smiles or "", "error": "",
+        }
+    except Exception as exc:  # noqa: BLE001 - never let a worker die
+        return {
+            "dataset": dataset, "smiles": smiles, "valid": False,
+            "warned": False, "n_warnings": 0, "repaired_smiles": "",
+            "error": f"{type(exc).__name__}: {exc}",
+        }
+
+
+def run_closed_shell_fp(procs: int = MAX_PROCS):
+    rows = []
+    ctx = get_context("fork")
+    for name in REAL_DATASETS:
+        smiles_list = load_dataset(name)
+        t0 = time.time()
+        with ctx.Pool(procs, initializer=_niceify, maxtasksperchild=2000) as pool:
+            part = pool.map(_closed_shell_fp_one, [(name, s) for s in smiles_list], chunksize=200)
+        rows.extend(part)
+        n_warned = sum(r["warned"] for r in part)
+        print(f"[closed_shell_fp] {name}: {len(smiles_list):,} records, "
+              f"{n_warned} warned, in {time.time()-t0:.0f}s", flush=True)
+    out = pd.DataFrame(rows)
+    out_path = os.path.join(_REPO, "analyses", "feature_eval_closed_shell_fp.parquet")
+    out.to_parquet(out_path, index=False)
+    print(f"wrote {out_path} ({len(out):,} rows); total warned={out['warned'].sum()}", flush=True)
+
+
+# --------------------------------------------------------------------------- #
 # CLI
 # --------------------------------------------------------------------------- #
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("stage", choices=[
-        "main", "labelled", "ph_subset", "salts_sample", "salts_agree", "corrupt", "all",
+        "main", "labelled", "ph_subset", "salts_sample", "salts_agree", "corrupt",
+        "corrupt_closed_shell", "closed_shell_fp", "all",
     ])
     ap.add_argument("--procs", type=int, default=MAX_PROCS)
     ap.add_argument("--corrupt-n", type=int, default=3500)
@@ -672,6 +802,8 @@ def main():
         "salts_sample": lambda: run_salts_sample(args.salts_sample_n, args.procs),
         "salts_agree": lambda: run_salts_agree(args.procs),
         "corrupt": lambda: run_corrupt(args.corrupt_n, args.procs),
+        "corrupt_closed_shell": lambda: run_corrupt_closed_shell(args.corrupt_n, args.procs),
+        "closed_shell_fp": lambda: run_closed_shell_fp(args.procs),
     }
     if args.stage == "all":
         for name in ["main", "labelled", "ph_subset", "salts_sample", "salts_agree", "corrupt"]:
