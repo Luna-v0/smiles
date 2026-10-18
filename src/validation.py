@@ -48,10 +48,13 @@ class ValidationResult:
         error: Underlying exception for the legacy tuple contract
             (``None`` when valid).
         warnings: Notes on accepted-but-irregular input (e.g. a cis/trans
-            mark written on a double bond and dropped).
+            mark written on a double bond and dropped, or — with
+            ``closed_shell=True`` — an atom left open-shell).
         repaired_smiles: For a chemistry failure, the input with only the
             broken atoms rewritten so that it validates (``None`` when no
-            unambiguous repair exists).
+            unambiguous repair exists). With ``closed_shell=True`` on an
+            otherwise-valid molecule, holds the shell-closing repair instead
+            (still never changes ``valid``).
         repairs: One line per edited atom, explaining the repair.
         failed_fragment: With ``remove_salts``, the component that failed
             (``None`` when valid or single-component).
@@ -167,12 +170,22 @@ def _chemistry_message(exc: Exception | None) -> str:
     return exc.message if isinstance(exc, ParserException) else str(exc)
 
 
+def _closed_shell_warning(atoms, n: int, deficit: int) -> str:
+    element = atoms[n]["element"]
+    plural = "s" if deficit != 1 else ""
+    return (
+        f"{element} (atom {n}) is open-shell: {deficit} unpaired electron{plural} "
+        "(a radical; accepted under the permissive valence policy)"
+    )
+
+
 def validate_smiles_detailed(
     mol: str,
     backend: str = "pysmiles",
     *,
     physiological_ph: bool = True,
     remove_salts: bool = True,
+    closed_shell: bool = False,
 ) -> ValidationResult:
     """Validate a SMILES string, reporting the failing tier on rejection.
 
@@ -190,6 +203,15 @@ def validate_smiles_detailed(
         remove_salts: Report the parent molecule and the removed counter-ions
             of a multi-component input, and name the component that failed.
             Every component is still validated.
+        closed_shell: Opt-in closed-shell check (default off; off is
+            byte-identical to this option not existing). When on, every atom
+            left with an odd number of unpaired electrons — a radical — gets
+            a warning in ``warnings``, plus, when the molecule is otherwise
+            valid, a repair suggestion in ``repaired_smiles``/``repairs``
+            (add the missing H, or add a negative charge, picked the same
+            way ``physiological_ph`` picks for nitrogen). This **never**
+            changes ``valid``: the permissive policy accepts radicals by
+            design (see docs/validation.md, "Closed-shell check").
 
     Returns:
         A :class:`ValidationResult`; truthy iff the molecule is valid.
@@ -198,9 +220,9 @@ def validate_smiles_detailed(
         TypeError: If ``mol`` is not a string.
         ImportError: If the chemistry backend is not installed.
     """
-    from chem.adapter import to_descriptor
+    from chem.adapter import open_shell_atoms, to_descriptor
     from chem.fragments import parent_index, split_fragments
-    from chem.repair import suggest_repair
+    from chem.repair import suggest_closed_shell_repair, suggest_repair
 
     graph, failure = _parse(mol)
     if failure is not None:
@@ -249,6 +271,26 @@ def validate_smiles_detailed(
         parent = parent_index(fragments)
         result.parent_smiles = fragments[parent].smiles
         result.removed_fragments = [f.smiles for k, f in enumerate(fragments) if k != parent]
+
+    if closed_shell:
+        try:
+            flagged = open_shell_atoms(atoms, bonds)
+        except Exception:  # noqa: BLE001 - aromaticity failure: nothing to add here
+            flagged = []
+        for n, deficit in flagged:
+            result.warnings.append(_closed_shell_warning(atoms, n, deficit))
+        if flagged and is_valid:
+            # Only suggest a shell-closing repair when the molecule is
+            # otherwise chemistry-valid: if it already failed for an
+            # unrelated reason, repaired_smiles must keep meaning "this makes
+            # the whole molecule valid", not conflate two unrelated fixes.
+            closed_repair = suggest_closed_shell_repair(
+                smiles, atoms, bonds, physiological_ph=physiological_ph
+            )
+            if closed_repair is not None:
+                result.repaired_smiles = closed_repair.smiles
+                result.repairs = closed_repair.edits
+
     return result
 
 

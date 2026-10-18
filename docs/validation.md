@@ -47,7 +47,62 @@ guanidines neutral, …).  With it off, the written charge is kept.
 `remove_salts=True` (default) splits multi-component input into
 `parent_smiles` (most heavy atoms) and `removed_fragments`.  Every component
 is still validated: a broken counter-ion makes the record invalid and is named
-in `failed_fragment`, so salt removal never hides a data error.
+in `failed_fragment`, so salt removal never hides a data error.  Because the
+repair is computed over the *whole* molecule rather than per fragment, a
+multi-component record can have both `failed_fragment` and `repaired_smiles`
+set at once: `repaired_smiles` is the full repaired input (every component,
+not just the one that failed), and `failed_fragment` still names which
+original component made the record invalid as written.
+
+## Closed-shell check (opt-in)
+
+`closed_shell=True` (default off) adds a second, independent check that
+never touches `valid`: it warns about every atom left with an odd number of
+unpaired electrons — an open shell, i.e. a radical — and, when the molecule
+is otherwise chemistry-valid, suggests the edit that closes it.
+
+This fills a real gap in the permissive valence policy above: that policy
+only rejects *over*-valence, so a **missing hydrogen or a missing negative
+charge** — which move an atom to *under*-valence — pass through silently
+today (confirmed on the known-answer corruption test:
+`analyses/feature_eval.py corrupt`, ~1% detected before this option, close to
+100% with it on; see the 2026-10-17 report). `closed_shell` is how a caller
+who cares about that gap opts into catching it, without changing what the
+validator accepts by default.
+
+- **Warning**: one line per open-shell atom in `ValidationResult.warnings`,
+  e.g. `"O (atom 3) is open-shell: 1 unpaired electron (a radical; accepted
+  under the permissive valence policy)"`.
+- **Repair**: when the molecule is otherwise valid, `repaired_smiles` and
+  `repairs` hold the shell-closing edit — add the missing hydrogen(s), or add
+  a matching negative charge. `physiological_ph` (the same flag the nitrogen
+  repair above uses) picks between them for an open-shell oxygen, by a small
+  pKa table of its own (`chem/repair.py: O_PKA_TABLE`): carboxylate and
+  nitro/nitroso O are deprotonated (so a negative charge is added) at pH 7.4,
+  phenolic and aliphatic-alcohol O are protonated (so a hydrogen is added) —
+  the same reasoning `PKA_TABLE` already applies to nitrogen. For every other
+  element, or with `physiological_ph=False`, a hydrogen is preferred when one
+  closes the shell. If the molecule is invalid for an unrelated reason (a
+  real over-valence failure elsewhere), the warning is still reported but no
+  closed-shell repair is suggested — `repaired_smiles` keeps meaning "this
+  makes the whole molecule valid," not a mix of two unrelated fixes.
+- **Never flags**: a *lone pair* is not a radical. An atom's shortfall
+  against its ground-state valence only forces an unpaired electron when
+  that shortfall is odd (one electron with no partner); an even shortfall
+  (e.g. a singlet carbene) can pair up on its own and is not reported — the
+  simple electron-count model used here cannot tell that apart from a
+  triplet biradical, and guessing would be worse than saying nothing.
+- **Exempt**, matching the valence policy: d/f-block metals (no simple
+  valence model applies), wildcard atoms, free (disconnected) ions, and
+  closed-shell ions. Aromatic rings are handled correctly — the same
+  aromaticity perception and pi-bond accounting the valence policy uses
+  means a normal aromatic ring never reports a false radical. A main-group
+  metal with a genuine unpaired electron (e.g. bare `[Na]`) is *not* exempt:
+  it is already accepted today as a radical under the permissive policy, and
+  this check names that same radical.
+- **Explicit radical notation** (`[CH3]`, nitroxide `R2N[O]`, …) is reported
+  as a warning, never an error — it already validates today and keeps doing
+  so; `closed_shell` only makes the radical visible.
 
 ## cis/trans marks
 

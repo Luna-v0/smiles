@@ -263,6 +263,79 @@ def valence_violations(
     return violations
 
 
+def open_shell_atoms(
+    atoms: List[AtomDescriptor], bonds: List[BondDescriptor]
+) -> List[Tuple[int, int]]:
+    """List atoms left with an odd number of unpaired ground-state electrons.
+
+    This is the opt-in **closed-shell check** (see
+    ``docs/validation.md``, "Closed-shell check"): it never feeds into
+    :func:`valence_violations` and never changes a verdict, it only tells the
+    caller which atoms are radicals.
+
+    An atom's bond total (bonds + explicit H, aromaticity-aware, dative bonds
+    to d/f-block metals excluded — the same ``total`` :func:`_valence_limit`
+    computes) is compared against its *ground-state* valence (``valence()[0]``
+    from pysmiles — the lowest, unexcited value, the same one used as the
+    ceiling for second-row atoms). A shortfall is a lone pair when it is even
+    (the unfilled electrons can pair with each other, e.g. a singlet carbene)
+    and a forced radical when it is odd (one electron has no partner to pair
+    with). Only the odd case is reported.
+
+    Exempt, matching :func:`valence_violations`: wildcard atoms, elements
+    with no entry in the periodic table, free (disconnected) charged ions,
+    closed-shell (noble-gas-isoelectronic) ions, and d/f-block metals (no
+    simple valence model applies to any of them).  An atom already reported
+    by :func:`valence_violations` (over-valent) is never open-shell: when the
+    bond total reaches or exceeds the ground-state valence there is no
+    shortfall to report, expanded-octet species included.
+
+    Args:
+        atoms: Atom descriptors from :func:`to_descriptor`.
+        bonds: Bond descriptors from :func:`to_descriptor`.
+
+    Returns:
+        A list of ``(atom_index, unpaired_electron_count)`` pairs, in atom
+        order. ``unpaired_electron_count`` is always odd and positive.
+
+    Raises:
+        Exception: If aromaticity perception fails (see :func:`_perceive`).
+    """
+    from pysmiles import PTE
+    from pysmiles.smiles_helper import valence
+
+    mol = _perceive(atoms, bonds)
+    flagged: List[Tuple[int, int]] = []
+    for node in mol:
+        attrs = mol.nodes[node]
+        element = attrs.get("element", "*")
+        if element == "*" or element not in PTE:
+            continue
+        if mol.degree(node) == 0 and attrs.get("charge", 0) != 0:
+            continue
+        if _is_d_f_block(element):
+            continue
+        try:
+            # Unlike valence_violations (over-valence only, where ignoring an
+            # organic atom's implicit H is a safe lower bound), the implicit
+            # H an organic atom was filled with here (fill_valence, inside
+            # _perceive) must be counted: it is what already closes that
+            # atom's shell, and skipping it would flag every ordinary
+            # organic-subset atom as a false radical.
+            total, _ = _valence_limit(mol, node, mol.nodes[node].get("hcount", 0))
+        except (ValueError, KeyError):
+            continue
+        if PTE[element]["AtomicNumber"] - attrs.get("charge", 0) in _NOBLE_GAS_ELECTRONS:
+            continue  # closed-shell ion: no valence to fill, never open-shell
+        ground = valence(attrs)
+        if not ground:
+            continue
+        deficit = ground[0] - total
+        if deficit > 0 and int(deficit) % 2 == 1:
+            flagged.append((node, int(deficit)))
+    return flagged
+
+
 def valid_pysmiles(
     atoms: List[AtomDescriptor], bonds: List[BondDescriptor]
 ) -> Tuple[bool, Optional[str]]:
