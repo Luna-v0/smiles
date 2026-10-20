@@ -74,18 +74,37 @@ validator accepts by default.
   e.g. `"O (atom 3) is open-shell: 1 unpaired electron (a radical; accepted
   under the permissive valence policy)"`.
 - **Repair**: when the molecule is otherwise valid, `repaired_smiles` and
-  `repairs` hold the shell-closing edit — add the missing hydrogen(s), or add
-  a matching negative charge. `physiological_ph` (the same flag the nitrogen
-  repair above uses) picks between them for an open-shell oxygen, by a small
-  pKa table of its own (`chem/repair.py: O_PKA_TABLE`): carboxylate and
-  nitro/nitroso O are deprotonated (so a negative charge is added) at pH 7.4,
-  phenolic and aliphatic-alcohol O are protonated (so a hydrogen is added) —
-  the same reasoning `PKA_TABLE` already applies to nitrogen. For every other
-  element, or with `physiological_ph=False`, a hydrogen is preferred when one
-  closes the shell. If the molecule is invalid for an unrelated reason (a
-  real over-valence failure elsewhere), the warning is still reported but no
-  closed-shell repair is suggested — `repaired_smiles` keeps meaning "this
-  makes the whole molecule valid," not a mix of two unrelated fixes.
+    `repairs` hold the shell-closing edit — add the missing hydrogen(s), or add
+    a matching negative charge. `physiological_ph` (the same flag the nitrogen
+    repair above uses) picks between them by the pKa of the X–H acid the atom
+    would become (`chem/repair.py: acid_class`): below 7.4 the acid is
+    deprotonated at body pH, so the charge is added; above it, the hydrogen.
+    The `repairs` line names the class and its pKa. The tables are
+    `O_PKA_TABLE`, `S_PKA_TABLE` and `N_ACID_PKA_TABLE`.
+
+    | atom | charge added (pKa < 7.4) | hydrogen added (pKa > 7.4) |
+    |---|---|---|
+    | O | nitro/nitroso, sulfonate/phosphate, O on a cation (N-oxides, nitrones, nitronates, `[Cl+3]` perchlorate), halogen oxyacids (chlorate, iodate), carboxylate, vinylogous acids (ascorbate, 4-hydroxycoumarins, cyclic 1,3-dione enols, hydroxy-uracils), N-hydroxy-pyridinones/-thiones | phenols, alcohols, O on a neutral N without an =O, O on Se/As |
+    | S | thioacids (dithiocarbamate, xanthate, thiocarboxylate, thiophosphate, thiosulfate, thiocyanate), aromatic thiols | aliphatic thiols |
+    | N | azide/diazo terminal N, N between a sulfonyl and a second acceptor (acylsulfonamides, sulfonylureas, N-heteroaryl sulfonamides, N-chloro sulfonamides), dicyanamide, thiazolidinedione imides | simple and N-aryl sulfonamides, imides, amides, amines |
+    | F, Cl, Br, I | a free halogen atom (a halide) | — |
+
+    Some acids sit close enough to pH 7.4 that both forms are common, and they
+    stay on the hydrogen side on purpose: phenols with nitro or halogen
+    substituents (pKa 4–7.2; the datasets write them neutral more often than
+    as anions) and Se/As oxyacids (polyprotic, so a radical next to an
+    existing O⁻ is a second deprotonation, pKa ≈ 8.3–8.5). On the charge side,
+    the closest calls are ciclopirox-type N-hydroxy-pyridinones (pKa 6.8–7.2,
+    0.2–0.6 below the cutoff), aromatic thiols (6.6) and thiazolidinediones
+    (6.1–6.8, ring only: an open-chain N-acyl thiocarbamate stays an imide,
+    pKa ≈ 9); at pH 7.4 both forms of these are present. Charged or aromatic
+    N, C, P and bare `[SH]` have no class; for them, and for everything with
+    `physiological_ph=False`, a hydrogen is preferred when one closes the
+    shell. If the molecule is invalid for an unrelated reason (a real
+    over-valence failure elsewhere), the warning is still reported but no
+    closed-shell repair is suggested — `repaired_smiles` keeps meaning "this
+    makes the whole molecule valid," not a mix of two unrelated fixes.
+
 - **Never flags**: a *lone pair* is not a radical. An atom's shortfall
   against its ground-state valence only forces an unpaired electron when
   that shortfall is odd (one electron with no partner); an even shortfall
