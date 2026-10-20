@@ -223,10 +223,43 @@ def protonated_at_ph(atoms, bonds, n: int, ph: float = PHYSIOLOGICAL_PH) -> Tupl
 O_PKA_TABLE: Dict[str, float] = {
     "nitro/nitroso O": -11.0,
     "sulfonate/phosphate O": -2.0,
+    "N-oxide-type O (on a cationic atom)": 0.8,  # pyridine N-oxide; R3N-O 4.7
+    "halogen oxyacid O (chlorate, bromate, iodate)": -1.0,  # HClO3 -1, HIO3 0.8
     "carboxylate O": 4.2,
+    # ascorbic 4.1, tetronic 3.8, 4-hydroxycoumarin 4.1, dimedone 5.2
+    "vinylogous acid O (enol or hydroxy-heteroarene beside a ring C=O)": 4.5,
+    # 1-hydroxy-2-pyridinone 5.8, pyrithione 4.6; ciclopirox 6.8-7.2 (a close call)
+    "N-hydroxy-pyridinone/-thione O": 5.8,
     "phenolic O": 10.0,
     "aliphatic alcohol O": 16.0,
 }
+
+#: Approximate pKa of the R-S-H acid of each sulfur class.
+S_PKA_TABLE: Dict[str, float] = {
+    # dithiocarbamic/xanthic/thioacetic acid 2-3.5, HSCN -1, thiosulfate 1.7
+    "thioacid S (C=S, C=O, P=S, S=O or C#N on its neighbour)": 2.5,
+    "aromatic thiol S": 6.6,  # thiophenol; 2-mercaptobenzothiazole 7.0
+    "aliphatic thiol S": 10.5,  # ethanethiol 10.6
+}
+
+#: Approximate pKa of the N-H acid of each nitrogen class (deprotonating the
+#: N-H, not the conjugate-acid pKa :data:`PKA_TABLE` lists for amines).
+N_ACID_PKA_TABLE: Dict[str, float] = {
+    "azide/diazo terminal N": 4.6,  # HN3
+    # saccharin 1.6, sulfonylureas ~5, sulfamethoxazole 5.7, sulfadiazine 6.5
+    "N between two acceptors (acylsulfonamide, sulfonylurea, N-heteroaryl "
+    "sulfonamide, dicyanamide)": 5.0,
+    "thiazolidinedione-type imide N": 6.5,  # glitazones 6.1-6.8
+    # benzenesulfonamide 10.1, N-aryl sulfonamides 8-9, phthalimide 8.3, succinimide 9.6
+    "sulfonamide/imide N": 9.0,
+    "amide N": 15.0,
+    "amine/imine N": 35.0,
+}
+
+#: Hydrogen halides (HF 3.2; HCl, HBr, HI below 0): always ionised at pH 7.4.
+HALIDE_PKA = -7.0
+
+_HALOGENS = {"F", "Cl", "Br", "I"}
 
 
 def _has_withdrawing_double_bond(atoms, bonds, centre: int, exclude: int) -> bool:
@@ -239,14 +272,97 @@ def _has_withdrawing_double_bond(atoms, bonds, centre: int, exclude: int) -> boo
     return False
 
 
+def _path_within(bonds, start: int, goal: int, banned: set, max_len: int) -> bool:
+    """Whether ``goal`` is reachable from ``start`` in at most ``max_len`` bonds
+    without passing through any atom in ``banned``."""
+    frontier, seen = {start}, {start} | set(banned)
+    for _ in range(max_len):
+        nxt = set()
+        for a in frontier:
+            for b, _ in _neighbours(bonds, a):
+                if b == goal:
+                    return True
+                if b not in seen:
+                    seen.add(b)
+                    nxt.add(b)
+        frontier = nxt
+    return False
+
+
+def _in_ring(bonds, n: int, max_size: int = 8) -> bool:
+    """Whether atom ``n`` lies on a ring of at most ``max_size`` atoms."""
+    neighbours = [m for m, _ in _neighbours(bonds, n)]
+    # A path between two of n's neighbours that avoids n closes a ring through n.
+    return any(
+        _path_within(bonds, m, x, {n}, max_size - 2)
+        for i, m in enumerate(neighbours) for x in neighbours[i + 1:]
+    )
+
+
+def _carries_terminal_oxo(atoms, bonds, k: int, exclude: int) -> bool:
+    """Whether ``k`` carries a terminal =O or =S (a carbonyl/thiocarbonyl)."""
+    for x, order in _neighbours(bonds, k):
+        if x == exclude or order != 2 or atoms[x]["element"] not in ("O", "S"):
+            continue
+        if len(_neighbours(bonds, x)) == 1:
+            return True
+    return False
+
+
+def _has_double_bond_to_o(atoms, bonds, centre: int, exclude: int) -> bool:
+    """Whether ``centre`` carries an =O other than ``exclude``."""
+    return any(
+        x != exclude and order == 2 and atoms[x]["element"] == "O"
+        for x, order in _neighbours(bonds, centre)
+    )
+
+
+def _is_vinylogous_acid(atoms, bonds, o: int, c: int) -> bool:
+    """O-C=C-C=O (or its aromatic equivalent) with the carbonyl in a ring.
+
+    Covers the acidic enols and hydroxy-heteroarenes datasets write as
+    anions: ascorbate, tetronic acids, cyclic 1,3-diones, 4-hydroxycoumarins,
+    4-hydroxy-2-pyrones/-pyridones, hydroxy-uracils.  Requiring the carbonyl
+    carbon ``k`` to sit in a ring leaves out acyclic 1,3-diketones
+    (acetylacetone, pKa 8.9), whose enol is held by an intramolecular
+    hydrogen bond.  For an aromatic ``c`` the carbonyl must also share a
+    small ring with it, which leaves out salicyl- and peri-hydroxy-quinone
+    phenols (pKa 8-11, the same hydrogen bond).
+    """
+    for j, order_cj in _neighbours(bonds, c):
+        if j == o or order_cj not in (2, 1.5):
+            continue
+        for k, _ in _neighbours(bonds, j):
+            if k == c or not _carries_terminal_oxo(atoms, bonds, k, j):
+                continue
+            if not _in_ring(bonds, k):
+                continue
+            if atoms[c]["aromatic"] and not _path_within(bonds, k, c, {j}, 5):
+                continue
+            return True
+    return False
+
+
 def oxygen_class(atoms, bonds, n: int) -> str:
     """Classify an open-shell oxygen into an :data:`O_PKA_TABLE` row.
 
-    Looks only at the one atom ``n`` is bonded to (an open-shell O has at
-    most one bond — a second bond, or a double bond, already closes its
-    shell): carboxylate/sulfonate/nitro-type O when that neighbour carries
-    another O=/N= double bond, phenolic O when it is aromatic, and a plain
-    aliphatic alcohol O otherwise.
+    Looks at the one atom ``n`` is bonded to (an open-shell O has at most one
+    bond — a second bond, or a double bond, already closes its shell) and
+    that atom's surroundings, from the most to the least acidic class:
+    nitro/nitroso and sulfonate/phosphate O when the neighbour carries
+    another O=/N= double bond; N-oxide-type O when the neighbour is a cation
+    (pyridine and amine N-oxides, nitrones, nitronates, perchlorate written
+    ``[Cl+3]``); halogen oxyacid O on a Cl/Br/I with an =O; carboxylate O on
+    a C=O/C=N carbon; vinylogous acid O (see :func:`_is_vinylogous_acid`);
+    N-hydroxy-pyridinone/-thione O on an aromatic N next to a ring C=O/C=S;
+    phenolic O on any other aromatic atom; and a plain aliphatic alcohol O
+    otherwise.
+
+    Deliberately not classed as acidic (left on the add-H side): phenols
+    with nitro or halogen substituents (pKa 4-7.2, close enough to 7.4 that
+    datasets write them neutral more often than as anions) and Se/As/Te
+    oxyacids (polyprotic, so a radical next to an existing O- is a second
+    deprotonation, pKa about 8.3-8.5).
     """
     neighbours = _neighbours(bonds, n)
     if not neighbours:
@@ -258,11 +374,155 @@ def oxygen_class(atoms, bonds, n: int) -> str:
         return "sulfonate/phosphate O"
     if via_element == "N" and withdrawing:
         return "nitro/nitroso O"
+    if atoms[via].get("charge", 0) > 0:
+        return "N-oxide-type O (on a cationic atom)"
+    if via_element in ("Cl", "Br", "I") and _has_double_bond_to_o(atoms, bonds, via, n):
+        return "halogen oxyacid O (chlorate, bromate, iodate)"
     if via_element == "C" and withdrawing:
         return "carboxylate O"
+    if via_element == "C" and _is_vinylogous_acid(atoms, bonds, n, via):
+        return "vinylogous acid O (enol or hydroxy-heteroarene beside a ring C=O)"
+    if via_element == "N" and atoms[via]["aromatic"] and any(
+        order == 1.5 and _carries_terminal_oxo(atoms, bonds, k, via)
+        for k, order in _neighbours(bonds, via)
+    ):
+        return "N-hydroxy-pyridinone/-thione O"
     if atoms[via]["aromatic"]:
         return "phenolic O"
     return "aliphatic alcohol O"
+
+
+def sulfur_class(atoms, bonds, n: int) -> Optional[str]:
+    """Classify a neutral open-shell sulfur into an :data:`S_PKA_TABLE` row.
+
+    ``None`` for a sulfur with no heavy-atom neighbour (``[SH]``), which is
+    left to the plain "add H" default.
+    """
+    neighbours = _neighbours(bonds, n)
+    if not neighbours or atoms[n].get("charge", 0) != 0:
+        return None
+    for via, _ in neighbours:
+        for x, order in _neighbours(bonds, via):
+            if x == n:
+                continue
+            if order == 2 and atoms[x]["element"] in ("O", "S", "N"):
+                return "thioacid S (C=S, C=O, P=S, S=O or C#N on its neighbour)"
+            if order == 3 and atoms[x]["element"] == "N":
+                return "thioacid S (C=S, C=O, P=S, S=O or C#N on its neighbour)"
+    if any(atoms[via]["aromatic"] for via, _ in neighbours):
+        return "aromatic thiol S"
+    return "aliphatic thiol S"
+
+
+def _n_acceptors(atoms, bonds, n: int) -> Dict[str, int]:
+    """Count the electron-withdrawing groups on nitrogen ``n``, by kind."""
+    counts = {"sulfonyl": 0, "acyl": 0, "cyano": 0, "heteroaryl": 0, "halogen": 0}
+    for via, _ in _neighbours(bonds, n):
+        element = atoms[via]["element"]
+        others = [(x, o) for x, o in _neighbours(bonds, via) if x != n]
+        if element in _HALOGENS:
+            counts["halogen"] += 1
+        elif element == "S" and any(o == 2 and atoms[x]["element"] == "O" for x, o in others):
+            counts["sulfonyl"] += 1
+        elif element == "C" and any(o == 3 and atoms[x]["element"] == "N" for x, o in others):
+            counts["cyano"] += 1
+        elif element == "C" and any(o == 2 and atoms[x]["element"] in ("O", "S") for x, o in others):
+            counts["acyl"] += 1
+        elif atoms[via]["aromatic"] and any(
+            atoms[x]["aromatic"] and atoms[x]["element"] in ("N", "O") for x, _ in others
+        ):
+            counts["heteroaryl"] += 1
+    return counts
+
+
+def _is_thiazolidinedione_n(atoms, bonds, n: int) -> bool:
+    """N of a thiazolidinedione/rhodanine ring: an imide N whose ring closes
+    through an S on one of its two acyl carbons (S-C(=O)-N-C(=O)-C-S).
+
+    The ring is what makes these imides acidic (glitazones 6.1-6.8, against
+    9-10 for open-chain or all-carbon imides), so an acyclic N-acyl
+    thiocarbamate (``CC(=O)NC(=O)SC``) does not qualify.
+    """
+    acyl = [
+        via for via, _ in _neighbours(bonds, n)
+        if atoms[via]["element"] == "C" and _carries_terminal_oxo(atoms, bonds, via, n)
+    ]
+    for a in acyl:
+        for other in acyl:
+            if other == a:
+                continue
+            for s, order in _neighbours(bonds, a):
+                if s == n or order != 1 or atoms[s]["element"] != "S":
+                    continue
+                # S-C-C(=O) back to the other acyl carbon, avoiding N and this
+                # acyl carbon: the five-membered thiazolidine ring.
+                if _path_within(bonds, s, other, {n, a}, 2):
+                    return True
+    return False
+
+
+def nitrogen_acid_class(atoms, bonds, n: int) -> Optional[str]:
+    """Classify a neutral, non-aromatic open-shell nitrogen into an
+    :data:`N_ACID_PKA_TABLE` row, or ``None`` (charged or aromatic N, left to
+    the plain "add H" default)."""
+    if atoms[n].get("charge", 0) != 0 or atoms[n]["aromatic"]:
+        return None
+    neighbours = _neighbours(bonds, n)
+    if len(neighbours) == 1:
+        via, order = neighbours[0]
+        if order == 2 and atoms[via]["element"] == "N" and atoms[via].get("charge", 0) > 0:
+            return "azide/diazo terminal N"
+    acceptors = _n_acceptors(atoms, bonds, n)
+    total = sum(acceptors.values())
+    if (acceptors["sulfonyl"] and total >= 2) or acceptors["cyano"] >= 2:
+        return (
+            "N between two acceptors (acylsulfonamide, sulfonylurea, N-heteroaryl "
+            "sulfonamide, dicyanamide)"
+        )
+    if acceptors["acyl"] >= 2 and _is_thiazolidinedione_n(atoms, bonds, n):
+        return "thiazolidinedione-type imide N"
+    if acceptors["sulfonyl"] or acceptors["acyl"] >= 2:
+        return "sulfonamide/imide N"
+    if acceptors["acyl"]:
+        return "amide N"
+    return "amine/imine N"
+
+
+def acid_class(atoms, bonds, n: int) -> Optional[Tuple[str, float]]:
+    """The ``(class, pKa)`` of the X-H acid an open-shell atom becomes with
+    one more hydrogen, or ``None`` when no class applies (the closed-shell
+    repair then adds the hydrogen).
+
+    Oxygen uses :data:`O_PKA_TABLE`, sulfur :data:`S_PKA_TABLE`, nitrogen
+    :data:`N_ACID_PKA_TABLE`; a free halogen atom is a halide
+    (:data:`HALIDE_PKA`).
+    """
+    element = atoms[n]["element"]
+    if element == "O":
+        kind = oxygen_class(atoms, bonds, n)
+        return kind, O_PKA_TABLE[kind]
+    if element == "S":
+        kind = sulfur_class(atoms, bonds, n)
+        return None if kind is None else (kind, S_PKA_TABLE[kind])
+    if element == "N":
+        kind = nitrogen_acid_class(atoms, bonds, n)
+        return None if kind is None else (kind, N_ACID_PKA_TABLE[kind])
+    if element in _HALOGENS and not _neighbours(bonds, n) and atoms[n].get("charge", 0) == 0:
+        return "free halogen atom (hydrogen halide)", HALIDE_PKA
+    return None
+
+
+def protonated_acid_at_ph(
+    atoms, bonds, n: int, ph: float = PHYSIOLOGICAL_PH
+) -> Optional[Tuple[bool, str]]:
+    """Return ``(is_protonated, explanation)`` for open-shell atom ``n`` at
+    ``ph``, or ``None`` when :func:`acid_class` has no class for it."""
+    found = acid_class(atoms, bonds, n)
+    if found is None:
+        return None
+    kind, pka = found
+    state = "protonated" if pka > ph else "deprotonated"
+    return pka > ph, f"{kind}, pKa ≈ {pka:g}: {state} at pH {ph:g}"
 
 
 def protonated_oxygen_at_ph(atoms, bonds, n: int, ph: float = PHYSIOLOGICAL_PH) -> Tuple[bool, str]:
@@ -416,11 +676,16 @@ def suggest_closed_shell_repair(
         smiles: The original SMILES (edits are applied to this string).
         atoms: Atom descriptors from ``to_descriptor``.
         bonds: Bond descriptors from ``to_descriptor``.
-        physiological_ph: For an open-shell oxygen that can be closed either
-            way, choose by its protonation state at pH 7.4 (carboxylate and
-            nitro/nitroso O prefer a negative charge, phenolic and aliphatic
-            alcohol O prefer a hydrogen). With it off, or for any other
-            element, a hydrogen is preferred when one closes the shell.
+        physiological_ph: For an open-shell O, S, N or free halogen that can
+            be closed either way, choose by the protonation state of its X-H
+            acid at pH 7.4 (:func:`acid_class`): carboxylate, nitro,
+            sulfonate, N-oxide, halogen-oxyacid and vinylogous-acid O,
+            thioacid and aromatic thiol S, azide/diazo N, sulfonyl N with a
+            second acceptor and a free halogen atom prefer a negative charge;
+            phenolic and alcohol O, aliphatic thiol S and amine/amide/simple
+            sulfonamide N prefer a hydrogen. With it off, or for an atom no class covers (C, P,
+            charged or aromatic N, ``[SH]``), a hydrogen is preferred when one
+            closes the shell.
 
     Returns:
         A :class:`Repair`, or ``None`` when no atom is open-shell, the
@@ -458,8 +723,9 @@ def suggest_closed_shell_repair(
         charge_options = [c for c in candidates if c[0].startswith("set charge")]
         note = ""
         if charge_options and h_options:
-            if physiological_ph and work[n]["element"] == "O":
-                protonated, why = protonated_oxygen_at_ph(work, bonds, n)
+            verdict = protonated_acid_at_ph(work, bonds, n) if physiological_ph else None
+            if verdict is not None:
+                protonated, why = verdict
                 choice = h_options[0] if protonated else charge_options[0]
                 note = f" ({why})"
             else:
