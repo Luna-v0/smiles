@@ -1,3 +1,0 @@
-sly
-pandas
-notebook

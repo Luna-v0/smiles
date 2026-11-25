@@ -30,23 +30,22 @@ def to_descriptor(
 ) -> Tuple[List[AtomDescriptor], List[BondDescriptor]]:
     """Translate a ``MolecularGraph`` into a backend-neutral descriptor.
 
+    Hydrogen handling is deliberately asymmetric and mirrors SMILES
+    semantics: bracket atoms fully specify their hydrogens, while organic
+    (implicit-H) atoms defer the valence fill to the backend.
+
     Args:
         graph: The molecule graph produced by the parser/``GraphBuilder``.
 
     Returns:
         A tuple ``(atoms, bonds)`` where ``atoms`` is a list of dicts (one per
         atom, indexed by position) carrying ``element``, ``charge``,
-        ``aromatic`` and — only for bracket atoms — an explicit ``hcount`` and
-        optional ``isotope``; and ``bonds`` is a list of ``(i, j, order)``
-        tuples with ``order`` in ``{1, 2, 3, 4, 1.5}``.
-
-    Notes:
-        Hydrogen handling is deliberately asymmetric and mirrors SMILES
-        semantics: a **bracket** atom fully specifies its hydrogens, so we
-        always emit ``hcount`` (``None`` means zero explicit H); an **organic**
-        (non-bracket) atom has *implicit* hydrogens, so we omit ``hcount`` and
-        let the backend fill the valence.  Disconnected components (the ``.``
-        bond) simply produce no edge.
+        ``aromatic`` and — only for bracket atoms, which fully specify their
+        hydrogens — an explicit ``hcount`` (``None`` means zero explicit H)
+        and optional ``isotope``; organic (non-bracket) atoms omit
+        ``hcount`` so the backend fills the valence.  ``bonds`` is a list of
+        ``(i, j, order)`` tuples with ``order`` in ``{1, 2, 3, 4, 1.5}``;
+        disconnected components (the ``.`` bond) simply produce no edge.
     """
     index = {atom: i for i, atom in enumerate(graph.adjacency_list)}
 
@@ -396,14 +395,11 @@ def valid_rdkit(
 
     Builds a ``Chem.RWMol`` atom-by-atom and bond-by-bond and runs
     ``Chem.SanitizeMol`` (valence + kekulization + aromaticity perception),
-    **bypassing** ``Chem.MolFromSmiles``.
-
-    Note:
-        RDKit's sanitizer uses strict default valences, so this driver rejects
-        the hypervalent / expanded-octet species that :func:`valid_pysmiles`
-        accepts under the permissive policy.  It is therefore the *strict*
-        (RDKit-equivalent) backend; choose it when maximum agreement with RDKit
-        is wanted rather than permissiveness.
+    **bypassing** ``Chem.MolFromSmiles``.  RDKit's sanitizer uses strict
+    default valences, so this driver rejects the hypervalent / expanded-octet
+    species that :func:`valid_pysmiles` accepts under the permissive policy;
+    it is the *strict* (RDKit-equivalent) backend, to choose when maximum
+    agreement with RDKit is wanted rather than permissiveness.
 
     Args:
         atoms: Atom descriptors from :func:`to_descriptor`.

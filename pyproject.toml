@@ -2,6 +2,7 @@
 name = "slyparser"
 version = "0.1.0"
 description = "A LALR(1) parser using SLY"
+requires-python = ">=3.10"
 dependencies = [
   "matplotlib>=3.10.8",
   "mkdocs>=1.6.1",
@@ -19,7 +20,7 @@ dependencies = [
   "rdkit>=2025.9.4",
   "scipy>=1.15.3",
   "seaborn>=0.13.2",
-  "sly",
+  "sly>=0.5,<0.6",
 ]
 
 [build-system]
@@ -39,5 +40,17 @@ testpaths = ["tests"]
 
 [dependency-groups]
 dev = [
+    "catppuccin-jupyterlab>=0.2.5",
+    "ipykernel>=7.2.0",
+    "ipywidgets>=8.1.8",
+    "jupyter-collaboration>=4.4.2",
+    "jupyter-mcp-tools>=0.1.6",
     "jupyterlab>=4.5.6",
+    "jupyterlab-git>=0.54.1",
+    "jupyterlab-lsp>=5.3.0",
+    "jupyterlab-vim>=4.1.4",
+    "jupytext>=1.19.5",
+    "lckr-jupyterlab-variableinspector>=3.2.4",
+    "pycrdt>=0.13.1",
+    "python-lsp-server[all]>=1.15.0",
 ]

@@ -828,14 +828,15 @@ class ParserManager:
                             debug_kwargs[k] = {kk: str(vv)[:50] for kk, vv in v.items()}
                         else:
                             debug_kwargs[k] = str(v)[:100]
-                    except:
+                    except Exception:
+                        # Arbitrary parser values: __str__/items() can raise
+                        # anything; only repr() formatting must not fail here.
                         debug_kwargs[k] = repr(v)[:100]
                 raise ParserException(
                     rule="chains",
                     parameter=str(debug_kwargs),
                     message=f"Invalid chains rule: {debug_kwargs}",
                 )
-                return
 
     def internal_bracket(self, internal_bracket=None, **kwargs) -> BracketAtom:
         """
