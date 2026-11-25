@@ -1,0 +1,47 @@
+# Pinned docs toolchain for `mkdocs gh-deploy --strict`.
+#
+# mkdocs/mkdocstrings' own dependencies float (no upper bounds), so an
+# unpinned `pip install mkdocs mkdocs-material mkdocstrings[python] ...`
+# can pick up a newer transitive package (pymdown-extensions, markdown, …)
+# that breaks the mkdocstrings<->pymdown-extensions `Highlight` integration
+# at build time. Pin the whole chain to versions known to build cleanly
+# (matches the project's local dev environment) instead of just the
+# top-level packages.
+#
+# Regenerate by comparing against `uv pip list` in this repo's .venv.
+
+# -- top-level docs packages --
+mkdocs==1.6.1
+mkdocs-material==9.7.6
+mkdocstrings==1.0.4
+mkdocstrings-python==2.0.3
+griffelib==2.0.2
+
+# -- pinned transitively (float otherwise and can break --strict) --
+mkdocs-material-extensions==1.3.1
+mkdocs-autorefs==1.4.4
+mkdocs-get-deps==0.2.2
+pymdown-extensions==10.21.2
+markdown==3.10.2
+pygments==2.20.0
+jinja2==3.1.6
+markupsafe==3.0.3
+babel==2.18.0
+paginate==0.5.7
+backrefs==6.2
+ghp-import==2.1.0
+mergedeep==1.3.4
+pathspec==1.0.4
+platformdirs==4.9.6
+pyyaml==6.0.3
+pyyaml-env-tag==1.1
+watchdog==6.0.0
+click==8.3.2
+colorama==0.4.6
+requests==2.33.1
+typing-extensions==4.15.0
+python-dateutil==2.9.0.post0
+idna==3.11
+urllib3==2.6.3
+certifi==2026.2.25
+charset-normalizer==3.4.7
